@@ -1,16 +1,18 @@
-#include <stdio>
+#include <iostream>
 #include <stdlib.h> // rand()
-using namespace std;
+#include "battle.h"
+#include "battlefixtures.h"
 
-namespace battle 
+namespace battle
 {
 	// Tests whether an attack is valid.
-	bool attack_is_valid(Country attacking, Country defending, int atk_dice, int def_dice, string out)
+	bool attack_is_valid(Country* attacking, Country* defending, int atk_dice, int def_dice, std::string out)
 	{
-		if (attacking.owner != defending.owner) {
+		int current_player = 1;
+		if (attacking->owner != defending->owner) {
 			out = "You can't attack your own people!";
 			return false;
-		} else if (attacking.units < 1 || defending.units < 1) {
+		} else if (attacking->units < 1 || defending->units < 1) {
 			out = "One of those countries is empty!";
 			return false;
 		} else if (atk_dice < 1 || atk_dice > 3) {
@@ -18,16 +20,17 @@ namespace battle
 			return false;
 		} else if (def_dice < 1 || def_dice > 2) {
 			out = "Invalid number of defending dice!";
-		} else if (attacking.owner != current_player) {
+			return false;
+		} else if (attacking->owner != current_player) {
 			out = "Not that player's turn!";
 			return false;
-		} else if (attacking.units - num_dice < 1) {
+		} else if (attacking->units - atk_dice < 1) {
 			out = "Attacker does not have enough units!";
 			return false;
-		} else if (attacking.units < defending units) {
+		} else if (attacking->units < defending->units) {
 			out = "Cannot be more defenders than attackers!";
 			return false;
-		} else if (!Country::areAdjacent(attacking, defending)) {
+		} else if (!Country::are_adjacent(attacking, defending)) {
 			out = "Those two countries are not adjacent!";
 			return false;
 		} else return true;
@@ -46,63 +49,66 @@ namespace battle
 			for (int i = 0; i < num_dice; i++)
 			{
 				out[i] = rand() % 6 + 1;
-			}
-			// Bubblesort out[] 
-			if (out[0] < out[1] && num_dice > 1) {
-				int t = out[0];
-				out[0] = out[1];
-				out[1] = t;
-			}
-			if (out[1] < out[2] && num_dice == 3) {
-				int t = out[1];
-				out[1] = out[2];
-				out[2] = t;
-			}
-			if (out[0] < out[1] && num_dice == 3) {
-				int t = out[0];
-				out[0] = out[1];
-				out[1] = t;
+				// This bit (bubble)sorts the array as it goes
+				// for convenience to the attack() method.
+				if (i != 0 && out[i+1] < out[i]) {
+					int t = out[i+1];
+					out[i] = out[i+1];
+					out[i+1] = t;
+				}
+				if (i == 2 && out[0] > out[1]) {
+					int t = out[1];
+					out[1] = out[0];
+					out[0] = t;
+				}
 			}
 			return out;
 		}
 	}
-	
+
 	// Stages a single attack.
 	// Returns -1 and a message to cout on error, 1 if the attacking country wins,
 	// and 0 otherwise.
-	int attack (Country attacking, Country defending, int atk_dice, int def_dice)
+	int attack (Country* attacking, Country* defending, int atk_dice, int def_dice)
 	{
-		string message;
-		if (!attack_is_valid(attacking, defending, atk_dice, def_dice, message) {
-			cout << message << endl;
+		std::string message;
+		if (!attack_is_valid(attacking, defending, atk_dice, def_dice, message)) {
+			std::cout << message << std::endl;
 			return -1;
 		}
-		int attackers [3] = dice(num_dice);
-		int defenders [3] = dice(num_dice);
-		for (int i = 0; i < def_dice; i++)
+		int* attackers = dice(atk_dice); 
+		int* defenders = dice(def_dice);
+		for (int i = 0; i < def_dice && i < atk_dice; i++)
 		{
 			if (attackers[i] > defenders[i]) {
-				defending.units = defending.units - 1;
+				defending->units = defending->units - 1;
 			} else {
-				attacking.units = attacking.units - 1;
+				attacking->units = attacking->units - 1;
 			}
-			if (defenders.units = 0) {
-				victory(attacking, defending, atk_dice, num_units);
+			if (defending->units = 0) {
 				return 1;
 			}
 		}
 		return 0;
 	}
 
-	int all_in_attack (Country attacking, Country defending)
+	// Triggers an all-out attack, using the maximum of dice on both sides
+	// until a victor is determined.
+	int all_in_attack (Country* attacking, Country* defending)
 	{
-		while (attacking.units > 1)
-		{
-			int dice = 1;
-			while (attacking.units - dice > 1 && dice < 4) { 
-				++dice;
+		while (attacking->units > 1) {
+			int num_atk_dice = 1;
+			int num_def_dice = 1;
+			while (attacking->units - num_atk_dice > 1 && num_atk_dice < 4) {
+				++num_atk_dice;
 			}
-			attack(dice);
+			while (defending->units - num_def_dice > 1 && num_def_dice < 3) {
+				++num_def_dice;
+			}
+			attack(attacking, defending, num_atk_dice, num_def_dice);
 		}
 	}
-}	
+
+	int victory (Country* attacking, Country* defending, int num_units) {
+	}
+}

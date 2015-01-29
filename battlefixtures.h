@@ -6,10 +6,10 @@ namespace battle {
 		public:
 			int owner;
 			int units;
-			Country () {}
+			Country ();
 			Country(int owned, int united);
 			~Country();
-			static bool are_adjacent(Country attacking, Country defending);
+			static bool are_adjacent(Country* attacking, Country* defending);
 	};
 }
 

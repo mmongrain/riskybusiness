@@ -2,27 +2,22 @@
 #include "battlefixtures.h"
 
 namespace battle {
-	class Country {
-	public:
-		int owner;
-		int units;
+	Country::Country () {
+		owner = -1;
+		units = -1;
+	}
 
-		Country () {
-			owner = -1;
-			units = -1;
-		}
+	Country::Country (int owned, int united) {
+		owner = owned;
+		units = united;
+	}
 
-		Country (int owned, int united) {
-			owner = owned;
-			units = united;
-		}
+	Country::~Country () {};
 
-		~Country ();
-		static bool are_adjacent (Country attacking, Country defending) {
-			if (attacking.owner != defending.owner) {
-				return true;
-			} else return false;
-		}
+	bool Country::are_adjacent (Country* attacking, Country* defending) {
+		if (attacking->owner != defending->owner) {
+			return true;
+		} else return false;
+	}
 
-	};
 }
