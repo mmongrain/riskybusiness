@@ -9,34 +9,37 @@ namespace battle
 {
   // Tests whether an attack is valid.
   // Returns verbose error messages as "out".
-  bool attack_is_valid(Country* attacking, Country* defending, int num_atk_dice, int num_def_dice, std::string out)
+  bool attack_is_valid(Country* attacking, Country* defending, std::vector<int> atk_dice, std::vector<int> def_dice, std::string &out)
   {
     int current_player = 1;
-    if (attacking->owner != defending->owner) {
+    if (attacking->owner == defending->owner) {
       out = "You can't attack your own people!";
       return false;
     } else if (attacking->units < 1 || defending->units < 1) {
       out = "One of those countries is empty!";
       return false;
-    } else if (num_atk_dice < 1 || num_atk_dice > 3) {
+    } else if (atk_dice.size() < 1 || atk_dice.size() > 3) {
       out = "Invalid number of attacking dice!";
       return false;
-    } else if (num_def_dice < 1 || num_def_dice > 2) {
+    } else if (def_dice.size() < 1 || def_dice.size() > 2) {
       out = "Invalid number of defending dice!";
       return false;
     } else if (attacking->owner != current_player) {
       out = "Not that player's turn!";
       return false;
-    } else if (attacking->units - num_atk_dice < 1) {
+    } else if (attacking->units - atk_dice.size() < 1) {
       out = "Attacker does not have enough units!";
       return false;
-    } else if (attacking->units < defending->units) {
+    } else if (def_dice.size() > atk_dice.size()) {
       out = "Cannot be more defenders than attackers!";
       return false;
     } else if (!Country::are_adjacent(attacking, defending)) {
       out = "Those two countries are not adjacent!";
       return false;
-    } else return true;
+    } else {
+      out = "All OK!";
+      return true;
+    }
   }
 
   // Rolls between one and three dice--no more, no less.
@@ -52,7 +55,7 @@ namespace battle
     } else {
       for (int i = 0; i < num_dice; i++)
       {
-        out.push_back(rand() % 6 + 1);
+        out.push_back(std::rand() % 6 + 1);
       }
       std::sort(out.begin(), out.end(), std::greater<int>());
       return out;
@@ -65,7 +68,7 @@ namespace battle
   int attack (Country* attacking, Country* defending, std::vector<int> atk_dice, std::vector<int> def_dice)
   {
     std::string message;
-    if (!attack_is_valid(attacking, defending, atk_dice.size(), def_dice.size(), message)) {
+    if (!attack_is_valid(attacking, defending, atk_dice, def_dice, message)) {
       return -1;
     }
     for (int i = 0; i < def_dice.size() && i < atk_dice.size(); i++)
@@ -75,7 +78,7 @@ namespace battle
       } else {
         attacking->units = attacking->units - 1;
       }
-      if (defending->units = 0) {
+      if (defending->units == 0) {
         return 1;
       }
     }
