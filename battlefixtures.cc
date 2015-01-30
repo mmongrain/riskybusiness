@@ -1,5 +1,5 @@
 #include <iostream>
-#include "battlefixtures.h"
+#include "battlefixtures.hh"
 
 namespace battle {
 	Country::Country () {
