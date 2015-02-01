@@ -3,10 +3,9 @@
 
 #include <string>
 #include <vector>
-#include "battlefixtures.hh"
+#include "battlefixtures.h"
 
 namespace battle {
-
   bool attack_is_valid(Country* attacking, Country* defending, std::vector<int> atk_dice, std::vector<int> def_dice, std::string &out);
   std::vector<int> dice(int num_dice);
   int attack(Country* attacking, Country* defending, std::vector<int> atk_dice, std::vector<int> def_dice);

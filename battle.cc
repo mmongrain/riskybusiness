@@ -2,8 +2,8 @@
 #include <stdlib.h> // rand()
 #include <algorithm> // sort()
 #include <vector>
-#include "battle.hh"
-#include "battlefixtures.hh"
+#include "battle.h"
+#include "battlefixtures.h"
 
 namespace battle
 {
@@ -90,13 +90,10 @@ namespace battle
   int all_in_attack (Country* attacking, Country* defending)
   {
     while (attacking->units > 1) {
+      int num_def_dice = (defending->units - num_def_dice > 1) ? 2 : 1;
       int num_atk_dice = 1;
-      int num_def_dice = 1;
       while (attacking->units - num_atk_dice > 1 && num_atk_dice < 3) {
         ++num_atk_dice;
-      }
-      while (defending->units - num_def_dice > 1 && num_def_dice < 2) {
-        ++num_def_dice;
       }
       std::vector<int> atk_dice = dice(num_atk_dice);
       std::vector<int> def_dice = dice(num_def_dice);
