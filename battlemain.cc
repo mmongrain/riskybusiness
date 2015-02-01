@@ -17,7 +17,6 @@ int main () {
   srand(time(NULL)); // Generates a unique-ish seed for the RNG
   battle::Country *england = new battle::Country(1, battle::english_units);
   battle::Country *france = new battle::Country(2, battle::french_units);
-  int exit = 0;
   int winners; // Will store the number of conquering armies
   std::cout << "You are the general of the English army. After a grueling "
             << "seven days' march, your army of " << battle::english_units 
@@ -26,12 +25,11 @@ int main () {
             << "How many units (1-3) will you send to battle? (Enter 4 for an "
             << "all-out attack, or 5 to quit.)" << std::endl;
 
-  while (exit == 0) {
+  while (true) {
     std::cout << england->units << "-" << france->units << ": ";
     if (england->units == 1 && france->units > 0) {
       std::cout << "The English army, humbled at the gates of Paris, retreats!"
                 << std::endl;
-      exit = 1;
       break;
     }
 
@@ -49,7 +47,6 @@ int main () {
         std::cout << "After the dust settles, England has " << england->units
                   << " remaining, and the English army has installed "
                   << france->units << " battalions in Paris." << std::endl;
-        exit = 1;
       } else { std::cout << message << std::endl; } // If victory is not valid
       break;
     }
@@ -59,7 +56,6 @@ int main () {
 
     if (attackers == 5) {
       std::cout << "Bye!" << std::endl;
-      exit = 1;
       break;
     }
 
