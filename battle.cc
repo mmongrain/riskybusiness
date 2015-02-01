@@ -87,20 +87,45 @@ namespace battle
 
   // Triggers an all-out attack, using the maximum of dice on both sides
   // until a victor is determined.
-  int all_in_attack (Country* attacking, Country* defending)
+  int all_in_attack (Country* attacking, Country* defending) 
   {
-    while (attacking->units > 1) {
-      int num_def_dice = (defending->units - num_def_dice > 1) ? 2 : 1;
+    while (attacking->units > 1 && defending->units > 0) {
+      int num_def_dice = (defending->units - 2 >= 0 && attacking->units > 2) ? 2 : 1;
       int num_atk_dice = 1;
       while (attacking->units - num_atk_dice > 1 && num_atk_dice < 3) {
         ++num_atk_dice;
       }
       std::vector<int> atk_dice = dice(num_atk_dice);
       std::vector<int> def_dice = dice(num_def_dice);
-      attack(attacking, defending, atk_dice, def_dice);
+      std::string message;
+      if (attack_is_valid(attacking, defending, atk_dice, def_dice, message)) {
+        attack(attacking, defending, atk_dice, def_dice);
+        std::cout << message << std::endl;
+      } else { 
+        std::cout << message << std::endl;
+        return 0;
+      }
+      if (defending->units == 0)
+      {
+        return num_atk_dice;
+      }
     }
   }
 
-  int victory (Country* attacking, Country* defending, int num_units) {
+  int victory (Country* attacking, Country* defending, int dice, int num_units, std::string &out) 
+  {
+    if (defending->units > 0) {
+      out = "Conquered country is not empty!";
+      return 0;
+    } else if (attacking->units - num_units < 1) {
+      out = "Not enough armies in conquering country!";
+      return 0;
+    } else {
+      out = "All OK!";
+      defending->owner = attacking->owner;
+      attacking->units = attacking->units - num_units - dice;
+      defending->units = num_units + dice;
+      return 1;
+    }
   }
 }
