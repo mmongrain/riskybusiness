@@ -8,7 +8,8 @@
 namespace battle
 {
   // Tests whether an attack is valid.
-  // Returns verbose error messages as "out".
+  // Returns verbose error messages as std::string "out", which also serve to
+  // clarify the logic of each condition.
   bool attack_is_valid(Country* attacking, Country* defending, std::vector<int> atk_dice, std::vector<int> def_dice, std::string &out)
   {
     int current_player = 1;
@@ -55,8 +56,12 @@ namespace battle
     } else {
       for (int i = 0; i < num_dice; i++)
       {
+		// Generates a random int between 1 and 6.
+		// Will require some kind of seed to be generated in main() for the
+		// distribution to be anything close to actually random.
         out.push_back(std::rand() % 6 + 1);
       }
+	  // Sorts the vector, from begin() to end(), using the > operator
       std::sort(out.begin(), out.end(), std::greater<int>());
       return out;
     }
@@ -73,10 +78,12 @@ namespace battle
     }
     for (int i = 0; i < def_dice.size() && i < atk_dice.size(); i++)
     {
+	  // If the attacker's dice is greater, decrement the number of defending units;
       if (atk_dice[i] > def_dice[i]) {
-        defending->units = defending->units - 1;
+        defending->units -= 1;
+    // Otherwise decrement the number of attacking units.
       } else {
-        attacking->units = attacking->units - 1;
+        attacking->units -= 1;
       }
       if (defending->units == 0) {
         return 1;
@@ -90,7 +97,11 @@ namespace battle
   int all_in_attack (Country* attacking, Country* defending) 
   {
     while (attacking->units > 1 && defending->units > 0) {
+      // If there are 2 or more attacking dice, roll 2 defending dice,
+      // otherwise roll 1.
       int num_def_dice = (defending->units - 2 >= 0 && attacking->units > 2) ? 2 : 1;
+      // Then figure out how many atk_dice there can be without reducing the
+      // number of units in the attacking country to below 1
       int num_atk_dice = 1;
       while (attacking->units - num_atk_dice > 1 && num_atk_dice < 3) {
         ++num_atk_dice;
@@ -112,6 +123,12 @@ namespace battle
     }
   }
 
+  // Performs the actions required once a country has prevailed!
+  // Most notably, by transferring the appropriate number of armies to the
+  // newly conquered country.
+  // Actually determining the victory condition (i.e., that there are no units
+  // remaining in the defending country and at least one unit remaining in the
+  // attacking country) is left to the main() method.
   int victory (Country* attacking, Country* defending, int dice, int num_units, std::string &out) 
   {
     if (defending->units > 0) {

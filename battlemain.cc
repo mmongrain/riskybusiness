@@ -25,14 +25,18 @@ int main () {
             << "How many units (1-3) will you send to battle? (Enter 4 for an "
             << "all-out attack, or 5 to quit.)" << std::endl;
 
+  // This is the main loop, and has 5 primary conditions:
   while (true) {
     std::cout << england->units << "-" << france->units << ": ";
+
+    // CONDITION 1: The English army loses.
     if (england->units == 1 && france->units > 0) {
       std::cout << "The English army, humbled at the gates of Paris, retreats!"
                 << std::endl;
       break;
     }
-
+    
+    // CONDITION 2: The French army loses.
     if (france->units == 0) {
       int max_imperialists = england->units - 1;
       std::cout << "The English army has taken Paris!" << std::endl
@@ -54,11 +58,13 @@ int main () {
     int attackers;
     std::cin >> attackers;
 
+    // CONDITION 3: The user quits.
     if (attackers == 5) {
       std::cout << "Bye!" << std::endl;
       break;
     }
 
+    // CONDITION 4: The user launches an all-out attack.
     if (attackers == 4) {
       winners = all_in_attack(england, france);
       std::cout << "The English army launches a devastating, all-in attack!!"
@@ -67,7 +73,8 @@ int main () {
                 << france->units << " French battalions remaining."
                 << std::endl;
     }
-    
+
+    // CONDITION 5: The user launches a single attack.
     if (attackers > 0 && attackers < 4) {
       std::vector<int> english_dice = battle::dice(attackers);
       std::vector<int> french_dice = battle::dice((attackers >= 2 && france->units > 1) ? 2 : 1);
