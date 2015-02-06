@@ -121,6 +121,7 @@ namespace battle
         return num_atk_dice;
       }
     }
+    return 0;
   }
 
   // Performs the actions required once a country has prevailed!
