@@ -1,20 +1,17 @@
-// Header for Continent
+#ifndef CONTINENT_H_
+#define CONTINENT_H_
 
-#ifndef CONTINENT_H
-#define CONTINENT_H
-
+#include <string>
 #include <iostream>
 #include <vector>
 #include <list>
 
-using namespace std;
-
 class Continent
 {
 private:
-		string continentName;
+  std::string continentName;
 public:
-	void setContinentName(string name)
+	void setContinentName(std::string name)
 	{
 		continentName = name;
 	}

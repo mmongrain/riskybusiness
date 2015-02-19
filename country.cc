@@ -1,97 +1,81 @@
 #include "country.h"
 
-using namespace std;
-
-
 // Declaration of the Countries available to be played, to be used in the adjacency list
-enum Countries
-{
-	Shire,
-	Minhiriath,
-	Enedwaith,
-	Mirkwood,
-	Erebor
-	
+enum Countries {
+  Shire,
+  Minhiriath,
+  Enedwaith,
+  Mirkwood,
+  Erebor
+  
 };
 
-struct GraphNode
-{
-	int destination;
-	struct GraphNode* next;
+struct GraphNode {
+  int destination;
+  struct GraphNode* next;
 
 };
 
-struct GraphList
-{
-	struct GraphNode *head;
+struct GraphList {
+  struct GraphNode *head;
 };
 
-class Graph
-{
+class Graph {
 private:
-	int size;
-	struct GraphList* array;
+  int size;
+  struct GraphList* array;
 
 public:
-	// Graph constructor
-	Graph(int size)
-	{
-		this->size = size;
-		array = new GraphList [size];
-		for(int i = 0; i < size; i++)
-			array[i].head = NULL;
-	}
+  // Graph constructor
+  Graph(int size) {
+    this->size = size;
+    array = new GraphList [size];
+    for(int i = 0; i < size; i++)
+    array[i].head = NULL;
+  }
 
-	// Creating new node
-	GraphNode* newGraphNode(int destination)
-	{
-		GraphNode* newNode = new GraphNode;
-		newNode->destination = destination;
-		newNode->next = NULL;
-		return newNode;
-	}
+  // Creating new node
+  GraphNode* NewGraphNode(int destination) {
+    GraphNode* new_node = new GraphNode;
+    new_node->destination = destination;
+    new_node->next = NULL;
+    return new_node;
+  }
 
-	// Add edge between nodes (country to country or cont. to cont.) to the map
-	void addEdge(int source, int destination)
-	{
-		GraphNode* newNode = newGraphNode(destination);
-		newNode->next = array[source].head;
-		array[source].head = newNode;
-		newNode = newGraphNode(source);
-		newNode->next = array[destination].head;
-		array[destination].head = newNode;
-	}
+  // Add edge between nodes (country to country or cont. to cont.) to the map
+  void AddEdge(int source, int destination) {
+    GraphNode* new_node = NewGraphNode(destination);
+    new_node->next = array[source].head;
+    array[source].head = new_node;
+    new_node = NewGraphNode(source);
+    new_node->next = array[destination].head;
+    array[destination].head = new_node;
+  }
 
-	// Print map of Countries
-	void printCountry()
-	{
-		for(int i = 0; i < size; i++)
-		{
-			GraphNode* ptr = array[i].head;
-			cout<<"\nAdjacency list of Country: " << i;
-			while(ptr)
-			{
-				cout<<"-> " <<ptr->destination;
-				ptr = ptr->next;
-			}
-			cout<< endl;
-		}
-	}
+  // Print map of Countries
+  void PrintCountry() {
+    for(int i = 0; i < size; i++) {
+      GraphNode* ptr = array[i].head;
+      std::cout<<"\nAdjacency list of Country: " << i;
+      while(ptr) {
+        std::cout << "-> " << ptr->destination;
+        ptr = ptr->next;
+      }
+      std::cout << endl;
+    }
+  }
 
-	// Print map of Continents
-	void printContinent()
-	{
-		for(int i = 0; i < size; i++)
-		{
-			GraphNode* ptr = array[i].head;
-			cout<<"\nAdjacency list of Continent: " << i;
-			while(ptr)
-			{
-				cout<<"-> " <<ptr->destination;
-				ptr = ptr->next;
-			}
-			cout<< endl;
-		}
-	}
+  // Print map of Continents
+  void PrintContinent() {
+    for(int i = 0; i < size; i++) {
+      GraphNode* ptr = array[i].head;
+      std::cout << "\nAdjacency list of Continent: " << i;
+      while(ptr) {
+        std::cout<<"-> " <<ptr->destination;
+        ptr = ptr->next;
+      }
+      std::cout<< endl;
+    }
+  }
 
 };

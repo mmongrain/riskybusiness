@@ -1,15 +1,18 @@
-#pragma once
+#ifndef PLAYER_H_
+#define PLAYER_H_
+
 class Player
 {
 public:
 	Player(int i);
 	~Player();
-	void playTurn();
+	void PlayTurn();
 
 private:
 	int id;
-	void reinforce();
-	void attack();
-	void move();
+	void Reinforce();
+	void Attack();
+	void Move();
 };
 
+#endif

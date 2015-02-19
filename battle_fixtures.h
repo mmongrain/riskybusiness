@@ -1,5 +1,5 @@
-#ifndef BATTLEFIXTURES_H
-#define BATTLEFIXTURES_H
+#ifndef BATTLE_FIXTURES_H_
+#define BATTLE_FIXTURES_H_
 
 namespace battle {
   class Country {

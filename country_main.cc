@@ -1,41 +1,37 @@
 #include "country.h"
 #include "continent.h"
-#include "country.cpp"
-#include "continent.cpp"
+#include "country.cc"
+#include "continent.cc"
 
-using namespace std;
-
-int main()
-{
+int main() {
 	// Create the Country graph and then add the edges between the Countries
 	Graph grcountry(5);
-	grcountry.addEdge(Shire,Minhiriath);
-	grcountry.addEdge(Shire,Erebor);
-	grcountry.addEdge(Minhiriath,Enedwaith);
-	grcountry.addEdge(Minhiriath,Mirkwood);
-	grcountry.addEdge(Minhiriath,Erebor);
-	grcountry.addEdge(Enedwaith,Mirkwood);
-	grcountry.addEdge(Mirkwood,Erebor);
+	grcountry.AddEdge(Shire,Minhiriath);
+	grcountry.AddEdge(Shire,Erebor);
+	grcountry.AddEdge(Minhiriath,Enedwaith);
+	grcountry.AddEdge(Minhiriath,Mirkwood);
+	grcountry.AddEdge(Minhiriath,Erebor);
+	grcountry.AddEdge(Enedwaith,Mirkwood);
+	grcountry.AddEdge(Mirkwood,Erebor);
 
-	grcountry.printCountry();
-
+	grcountry.PrintCountry();
 
 	// Create the continent graph and then add the edges between the Continents
 	Graph grcont(4);
-	grcont.addEdge(Eriador,Rhovanion);
-	grcont.addEdge(Rhovanion, Mordor);
-	grcont.addEdge(Rhovanion,Rhun);
+	grcont.AddEdge(Eriador,Rhovanion);
+	grcont.AddEdge(Rhovanion, Mordor);
+	grcont.AddEdge(Rhovanion,Rhun);
 
-	grcont.printContinent();
+	grcont.PrintContinent();
 
 	// Creates the country object, and sets the known attributes
 	Country shire;
-	shire.setCountryName("Shire");
-	shire.setContinent("Eriador");
+	shire.set_country_name("Shire");
+	shire.set_continent("Eriador");
 
 	// Creates the continent object, and sets its name
 	Continent eriador;
-	eriador.setContinentName("Eriador");
+	eriador.set_continent_name("Eriador");
 
 	cin.get();
 	return 0;

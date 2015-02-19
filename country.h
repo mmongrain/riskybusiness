@@ -1,44 +1,25 @@
-// Header file for Country
-
-#ifndef COUNTRY_H
-#define COUNTRY_H
+#ifndef COUNTRY_H_
+#define COUNTRY_H_
 
 #include <iostream>
 #include <vector>
 #include <list>
 
-using namespace std;
 
-class Country
-{
+class Country {
 private:
-	string countryName;
-	string continent;
-	string owner;
-	int armySize;
+  std::string country_name;
+  std::string continent;
+  std::string owner;
+  int army_size;
 
 public:
-	void setContinent(string cont)
-	{
-		continent = cont;
-	}
-	void setCountryName(string name)
-	{
-		countryName = name;
-	}
-	void setOwner(string Owner)
-	{
-		//To be determined by the random generator
-	}
-	void setArmy(int size)
-	{
-		//To be determined by the Owner's armies
-	}
-	string getCountryName()
-	{
-		return countryName;
-	}
-	Country getCountryByName(string name);
+  void set_continent(std::string cont) { continent = cont; }
+  void set_country_name(std::string name) { countryName = name; }
+  void set_owner(std::string owner) {}
+  void set_army(int size) {}
+  string get_country_name() { return country_name; }
+  Country GetCountryByName(std::string name);
 };
 
 #endif

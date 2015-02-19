@@ -1,6 +1,6 @@
-#include "battlefixtures.h"
+#include "battle_fixtures.h"
 #include "battle.h"
-#include <stdlib.h>
+#include <stdlib.h> // srand()
 #include <time.h> // time()
 #include <iostream>
 #include <vector>
@@ -46,12 +46,14 @@ int main () {
       std::cin >> imperialists;
       imperialists -= winners;
       std::string message;
-      if (victory(england, france, winners, imperialists, message)) {
+      if (Victory(england, france, winners, imperialists, message)) {
         std::cout << message << std::endl;
         std::cout << "After the dust settles, England has " << england->units
                   << " remaining, and the English army has installed "
                   << france->units << " battalions in Paris." << std::endl;
-      } else { std::cout << message << std::endl; } // If victory is not valid
+      } else { 
+        std::cout << message << std::endl; 
+      } 
       break;
     }
 
@@ -66,7 +68,7 @@ int main () {
 
     // CONDITION 4: The user launches an all-out attack.
     if (attackers == 4) {
-      winners = all_in_attack(england, france);
+      winners = AllInAttack(england, france);
       std::cout << "The English army launches a devastating, all-in attack!!"
                 << std::endl << "After the dust settles, there are "
                 << england->units << " English battalions and "
@@ -76,15 +78,15 @@ int main () {
 
     // CONDITION 5: The user launches a single attack.
     if (attackers > 0 && attackers < 4) {
-      std::vector<int> english_dice = battle::dice(attackers);
-      std::vector<int> french_dice = battle::dice((attackers >= 2 && france->units > 1) ? 2 : 1);
+      std::vector<int> english_dice = battle::Dice(attackers);
+      std::vector<int> french_dice = battle::Dice((attackers >= 2 && france->units > 1) ? 2 : 1);
       std::cout << "The English army, numbering " << england->units
                 << ", launches an attack on the French army, numbering "
                 << france->units << "." << std::endl;
       std::string message; 
-      if (battle::attack_is_valid(england, france, english_dice, french_dice, message)) {
+      if (battle::AttackIsValid(england, france, english_dice, french_dice, message)) {
         std::cout << message << std::endl;
-        battle::attack(england, france, english_dice, french_dice);
+        battle::Attack(england, france, english_dice, french_dice);
         std::cout << "The English army rolls ";
         for (int i = 0; i < english_dice.size(); i++) {
         std::cout << english_dice[i] << " ";
@@ -97,7 +99,9 @@ int main () {
                   << england->units << " and the French army now numbers "
                   << france->units << "." << std::endl;
 
-      } else { std::cout << message << std::endl; } // If !attack_is_valid 
+      } else { 
+        std::cout << message << std::endl; 
+      }  
       if (france->units == 0) { 
         winners = attackers;
       }

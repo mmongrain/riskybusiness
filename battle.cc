@@ -10,7 +10,7 @@ namespace battle
   // Tests whether an attack is valid.
   // Returns verbose error messages as std::string "out", which also serve to
   // clarify the logic of each condition.
-  bool attack_is_valid(Country* attacking, Country* defending, std::vector<int> atk_dice, std::vector<int> def_dice, std::string &out)
+  bool AttackIsValid(Country* attacking, Country* defending, std::vector<int> atk_dice, std::vector<int> def_dice, std::string &out)
   {
     int current_player = 1;
     if (attacking->owner == defending->owner) {
@@ -34,7 +34,7 @@ namespace battle
     } else if (def_dice.size() > atk_dice.size()) {
       out = "Cannot be more defenders than attackers!";
       return false;
-    } else if (!Country::are_adjacent(attacking, defending)) {
+    } else if (!Country::AreAdjacent(attacking, defending)) {
       out = "Those two countries are not adjacent!";
       return false;
     } else {
@@ -47,7 +47,7 @@ namespace battle
   // Returns a vector of up to three ints, sorted in decreasing numerical order
   // for convenience to the attack() method.
   // Deals with invalid input by returning a vector of -1.
-  std::vector<int> dice(int num_dice)
+  std::vector<int> Dice(int num_dice)
   {
     std::vector<int> out;
     if (num_dice < 1 || num_dice > 3) {
@@ -68,12 +68,12 @@ namespace battle
   }
 
   // Stages a single attack.
-  // Returns -1 on error (call attack_is_valid() for verbose error reporting),
+  // Returns -1 on error (call AttackIsValid() for verbose error reporting),
   // 1 if the attacking country wins, and 0 otherwise.
-  int attack (Country* attacking, Country* defending, std::vector<int> atk_dice, std::vector<int> def_dice)
+  int Attack (Country* attacking, Country* defending, std::vector<int> atk_dice, std::vector<int> def_dice)
   {
     std::string message;
-    if (!attack_is_valid(attacking, defending, atk_dice, def_dice, message)) {
+    if (!AttackIsValid(attacking, defending, atk_dice, def_dice, message)) {
       return -1;
     }
     for (int i = 0; i < def_dice.size() && i < atk_dice.size(); i++)
@@ -94,7 +94,7 @@ namespace battle
 
   // Triggers an all-out attack, using the maximum of dice on both sides
   // until a victor is determined.
-  int all_in_attack (Country* attacking, Country* defending) 
+  int AllInAttack (Country* attacking, Country* defending) 
   {
     while (attacking->units > 1 && defending->units > 0) {
       // If there are 2 or more attacking dice, roll 2 defending dice,
@@ -109,7 +109,7 @@ namespace battle
       std::vector<int> atk_dice = dice(num_atk_dice);
       std::vector<int> def_dice = dice(num_def_dice);
       std::string message;
-      if (attack_is_valid(attacking, defending, atk_dice, def_dice, message)) {
+      if (AttackIsValid(attacking, defending, atk_dice, def_dice, message)) {
         attack(attacking, defending, atk_dice, def_dice);
         std::cout << message << std::endl;
       } else { 
@@ -127,10 +127,10 @@ namespace battle
   // Performs the actions required once a country has prevailed!
   // Most notably, by transferring the appropriate number of armies to the
   // newly conquered country.
-  // Actually determining the victory condition (i.e., that there are no units
+  // Actually determining the Victory condition (i.e., that there are no units
   // remaining in the defending country and at least one unit remaining in the
   // attacking country) is left to the main() method.
-  int victory (Country* attacking, Country* defending, int dice, int num_units, std::string &out) 
+  int Victory (Country* attacking, Country* defending, int dice, int num_units, std::string &out) 
   {
     if (defending->units > 0) {
       out = "Conquered country is not empty!";

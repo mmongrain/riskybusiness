@@ -5,28 +5,24 @@
 #include <cstdlib>
 #include "country.h"
 
-struct GraphNode
-{
+struct GraphNode {
 	int destination;
 	struct GraphNode* next;
-
 };
 
-struct GraphList
-{
+struct GraphList {
 	struct GraphNode *head;
 };
 
-class Graph
-{
+class Graph {
 private:
 	struct GraphList* array;
 	int size;
 public:
-	void makeGraph();
-	void addAdjacent(Country a, Country b);
+	void MakeGraph();
+	void AddAdjacent(Country a, Country b);
 	Graph(int size);
-	GraphNode* newGraphNode(Country destination);
-	void addEdge(Country source, Country destination);
-	void printGraph();
+	GraphNode* NewGraphNode(Country destination);
+	void AddEdge(Country source, Country destination);
+	void PrintGraph();
 };

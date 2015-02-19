@@ -1,5 +1,5 @@
-#include "Game.h"
-#include "Player.h"
+#include "game.h"
+#include "player.h"
 #include <iostream>
 
 Game::Game()
@@ -7,21 +7,21 @@ Game::Game()
 	game_over = false;
 }
 
-void Game::playGame()
+void Game::PlayGame()
 {
-	startup();
-	mainPhase();
+	Startup();
+	MainPhase();
 
 	std::cout << "\nGame over. GGWP!\n" << std::endl;
 }
 
-void Game::startup()
+void Game::Startup()
 {
 	std::cout << "===== STARTUP PHASE =====\n\n";
 	std::cout << "Please enter a number of players between 2 and 6:\n";	
 
 	// verify input
-	while (!(std::cin >> numOfPlayers) || numOfPlayers < 2 || numOfPlayers > 6) 
+	while (!(std::cin >> num_players) || num_players < 2 || num_players > 6) 
 	{	
 		std::cout << "Wrong input! Please enter a number of players between 2 and 6:\n";
 		std::cin.clear();
@@ -29,27 +29,27 @@ void Game::startup()
 	}
 
 	// creating player objects
-	Game::players = new Player* [numOfPlayers];
-	for (int i = 0; i < numOfPlayers; i++){
+	Game::players = new Player* [num_players];
+	for (int i = 0; i < num_players; i++){
 		players[i] = new Player(i+1);
 	}	
 
-	assignCountries();
+	AssignCountries();
 }
 
-void Game::assignCountries()
+void Game::AssignCountries()
 {
 	std::cout << "Countries have been assigned" << std::endl;
 }
 
-void Game::mainPhase()
+void Game::MainPhase()
 {
 	std::cout << "\n===== MAIN PLAY PHASE =====\n";
 	while (game_over == false)
 	{
-		for (int i = 0; i < numOfPlayers; i++) // round-robin loop over the players
+		for (int i = 0; i < num_players; i++) // round-robin loop over the players
 		{
-			players[i]->playTurn();
+			players[i]->PlayTurn();
 		}
 
 		// END OF GAME
@@ -70,5 +70,5 @@ void Game::mainPhase()
 Game::~Game()
 {
 	delete[] players;
-	players = NULL;
+	players = 0;
 }

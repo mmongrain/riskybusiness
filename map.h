@@ -1,21 +1,11 @@
-//
-//  Map.h
-//  Driver
-//
-//  Created by Leonard Nguyen on 2015-02-05.
-//  Copyright (c) 2015 Leonard Nguyen. All rights reserved.
-//
-
-#ifndef __Driver__Map__
-#define __Driver__Map__
+#ifndef MAP_H_ 
+#define MAP_H_ 
 
 #include <stdio.h>
 
 class Map {
 public:
     Map();
-    
-
 };
 
-#endif /* defined(__Driver__Map__) */
+#endif 

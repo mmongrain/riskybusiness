@@ -19,7 +19,7 @@ namespace battle {
 
   Country::~Country () {};
 
-  bool Country::are_adjacent (Country* attacking, Country* defending) {
+  bool Country::AreAdjacent (Country* attacking, Country* defending) {
     if (attacking->owner != defending->owner) {
       return true;
     } else return false;

@@ -1,9 +1,7 @@
 #include "continent.h"
 
-using namespace std;
 
 // In further iterations of the game, Continent will have more attributes/tasks
-
 
 // Declaration of the Continents
 enum Continents

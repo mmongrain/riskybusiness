@@ -1,13 +1,5 @@
-//
-//  Map.cpp
-//  Driver
-//
-//  Created by Leonard Nguyen on 2015-02-05.
-//  Copyright (c) 2015 Leonard Nguyen. All rights reserved.
-//
-
-#include "Map.h"
-#include "Country.h"
+#include "map.h"
+#include "country.h"
 #include <string>
 #include <iostream>
 
@@ -20,7 +12,6 @@ Map::Map() {
         map[i] = new std::string[15];
         for (int j=0; j<15; j++) {
             //map [i][j]= The data coming from somewhere
-            
         }
     }
 }

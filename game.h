@@ -6,14 +6,14 @@ public:
 	Game();
 	~Game();
 
-	void playGame();
+	void PlayGame();
 
 private:
 	Player** players;
 	bool game_over;
-	int numOfPlayers;
-	void startup();
-	void Game::mainPhase();
-	void assignCountries();
+	int num_of_players;
+	void Startup();
+	void MainPhase();
+	void AssignCountries();
 };
 
