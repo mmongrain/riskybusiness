@@ -1,76 +1,44 @@
+// Header file for Country
+
+#ifndef COUNTRY_H
+#define COUNTRY_H
+
 #include <iostream>
-#include <string>
 #include <vector>
-#include "continents.h"
+#include <list>
 
 using namespace std;
 
 class Country
 {
 private:
-	int x_coord;
-	int y_coord;
-	int army_size;
-	int id_num;
-
-	string country_name;
+	string countryName;
+	string continent;
 	string owner;
-	Continents continent; //need to include continents file
-
-	vector<Country> adjacent_country;
-	vector<Country> country_vector;
+	int armySize;
 
 public:
-	Country(){x_coord=0; y_coord=0; country_name="country"; id_num=0;} 
-
-	int getX_Coord()
+	void setContinent(string cont)
 	{
-		return x_coord;
+		continent = cont;
 	}
-	int getY_Coord()
+	void setCountryName(string name)
 	{
-		return y_coord;
+		countryName = name;
 	}
-	int getArmy_Size()
+	void setOwner(string Owner)
 	{
-		return army_size;
+		//To be determined by the random generator
 	}
-	string getCountry_Name()
+	void setArmy(int size)
 	{
-		return country_name;
+		//To be determined by the Owner's armies
 	}
-	string getOwner()
+	string getCountryName()
 	{
-		return owner;
+		return countryName;
 	}
-	Continents getContinent()
-	{
-		return continent;
-	}
-
-	//setters
-	void setX_Coord(int x)
-	{
-		x_coord = x;
-	}
-	void setY_Coord(int y)
-	{
-		y_coord = y;
-	}
-	void setArmy_Size(int size)
-	{
-		army_size = size;
-	}
-	void setCountry_Name(string name)
-	{
-		country_name = name;
-	}
-	void setOwner(string own)
-	{
-		owner = own;
-	}
-
-	//Figure out c++ way
-	void addAdjacentCountry(Country adjacentCountry);
-
+	Country getCountryByName(string name);
 };
+
+#endif
