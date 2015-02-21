@@ -11,7 +11,7 @@ class Continent
 private:
   std::string continentName;
 public:
-	void setContinentName(std::string name)
+	void set_continent_name(std::string name)
 	{
 		continentName = name;
 	}

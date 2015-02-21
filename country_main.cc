@@ -33,6 +33,6 @@ int main() {
 	Continent eriador;
 	eriador.set_continent_name("Eriador");
 
-	cin.get();
+	std::cin.get();
 	return 0;
 }
