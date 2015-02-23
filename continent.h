@@ -10,6 +10,7 @@ class Continent
 {
 private:
   std::string continentName;
+  std::vector<Territory> territories;
 public:
 	void setContinentName(std::string name)
 	{

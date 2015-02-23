@@ -1,7 +1,8 @@
-#pragma once
-#include "Player.h"
-class Game
-{
+#ifndef GAME_H_
+#define GAME_H_
+
+#include "player.h"
+class Game {
 public:
 	Game();
 	~Game();
@@ -11,9 +12,10 @@ public:
 private:
 	Player** players;
 	bool game_over;
-	int num_of_players;
+	int num_players;
 	void Startup();
 	void MainPhase();
 	void AssignCountries();
 };
 
+#endif

@@ -2,8 +2,7 @@
 #include "player.h"
 #include <iostream>
 
-Game::Game()
-{	
+Game::Game() {	
 	game_over = false;
 }
 
