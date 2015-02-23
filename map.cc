@@ -1,103 +1,25 @@
+#include "map.h"
+
 #include <string>
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <sstream>
 
-class Map { 
-
-  private:
-
-    struct MapInfo {
-      std::string author;
-      std::string image;
-      bool wrap;
-      char scroll;
-      bool warn;
-    } map_info;
-
-  public:
-
-    struct Territory {
-      friend class Map;
-      private:
-        std::string name;
-        int x;
-        int y;
-        std::string continent;
-        std::vector<std::string> adjacency_list;
-      public:
-        std::string get_name() { return name; }
-        int get_x() { return x; }
-        int get_y() { return y; }
-        std::string get_continent() { return continent; }
-        std::vector<std::string> get_adjacency_list() { return adjacency_list; }
-        std::string ToString();
-    };
-  
-    struct Continent {
-      friend class Map;
-      private:
-        std::string name;
-        int victory_size;
-        std::vector<Territory> territories;
-      public:
-        std::string get_name() { return name; }
-        int get_victory_size() { return victory_size; }
-        std::vector<Territory> get_territories() { return territories; }
-    };
-
-  private:
-
-    std::vector<Continent> continents;
-    std::vector<Territory> territories;
-
-    void LoadMap(char* filename);
-    void ParseMapInfo(const std::vector<std::string> &section_map);
-    void ParseContinentInfo(const std::vector<std::string> &section_continents);
-    void ParseTerritoryInfo(const std::vector<std::string> &section_continents);
-
-  public:
-
-    Map();
-    Map(char* filename);
-
-    std::string get_author() { return map_info.author; }
-    std::string get_image()  { return map_info.image; }
-    bool get_wrap()          { return map_info.wrap; }
-    char get_scroll()        { return map_info.scroll; }
-    bool get_warn()          { return map_info.warn; }
-
-    std::vector<Continent> get_continents()  { return continents; }
-    std::vector<Territory> get_territories() { return territories; }
-};
-
-int main () {
-  char filename[100] = "World (small).map";
-  Map map(filename);
-  std::cout << "author: " << map.get_author() 
-            << ", image: " << map.get_image()
-            << ", wrap: " << map.get_wrap() 
-            << ", scroll: " << map.get_scroll()
-            << ", warn: " << map.get_warn() << std::endl; 
-  std::vector<Map::Continent> continents = map.get_continents();
-  std::vector<Map::Territory> territories = map.get_territories();
-  for (int i = 0; i < continents.size(); i++) {
-    std::cout << "name: " << continents[i].get_name()
-              << ", victory_size: " << continents[i].get_victory_size() << std::endl;
-  }
-  for (int i =0; i < territories.size(); i++) {
-    std::cout << territories[i].ToString() << std::endl;
-  }
-  return 0;
+std::string Map::Continent::ToString() {
+  std::string out = "";
+  out = get_name() + "=" + std::to_string(get_victory_size());
+  return out;
 }
 
 std::string Map::Territory::ToString() {
-  std::string out = "name:" + name + ", x:" + std::to_string(x) + ", y:" + 
-                    std::to_string(y) + ", continent:" + continent + 
-                    ", adjacency list:";
+  std::string out = name + "," + std::to_string(x) + "," + std::to_string(y)
+                    + "," + continent + ",";
   for (int i = 0; i < adjacency_list.size(); i ++) {
-    out = out + adjacency_list[i] + ", ";
+    out = out + adjacency_list[i]; 
+    if (i < adjacency_list.size() - 1) {
+      out = out + ",";
+    }
   }
   return out;
 }
@@ -105,10 +27,10 @@ std::string Map::Territory::ToString() {
 Map::Map() {}
 
 Map::Map(char* filename) {
-  LoadMap(filename);
+  Load(filename);
 }
 
-void Map::LoadMap(char* filename) {
+void Map::Load(char* filename) {
   std::ifstream file(filename);
   std::vector<std::string> section_map;
   std::vector<std::string> section_continents;
@@ -144,8 +66,42 @@ void Map::LoadMap(char* filename) {
   ParseTerritoryInfo(section_territories);
 } 
 
+void Map::Save(char *filename) {
+  std::ofstream out(filename);
+  out << "[Map]\nauthor=" << get_author() << "\nwarn="; 
+  (get_warn()) ? out << "yes\nimage=" : out << "no\nimage="; 
+  out << get_image() << "\nwrap=";
+  (get_wrap()) ? out << "yes\nscroll=" : out << "no\nscroll=";
+  std::string scroll;
+  switch (get_scroll()) {
+    case 'h': scroll = "horizontal";
+              break;
+    case 'v': scroll = "vertical";
+              break;
+    default:  scroll = "none";
+              break;
+  }
+  out << scroll << "\n\n[Continents]\n"; 
+  for (int i = 0; i < continents.size(); i++) {
+    out << continents[i].ToString() << std::endl;
+  }
+  out << "\n[Territories]\n";
+  for (int i = 0; i < territories.size(); i++) {
+    out << territories[i].ToString() << std::endl;
+  }
+}
+
 void Map::ParseMapInfo(const std::vector<std::string> &section_map) {
   for (int i = 0; i < section_map.size(); i++) {
+    /* TODO: Fix the clearing for all three Parse methods
+     * right now the clear is happening at the end of method execution,
+     * idk why
+     * Clear out the existing struct
+    map_info.author = "";
+    map_info.image = "";
+    map_info.wrap = true;
+    map_info.scroll = 'n';
+    map_info.warn = true; */
     std::size_t delim = section_map[i].find("=");
     /**
      * WARNING: Possible portability problem 
@@ -158,7 +114,6 @@ void Map::ParseMapInfo(const std::vector<std::string> &section_map) {
     int end_of_string = section_map[i].length() - delim - 2;
     std::string field = section_map[i].substr(0, delim);
     std::string value = section_map[i].substr(delim + 1, end_of_string); 
-    // std::cout << i << ". field: " << field << ", value: " << value << std::endl;
 
     // Can't use switch because std::string isn't a primitive. Bummer
     // Convert field to an enum when you get the chance
@@ -188,6 +143,7 @@ void Map::ParseMapInfo(const std::vector<std::string> &section_map) {
 
 void Map::ParseContinentInfo(const std::vector<std::string> &section_continents) {
   for (int i = 0; i < section_continents.size(); i++) {
+    // continents.clear();
     std::size_t delim = section_continents[i].find("=");
     Continent continent;
     continent.name = section_continents[i].substr(0, delim);
@@ -200,6 +156,7 @@ void Map::ParseContinentInfo(const std::vector<std::string> &section_continents)
 
 void Map::ParseTerritoryInfo(const std::vector<std::string> &section_territories) {
   for (int i = 0; i < section_territories.size(); i++) {
+    // territories.clear();
     Territory temp;
     std::vector<std::string> territory;
     std::stringstream input(section_territories[i]);
