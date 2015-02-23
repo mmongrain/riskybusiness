@@ -6,6 +6,7 @@
 #include <fstream>
 #include <vector>
 #include <sstream>
+#include "player.h"
 
 class Map { 
 
@@ -30,7 +31,7 @@ class Map {
         Player owner;
         int num_units;
         std::string continent;
-        std::vector<std::string> adjacency_list;
+        std::vector<Territory> adjacency_list;
       public:
         std::string get_name() { return name; }
         int get_x() { return x; }

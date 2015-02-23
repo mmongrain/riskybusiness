@@ -3,7 +3,7 @@
 #include <algorithm> // sort()
 #include <vector>
 #include "battle.h"
-#include "battlefixtures.h"
+#include "battle_fixtures.h"
 
 namespace battle
 {

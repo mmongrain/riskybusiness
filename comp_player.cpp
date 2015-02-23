@@ -1,5 +1,6 @@
 #include "comp_player.h"
 #include "player.h"
+#include "strategy.h"
 #include <iostream>
 
 void Player::PlayTurn() {
@@ -11,10 +12,11 @@ void Player::PlayTurn() {
 
 void Player::Reinforce() {
 	Player::Reinforce(); 
-	std::cout << " (Computer)" << std::endl;
+	std::cout << "Player " << id << " reinforced (computer)" << std::endl;
 }
 
 void Player::Attack() {
+	CompPlayer::strategy->attack();  // doesn't work... gotta figure out why
 	std::cout << "Player " << id << " attacked (computer)" << std::endl;
 }
 

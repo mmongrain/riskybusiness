@@ -1,5 +1,6 @@
 #include "player.h"
 #include <iostream>
+#include <vector>
 
 
 Player::Player(int i) {
