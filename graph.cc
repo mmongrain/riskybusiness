@@ -13,6 +13,7 @@ Graph::Graph(int size) {
 //Creating new node
 GraphNode* NewGraphNode(Country destination) {
 	// Is it possible to have a Country as a Node and not an int? Why is destination not working
+		// -> in the definition of GraphNode (in country.cc), destination is an integer, so it's expecting an int, not a Country object
 	GraphNode* new_node = new GraphNode;
 	new_node->destination = destination;
 	new_node->next = NULL;
@@ -38,12 +39,12 @@ void PrintGraph() {
 			std::cout<<"-> " <<ptr->destination;
 			ptr = ptr->next;
 		}
-		std::cout<< endl;
+		std::cout<< std::endl;
 	}
 }
 
 void MakeGraph() {
-	ifstream input_file;
+	std::ifstream input_file;
 	Country country_temp;
 
 	//adds countries into country_vector

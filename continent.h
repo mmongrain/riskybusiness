@@ -12,7 +12,7 @@ private:
   std::string continentName;
   std::vector<Territory> territories;
 public:
-	void setContinentName(std::string name)
+	void set_continent_name(std::string name)
 	{
 		continentName = name;
 	}

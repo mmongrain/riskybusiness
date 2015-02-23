@@ -15,10 +15,10 @@ private:
 
 public:
   void set_continent(std::string cont) { continent = cont; }
-  void set_country_name(std::string name) { countryName = name; }
+  void set_country_name(std::string name) { country_name = name; }
   void set_owner(std::string owner) {}
   void set_army(int size) {}
-  string get_country_name() { return country_name; }
+  std::string get_country_name() { return country_name; }
   Country GetCountryByName(std::string name);
 };
 

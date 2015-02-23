@@ -10,7 +10,7 @@ enum Countries {
   
 };
 
-struct GraphNode {
+struct GraphNode { // GraphNode, GraphList and Graph are defined both in graph.h and in country.cc
   int destination;
   struct GraphNode* next;
 
@@ -20,7 +20,7 @@ struct GraphList {
   struct GraphNode *head;
 };
 
-class Graph {
+class Graph { 
 private:
   int size;
   struct GraphList* array;
@@ -61,7 +61,7 @@ public:
         std::cout << "-> " << ptr->destination;
         ptr = ptr->next;
       }
-      std::cout << endl;
+      std::cout << std::endl;
     }
   }
 
@@ -74,7 +74,7 @@ public:
         std::cout<<"-> " <<ptr->destination;
         ptr = ptr->next;
       }
-      std::cout<< endl;
+      std::cout<< std::endl;
     }
   }
 

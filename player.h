@@ -6,13 +6,15 @@ class Player
 public:
 	Player(int i);
 	~Player();
-	void PlayTurn();
+	virtual void PlayTurn();
 
 private:
 	int id;
-	void Reinforce();
-	void Attack();
-	void Move();
+
+protected:
+	virtual void Reinforce();
+	virtual void Attack();
+	virtual void Move();
 };
 
 #endif
