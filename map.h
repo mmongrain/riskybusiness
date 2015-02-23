@@ -56,11 +56,11 @@ class Map {
       friend class Map;
       private:
         std::string name;
-        int victory_size;
+        int victory_value;
         std::vector<Territory> territories;
       public:
         std::string get_name() { return name; }
-        int get_victory_size() { return victory_size; }
+        int get_victory_value() { return victory_value; }
         std::vector<Territory> get_territories() { return territories; }
         std::string ToString();
     };
@@ -82,10 +82,10 @@ class Map {
     void Save(char* filename);
 
     std::string get_author() { return map_info.author; }
-    std::string get_image()  { return map_info.image; }
-    bool get_wrap()          { return map_info.wrap; }
+    std::string get_image()  { return map_info.image;  }
+    bool get_wrap()          { return map_info.wrap;   }
     char get_scroll()        { return map_info.scroll; }
-    bool get_warn()          { return map_info.warn; }
+    bool get_warn()          { return map_info.warn;   }
 
     std::vector<Continent> get_continents()  { return continents; }
     std::vector<Territory> get_territories() { return territories; }

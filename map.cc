@@ -8,7 +8,7 @@
 
 std::string Map::Continent::ToString() {
   std::string out = "";
-  out = get_name() + "=" + std::to_string(get_victory_size());
+  out = get_name() + "=" + std::to_string(get_victory_value());
   return out;
 }
 
@@ -95,7 +95,7 @@ void Map::ParseMapInfo(const std::vector<std::string> &section_map) {
   for (int i = 0; i < section_map.size(); i++) {
     /* TODO: Fix the clearing for all three Parse methods
      * right now the clear is happening at the end of method execution,
-     * idk why
+     * which obviously borks everything, idk why
      * Clear out the existing struct
     map_info.author = "";
     map_info.image = "";
@@ -115,7 +115,6 @@ void Map::ParseMapInfo(const std::vector<std::string> &section_map) {
     std::string field = section_map[i].substr(0, delim);
     std::string value = section_map[i].substr(delim + 1, end_of_string); 
 
-    // Can't use switch because std::string isn't a primitive. Bummer
     // Convert field to an enum when you get the chance
     if (field.compare("author") == 0) { // "If strings are identical" 
       map_info.author = value;
@@ -149,7 +148,7 @@ void Map::ParseContinentInfo(const std::vector<std::string> &section_continents)
     continent.name = section_continents[i].substr(0, delim);
     // stoi is available in c++11, make sure your compiler supports, it converts int to str
     // compilation flag is -std=c++11
-    continent.victory_size = std::stoi(section_continents[i].substr(delim + 1));
+    continent.victory_value = std::stoi(section_continents[i].substr(delim + 1));
     continents.push_back(continent);
   }
 }
