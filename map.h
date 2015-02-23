@@ -27,12 +27,26 @@ class Map {
         std::string name;
         int x;
         int y;
+        Player owner;
+        int num_units;
         std::string continent;
         std::vector<std::string> adjacency_list;
       public:
         std::string get_name() { return name; }
         int get_x() { return x; }
         int get_y() { return y; }
+        Player get_owner() { return owner; }
+        Player set_owner(Player owner) { 
+          Player temp = this->owner;
+          this->owner = owner; 
+          return temp;
+        }
+        int get_num_units() { return num_units; }
+        int set_num_units(int num_units) {
+          int temp = this->num_units;
+          this->num_units = num_units;
+          return temp;
+        }
         std::string get_continent() { return continent; }
         std::vector<std::string> get_adjacency_list() { return adjacency_list; }
         std::string ToString();
