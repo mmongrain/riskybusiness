@@ -64,6 +64,7 @@ void Map::Load(char* filename) {
   ParseMapInfo(section_map);
   ParseContinentInfo(section_continents);
   ParseTerritoryInfo(section_territories);
+  ReconcileTerritories();
 } 
 
 void Map::Save(char *filename) {
@@ -175,10 +176,26 @@ void Map::ParseTerritoryInfo(const std::vector<std::string> &section_territories
     temp.y = std::stoi(territory[2]);
     temp.continent = territory[3];
     for (int i = 4; i < territory.size(); i++) {
+      Territory land;
+      land.name = territory[i];
       temp.adjacency_list.push_back(territory[i]);
     }
     territories.push_back(temp);
   }
 }
 
-    
+void Map::ReconcileTerritories() {
+  /**
+   * TODO: Write a better algorithm than this O(n^3) piece of junk
+   * if that's even possible lol
+   **/
+  for (int i = 0; i < territories.size(); i++) {
+    for (int j = 0; i < territories[i].adjacency_list.size(); i++) {
+      for (int k = 0; k < territories.size(); i++) {
+        if (territories[i].adjacency_list[j].name.compare(territories[k].name) == 0) {
+          territories[i].adjacency_list[j] = territories[k];
+        }
+      }
+    }
+  }
+}

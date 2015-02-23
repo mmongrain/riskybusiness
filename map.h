@@ -74,6 +74,7 @@ class Map {
     void ParseMapInfo(const std::vector<std::string> &section_map);
     void ParseContinentInfo(const std::vector<std::string> &section_continents);
     void ParseTerritoryInfo(const std::vector<std::string> &section_continents);
+    void ReconcileTerritories();
 
   public:
 
