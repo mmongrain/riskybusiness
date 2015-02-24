@@ -1,4 +1,5 @@
-#pragma once
+#ifndef PLAYER_H_
+#define PLAYER_H_
 #include "map.h"
 #include <vector>
 
@@ -14,9 +15,9 @@ public:
 
 protected:
 	int id;
-	virtual void Reinforce();
-	virtual void Attack();
-	virtual void Move();
+	virtual void Reinforce() = 0;
+	virtual void Attack() = 0;
+	virtual void Move() = 0;
 };
 
-
+#endif

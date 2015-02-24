@@ -46,7 +46,7 @@ int main () {
       std::cin >> imperialists;
       imperialists -= winners;
       std::string message;
-      if (Victory(england, france, winners, imperialists, message)) {
+      if (victory(england, france, winners, imperialists, message)) {
         std::cout << message << std::endl;
         std::cout << "After the dust settles, England has " << england->units
                   << " remaining, and the English army has installed "
@@ -68,7 +68,7 @@ int main () {
 
     // CONDITION 4: The user launches an all-out attack.
     if (attackers == 4) {
-      winners = AllInAttack(england, france);
+      winners = all_in_attack(england, france);
       std::cout << "The English army launches a devastating, all-in attack!!"
                 << std::endl << "After the dust settles, there are "
                 << england->units << " English battalions and "
