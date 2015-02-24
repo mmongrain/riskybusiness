@@ -6,7 +6,6 @@
 #include <fstream>
 #include <vector>
 #include <sstream>
-#include "player.h"
 
 class Map { 
 
@@ -28,17 +27,17 @@ class Map {
         std::string name;
         int x;
         int y;
-        Player owner;
+        int owner;
         int num_units;
         std::string continent;
-        std::vector<Territory> adjacency_list;
+        std::vector<Territory*> adjacency_list; 
       public:
         std::string get_name() { return name; }
         int get_x() { return x; }
         int get_y() { return y; }
-        Player get_owner() { return owner; }
-        Player set_owner(Player owner) { 
-          Player temp = this->owner;
+        int get_owner() { return owner; }
+        int set_owner(int owner) { 
+          int temp = this->owner;
           this->owner = owner; 
           return temp;
         }
@@ -49,7 +48,7 @@ class Map {
           return temp;
         }
         std::string get_continent() { return continent; }
-        std::vector<std::string> get_adjacency_list() { return adjacency_list; }
+        std::vector<Territory*> get_adjacency_list() { return adjacency_list; }
         std::string ToString();
     };
   

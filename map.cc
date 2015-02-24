@@ -1,5 +1,4 @@
 #include "map.h"
-
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -15,8 +14,8 @@ std::string Map::Continent::ToString() {
 std::string Map::Territory::ToString() {
   std::string out = name + "," + std::to_string(x) + "," + std::to_string(y)
                     + "," + continent + ",";
-  for (int i = 0; i < adjacency_list.size(); i ++) {
-    out = out + adjacency_list[i]; 
+  for (unsigned int i = 0; i < adjacency_list.size(); i ++) {
+    out = out + adjacency_list[i]->ToString(); 
     if (i < adjacency_list.size() - 1) {
       out = out + ",";
     }
@@ -83,17 +82,17 @@ void Map::Save(char *filename) {
               break;
   }
   out << scroll << "\n\n[Continents]\n"; 
-  for (int i = 0; i < continents.size(); i++) {
+  for (unsigned int i = 0; i < continents.size(); i++) {
     out << continents[i].ToString() << std::endl;
   }
   out << "\n[Territories]\n";
-  for (int i = 0; i < territories.size(); i++) {
+  for (unsigned int i = 0; i < territories.size(); i++) {
     out << territories[i].ToString() << std::endl;
   }
 }
 
 void Map::ParseMapInfo(const std::vector<std::string> &section_map) {
-  for (int i = 0; i < section_map.size(); i++) {
+  for (unsigned int i = 0; i < section_map.size(); i++) {
     /* TODO: Fix the clearing for all three Parse methods
      * right now the clear is happening at the end of method execution,
      * which obviously borks everything, idk why
@@ -142,7 +141,7 @@ void Map::ParseMapInfo(const std::vector<std::string> &section_map) {
 }
 
 void Map::ParseContinentInfo(const std::vector<std::string> &section_continents) {
-  for (int i = 0; i < section_continents.size(); i++) {
+  for (unsigned int i = 0; i < section_continents.size(); i++) {
     // continents.clear();
     std::size_t delim = section_continents[i].find("=");
     Continent continent;
@@ -155,7 +154,7 @@ void Map::ParseContinentInfo(const std::vector<std::string> &section_continents)
 }
 
 void Map::ParseTerritoryInfo(const std::vector<std::string> &section_territories) {
-  for (int i = 0; i < section_territories.size(); i++) {
+  for (unsigned int i = 0; i < section_territories.size(); i++) {
     // territories.clear();
     Territory temp;
     std::vector<std::string> territory;
@@ -175,10 +174,10 @@ void Map::ParseTerritoryInfo(const std::vector<std::string> &section_territories
     temp.x = std::stoi(territory[1]);
     temp.y = std::stoi(territory[2]);
     temp.continent = territory[3];
-    for (int i = 4; i < territory.size(); i++) {
-      Territory land;
-      land.name = territory[i];
-      temp.adjacency_list.push_back(territory[i]);
+    for (unsigned int i = 4; i < territory.size(); i++) {
+      Territory *land;
+      land->name = territory[i];
+      temp.adjacency_list.push_back(land);
     }
     territories.push_back(temp);
   }
@@ -189,11 +188,11 @@ void Map::ReconcileTerritories() {
    * TODO: Write a better algorithm than this O(n^3) piece of junk
    * if that's even possible lol
    **/
-  for (int i = 0; i < territories.size(); i++) {
-    for (int j = 0; i < territories[i].adjacency_list.size(); i++) {
-      for (int k = 0; k < territories.size(); i++) {
-        if (territories[i].adjacency_list[j].name.compare(territories[k].name) == 0) {
-          territories[i].adjacency_list[j] = territories[k];
+  for (unsigned int i = 0; i < territories.size(); i++) {
+    for (unsigned int j = 0; i < territories[i].adjacency_list.size(); i++) {
+      for (unsigned int k = 0; k < territories.size(); i++) {
+        if (territories[i].adjacency_list[j]->name.compare(territories[k].name) == 0) {
+          territories[i].adjacency_list[j] = &territories[k];
         }
       }
     }

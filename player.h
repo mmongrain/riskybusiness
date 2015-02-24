@@ -1,23 +1,22 @@
-#ifndef PLAYER_H_
-#define PLAYER_H_
+#pragma once
+#include "map.h"
 #include <vector>
+
 
 class Player
 {
 public:
 	Player(int i);
-	~Player();
+	virtual ~Player();
 	virtual void PlayTurn();
-	std::vector<std::string> owned_territories;
+	std::vector<Map::Territory *> owned_territories;
 	
 
-private:
-	int id;
-
 protected:
+	int id;
 	virtual void Reinforce();
 	virtual void Attack();
 	virtual void Move();
 };
 
-#endif
+
