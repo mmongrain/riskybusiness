@@ -3,15 +3,15 @@
 
 #include <string>
 #include <vector>
-#include "battle_fixtures.h"
-#include "map.cc"
+#include "map.h"
 
 namespace battle {
-  bool attack_is_valid(Map::Territory* attacking, Map::Territory* defending, std::vector<int> atk_dice, std::vector<int> def_dice, std::string &out);
-  std::vector<int> dice(int num_dice);
-  int attack(Map::Territory* attacking, Map::Territory* defending, std::vector<int> atk_dice, std::vector<int> def_dice);
-  int all_in_attack(Map::Territory* attacking, Map::Territory* defending);
-  int victory(Map::Territory* attacking, Map::Territory* defending, int dice, int num_units, std::string &out);
+  bool AttackIsValid(Map::Territory* attacking, Map::Territory* defending, std::vector<int> atk_dice, std::vector<int> def_dice, std::string &out);
+  std::vector<int> Dice(int num_dice);
+  int Attack(Map::Territory* attacking, Map::Territory* defending, std::vector<int> atk_dice, std::vector<int> def_dice);
+  int AllInAttack(Map::Territory* attacking, Map::Territory* defending);
+  int Victory(Map::Territory* attacking, Map::Territory* defending, int dice, int num_units, std::string &out);
+  int Battle(Map::Territory *attacking, Map::Territory *defending);
 }
 
 #endif

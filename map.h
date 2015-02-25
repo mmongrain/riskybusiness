@@ -20,17 +20,19 @@ class Map {
     } map_info;
 
   public:
-
-    struct Territory {
+     class Continent;
+     class Territory {
       friend class Map;
+
       private:
         std::string name;
         int x;
         int y;
-        int owner;
+        Player *owner;
         int num_units;
-        std::string continent;
+        Continent *continent;
         std::vector<Territory*> adjacency_list; 
+
       public:
         std::string get_name() { return name; }
         std::string set_name(std::string name) {
@@ -38,32 +40,38 @@ class Map {
           this->name = name;
           return temp;
         }
-        int get_x() { return x; }
-        int get_y() { return y; }
-        int get_owner() { return owner; }
+
+        int get_x()                { return x; }
+        int get_y()                { return y; }
+        Player *get_owner()        { return owner; }
+        int get_num_units()        { return num_units; }
+        Continent *get_continent() { return continent; }
+
         int set_owner(int owner) { 
           int temp = this->owner;
           this->owner = owner; 
           return temp;
         }
-        int get_num_units() { return num_units; }
+
         int set_num_units(int num_units) {
           int temp = this->num_units;
           this->num_units = num_units;
           return temp;
         }
-        std::string get_continent() { return continent; }
+
         std::vector<Territory*> get_adjacency_list() { return adjacency_list; }
         std::string ToString();
     };
   
-    struct Continent {
+    class Continent {
       friend class Map;
       private:
         std::string name;
         int victory_value;
         std::vector<Territory> territories;
+        Player *owner;
       public:
+        Player *getOwner() { return owner; }
         std::string get_name() { return name; }
         std::string set_name(std::string name) {
           std::string temp = this->name;
