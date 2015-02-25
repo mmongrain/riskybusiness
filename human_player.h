@@ -6,12 +6,13 @@
 class HumanPlayer : public Player {
 
 public:
-	HumanPlayer(int i);
+	HumanPlayer();
+  ~HumanPlayer();
 
 protected:
 	void Reinforce();
 	void Attack();
 	void Move();
-}
+};
 
 #endif

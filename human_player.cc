@@ -1,12 +1,18 @@
+#include <iostream>
+
+#include "player.h"
 #include "human_player.h"
 
-HumanPlayer::HumanPlayer(int i) : Player(i) {}
+HumanPlayer::HumanPlayer() {}
 
-void Player::Reinforce() {
+HumanPlayer::~HumanPlayer() {}
+  
+
+void HumanPlayer::Reinforce() {
 	std::cout << "\nReinforcement phase:\nPlayer " << id << " reinforced" << std::endl;
 }
 
-void Player::Attack() {
+void HumanPlayer::Attack() {
 	int answer;
 	std::cout << "\nAttack phase:\nPress 1 to attack or 0 to skip" << std::endl;
 
@@ -23,7 +29,7 @@ void Player::Attack() {
 	else std::cout << "Player " << id << " chose not to attack" << std::endl;
 }
 
-void Player::Move()
+void HumanPlayer::Move()
 {
 	std::cout << "\nFortification phase:\npress 1 to move or 0 to skip" << std::endl;
 	int answer;

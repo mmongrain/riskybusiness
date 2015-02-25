@@ -2,9 +2,11 @@
 #include <iostream>
 #include <vector>
 
-Player::Player(int i) {
-	id = i;
+Player::Player() {
+  id = player_id++;
 }
+
+Player::~Player() {}
 
 void Player::PlayTurn() {
 	std::cout << "\n\n=== PLAYER " << id << "'S TURN ==" << std::endl;
@@ -12,3 +14,5 @@ void Player::PlayTurn() {
 	Attack();
 	Move();
 }
+
+int Player::player_id = 0;
