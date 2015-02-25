@@ -5,13 +5,24 @@
 
 
 class Player : Observable {
-
   public:
     Player(int i);
     virtual ~Player();
     virtual void PlayTurn();
+    /**
+     * TODO: We have getters and setters for the methods... should we make these
+     * public members protected?   --Matthew
+     **/
     std::vector<Map::Territory *> owned_territories;
     std::vector<Map::Continent *> owned_continents;
+
+    int get_id()             { return id; }
+    int get_victories()      { return victories; }
+    int get_reinforcements() { return reinforcements; }
+    int get_armies()         { return armies; }
+
+    std::vector<Map::Territory*> &get_owned_territories { return owned_territories; }
+    std::vector<Map::Continent*> &get_owned_continents  { return owned_continents; } 
 
   protected:
     int id;
