@@ -19,7 +19,7 @@ class PlayerView : Observer {
     std::vector<Map::Territory*> territories;
     std::vector<Map::Continent*> continents;
     int reinforcements;
-    int armies;
+    int units;
     int victories;
 };
 

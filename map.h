@@ -33,6 +33,11 @@ class Map {
         std::vector<Territory*> adjacency_list; 
       public:
         std::string get_name() { return name; }
+        std::string set_name(std::string name) {
+          std::string temp = this->name;
+          this->name = name;
+          return temp;
+        }
         int get_x() { return x; }
         int get_y() { return y; }
         int get_owner() { return owner; }
@@ -60,6 +65,11 @@ class Map {
         std::vector<Territory> territories;
       public:
         std::string get_name() { return name; }
+        std::string set_name(std::string name) {
+          std::string temp = this->name;
+          this->name = name;
+          return temp;
+        }
         int get_victory_value() { return victory_value; }
         std::vector<Territory> get_territories() { return territories; }
         std::string ToString();

@@ -12,7 +12,7 @@ class Player: public Observable {
     int id;
     int victories;
     int reinforcements;
-    int armies;
+    int units;
     virtual void Reinforce() = 0;
     virtual void Attack() = 0;
     virtual void Move() = 0;
@@ -25,8 +25,10 @@ class Player: public Observable {
     Player();
     virtual ~Player();
     virtual void PlayTurn();
+    void add_territory(Map::Territory *new_territory);
+    void add_continent(Map::Continent *new_continent);
     /**
-     * TODO: We have getters and setters for the methods... should we make these
+     * TODO: We have getters and setters for these members... should we make these
      * public members protected?   --Matthew
      **/
     std::vector<Map::Territory *> owned_territories;
@@ -35,15 +37,16 @@ class Player: public Observable {
     int get_id()             { return id; }
     int get_victories()      { return victories; }
     int get_reinforcements() { return reinforcements; }
-    int get_armies()         { return armies; }
+    int get_units()          { return units; }
     std::string get_name()   { return name; }
 
     std::vector<Map::Territory*> &get_owned_territories() { return owned_territories; }
     std::vector<Map::Continent*> &get_owned_continents()  { return owned_continents; } 
 
-    void set_reinforcements(int reinfocements) { this->reinforcements = reinforcements; }
-    void set_armies(int armies)                { this->armies = armies; }
-    void set_name(std::string name)            { this->name = name; }
+    void set_victories(int victories);
+    void set_reinforcements(int reinforcements);
+    void set_units(int units);
+    void set_name(std::string name);
 };
 
 #endif
