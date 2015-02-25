@@ -25,8 +25,12 @@ class Player: public Observable {
     Player();
     virtual ~Player();
     virtual void PlayTurn();
+
     void add_territory(Map::Territory *new_territory);
     void add_continent(Map::Continent *new_continent);
+    void remove_territory(Map::Territory *old_territory);
+    void remove_continent(Map::Continent *old_continent);
+
     /**
      * TODO: We have getters and setters for these members... should we make these
      * public members protected?   --Matthew

@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <iostream>
 #include <vector>
 
@@ -32,6 +33,16 @@ void Player::add_territory(Map::Territory *new_territory) {
     if (territory == new_territory) { return; }
   }
   owned_territories.push_back(new_territory);
+  NotifyObservers();
+}
+
+void Player::remove_territory(Map::Territory *old_territory) {
+  owned_territories.erase(std::remove(owned_territories.begin(), owned_territories.end(), old_territory), owned_territories.end());
+  NotifyObservers();
+}
+
+void Player::remove_continent(Map::Continent *old_continent) {
+  owned_continents.erase(std::remove(owned_continents.begin(), owned_continents.end(), old_continent), owned_continents.end());
   NotifyObservers();
 }
 

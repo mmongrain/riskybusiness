@@ -23,6 +23,7 @@ int main () {
   player->add_territory(canada);
   player->add_territory(russia);
   player->add_continent(asia);
+  player->remove_territory(russia);
 
   // Delete 'em all
   delete player;
