@@ -3,7 +3,6 @@
 #include <string>
 #include <fstream>
 #include <cstdlib>
-#include "country.h"
 
 struct GraphNode {
 	int destination;

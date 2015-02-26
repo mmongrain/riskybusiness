@@ -3,7 +3,7 @@
 #include <algorithm> // sort()
 #include <vector>
 #include <time.h> // time()
-
+#include "game.h"
 #include "battle.h"
 #include "map.h"
 
@@ -103,11 +103,11 @@ int battle::AllInAttack (Map::Territory *attacking, Map::Territory *defending) {
     while (attacking->get_units() - num_atk_dice > 1 && num_atk_dice < 3) {
       ++num_atk_dice;
     }
-    std::vector<int> atk_dice = dice(num_atk_dice);
-    std::vector<int> def_dice = dice(num_def_dice);
+    std::vector<int> atk_dice = Dice(num_atk_dice);
+    std::vector<int> def_dice = Dice(num_def_dice);
     std::string message;
     if (AttackIsValid(attacking, defending, atk_dice, def_dice, message)) {
-      attack(attacking, defending, atk_dice, def_dice);
+      Attack(attacking, defending, atk_dice, def_dice);
       std::cout << message << std::endl;
     } else { 
       std::cout << message << std::endl;
@@ -130,7 +130,7 @@ int battle::AllInAttack (Map::Territory *attacking, Map::Territory *defending) {
 int battle::Victory (Map::Territory *attacking, Map::Territory *defending, int dice, int num_units, std::string &out) {
   if (defending->get_units() > 0) {
     out = "Conquered country is not empty!";
-    return 0;
+	return 0;
   } else if (attacking->get_units() - num_units < 1) {
     out = "Not enough armies in conquering country!";
     return 0;
@@ -139,7 +139,7 @@ int battle::Victory (Map::Territory *attacking, Map::Territory *defending, int d
     defending->get_owner()->remove_territory(defending);
     attacking->get_owner()->add_territory(defending);
     defending->set_owner(attacking->get_owner());
-    attacking->set_units(attacking_get_units() - num_units - dice);
+    attacking->set_units(attacking->get_units() - num_units - dice);
     defending->set_units(num_units + dice);
     attacking->get_owner()->NotifyObservers();
     defending->get_owner()->NotifyObservers();
@@ -169,7 +169,7 @@ int battle::Battle (Map::Territory *attacking, Map::Territory *defending) {
       std::cin >> imperialists;
       imperialists -= winners;
       std::string message;
-      if (victory(attacking, defending, winners, imperialists, message)) {
+      if (Victory(attacking, defending, winners, imperialists, message)) {
         std::cout << message << std::endl;
         std::cout << "After the dust settles, " << attacking->get_name() << " has " << attacking->get_units()
                   << " remaining, and the attacking army has installed "
@@ -181,7 +181,7 @@ int battle::Battle (Map::Territory *attacking, Map::Territory *defending) {
     }
 
     std::cout << "How many get_units() (1-3) will you send to battle? (Enter 4 for an "
-    std::cout << "all-out attack, or 5 to quit.)" << std::endl;
+			<< "all-out attack, or 5 to quit.)" << std::endl;
     std::cout << attacking->get_units() << "-" << defending->get_units() << ": ";
     int attackers;
     std::cin >> attackers;
@@ -194,7 +194,7 @@ int battle::Battle (Map::Territory *attacking, Map::Territory *defending) {
 
     // CONDITION 4: The user launches an all-out attack.
     if (attackers == 4) {
-      winners = all_in_attack(attacking, defending);
+      winners = AllInAttack(attacking, defending);
       std::cout << "The attacking army launches a devastating, all-in attack!!"
                 << std::endl << "After the dust settles, there are "
                 << attacking->get_units() << " attacking battalions and "

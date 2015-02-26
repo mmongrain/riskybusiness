@@ -7,6 +7,7 @@
 #include <vector>
 #include <sstream>
 
+class Player; // does not "see" the Player class unless we forward declare it
 class Map { 
 
   private:
@@ -44,11 +45,12 @@ class Map {
         int get_x()                { return x; }
         int get_y()                { return y; }
         Player *get_owner()        { return owner; }
-        int get_num_units()        { return num_units; }
+        int get_units()        { return num_units; }
+		void set_units(int u) { num_units = u; }
         Continent *get_continent() { return continent; }
 
-        int set_owner(int owner) { 
-          int temp = this->owner;
+        Player* set_owner(Player *owner) { 
+          Player *temp = this->owner;
           this->owner = owner; 
           return temp;
         }

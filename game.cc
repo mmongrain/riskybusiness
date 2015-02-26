@@ -1,5 +1,6 @@
 #include "game.h"
 #include "player.h"
+#include "human_player.h"
 #include <iostream>
 
 Game::Game() {	
@@ -30,7 +31,7 @@ void Game::Startup()
 	// creating player objects
 	Game::players = new Player* [num_players];
 	for (int i = 0; i < num_players; i++){
-		players[i] = new Player(i+1);
+		players[i] = new HumanPlayer();
 	}	
 
 	AssignCountries();
