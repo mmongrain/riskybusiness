@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
-
+#include <math.h>
 #include "player.h"
 #include "map.h"
 
@@ -19,6 +19,14 @@ void Player::PlayTurn() {
 }
 
 int Player::player_id = 0;
+
+void Player::Reinforce(){	
+	reinforcements = floor(owned_territories.size / 3);
+	if (reinforcements < 3)
+		reinforcements = 3;
+	// TODO: 1. Determine whether or not the Player controls a Continent
+	//		 2. Risk Card bonus (?) later
+}
 
 void Player::add_continent(Map::Continent *new_continent) {
   for (auto &continent : owned_continents) {

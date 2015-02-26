@@ -70,6 +70,7 @@ class Map {
       private:
         std::string name;
         int victory_value;
+		int bonus; // used to calculate reinforcements
         std::vector<Territory> territories;
         Player *owner;
       public:
@@ -81,6 +82,7 @@ class Map {
           return temp;
         }
         int get_victory_value() { return victory_value; }
+		int get_bonus() { return bonus; }
         std::vector<Territory> get_territories() { return territories; }
         std::string ToString();
     };
