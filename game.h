@@ -17,7 +17,6 @@ private:
 	void Startup();
 	void MainPhase();
 	void AssignCountries();
-  Map game_map;
 };
 
 #endif
