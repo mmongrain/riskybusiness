@@ -27,7 +27,7 @@ void CompPlayer::Attack() {
 	std::cout << "Player " << Player::id << " attacked (computer)" << std::endl;
 }
 
-void Player::Move() {
+void CompPlayer::Move() {
 
 	// pick from where
 	Map::Territory *move_from = owned_territories[std::rand() % owned_territories.size() + 1];

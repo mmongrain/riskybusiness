@@ -1,5 +1,6 @@
 #include "game.h"
 #include "player.h"
+#include "comp_player.h"
 #include "human_player.h"
 #include "map.h"
 #include <iostream>
@@ -34,12 +35,12 @@ void Game::Startup()
 
 	Game::players = *(new std::vector<Player*>);
 	for (int i = 0; i < num_human_players; i++){
-		players[i] = new HumanPlayer();
+		players.push_back(new HumanPlayer());
 	}
 
 	// creating ComputerPlayer objects
 	if (num_human_players < 6) {
-		std::cout << "Please enter a number of computer players between 2 and " << 6 - num_human_players 
+		std::cout << "Please enter a number of computer players between 0 and " << 6 - num_human_players 
 			<< ":\n (So there will be at most 6 players)"<< std::endl;
 		// verify input
 		while (!(std::cin >> num_comp_players) || num_comp_players < 0 || num_comp_players > 6 - num_human_players)
@@ -48,6 +49,9 @@ void Game::Startup()
 				<< 6 - num_human_players << ":\n" << std::endl;
 			std::cin.clear();
 			std::cin.ignore(1000, '\n');
+		}
+		for (int i = 0; i < num_comp_players; i++){
+			players.push_back(new CompPlayer());
 		}
 	}
 	AssignCountries();

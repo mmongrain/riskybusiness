@@ -22,6 +22,7 @@ public:
 protected:
 	void Attack();
 	void Reinforce();
+	void Move();
 private:
 	Strategy *strategy;
 };
