@@ -25,51 +25,50 @@ class Map: public Observable {
   public:
      class Continent;
      class Territory : Observable {
-      friend class Map;
+     friend class Map;
 
-      private:
-        std::string name;
-        int x;
-        int y;
-        Player *owner;
-        int num_units;
-        Continent *continent;
-        std::vector<Territory*> adjacency_list; 
+     private:
+       std::string name;
+       int x;
+       int y;
+       Player *owner;
+       int num_units;
+       Continent *continent;
+       std::vector<Territory*> adjacency_list; 
 
-      public:
+     public:
 
-        std::string get_name() { return name; }
-        std::string set_name(std::string name) {
-          std::string temp = this->name;
-          this->name = name;
-          return temp;
-        }
+       std::string get_name() { return name; }
+       std::string set_name(std::string name) {
+         std::string temp = this->name;
+         this->name = name;
+         return temp;
+       }
 
-		// Are these part of Territory or Map?
-        int get_x()                { return x; }
-        int get_y()                { return y; }
-        Player *get_owner()        { return owner; }
-        int get_num_units()        { return num_units; }
-        Continent *get_continent() { return continent; }
-		bool AttackIsValid(std::string s);
+       int get_x()                { return x; }
+       int get_y()                { return y; }
+       Player *get_owner()        { return owner; }
+       int get_num_units()        { return num_units; }
+       Continent *get_continent() { return continent; }
 
-        Player* set_owner(Player *owner) { 
-          Player *temp = this->owner;
-          this->owner = owner;
-          NotifyObservers();
-          return temp;
-        }
+       Player* set_owner(Player *owner) { 
+         Player *temp = this->owner;
+         this->owner = owner;
+         NotifyObservers();
+         return temp;
+       }
 
-        int set_num_units(int num_units) {
-          int temp = this->num_units;
-          this->num_units = num_units;
-          NotifyObservers();
-          return temp;
-        }
+       int set_num_units(int num_units) {
+         int temp = this->num_units;
+         this->num_units = num_units;
+         NotifyObservers();
+         return temp;
+       }
 
-        std::vector<Territory*> *get_adjacency_list() { return &adjacency_list; }
-        std::string ToString();
-        bool AreAdjacent(Territory *bordering);
+       std::vector<Territory*> *get_adjacency_list() { return &adjacency_list; }
+       std::string ToString();
+       bool AreAdjacent(Territory *bordering);
+       bool AttackIsValid(Territory *defending);
     };
   
     class Continent : Observable {
@@ -109,9 +108,17 @@ class Map: public Observable {
     void ReconcileTerritories();
 
   public:
+    // BEGIN SINGLETON GARBAGE, taken from http://stackoverflow.com/questions/1008019/c-singleton-design-pattern
+    static Map &Instance() {
+      static Map instance;
+      return instance;
+    }
 
-    Map();
-    Map(char* filename);
+    Map() {}
+    Map(Map const&) = delete;
+    void operator=(Map const&) = delete;
+    // END SINGLETON
+
     void Load(char* filename);
     void Save(char* filename);
 
