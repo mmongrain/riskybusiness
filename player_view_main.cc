@@ -2,6 +2,8 @@
 #include "player_view.h"
 #include "human_player.h"
 
+/*
+
 int main () {
   // Initialize the objects
   Player *player = new HumanPlayer();
@@ -19,7 +21,7 @@ int main () {
   player->set_name("Paul");
   player->set_victories(3);
   player->set_reinforcements(7);
-  player->set_units(12);
+  player->set_total_units(12);
   player->add_territory(canada);
   player->add_territory(russia);
   player->add_continent(asia);
@@ -32,3 +34,5 @@ int main () {
   delete russia;
   delete asia;
 }
+
+*/

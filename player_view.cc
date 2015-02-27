@@ -18,7 +18,7 @@ void PlayerView::Update() {
   territories = player->get_owned_territories();
   continents = player->get_owned_continents();
   reinforcements = player->get_reinforcements();
-  units = player->get_units();
+  units = player->get_total_units();
   victories = player->get_victories();
   std::cout << this->to_string();
 }

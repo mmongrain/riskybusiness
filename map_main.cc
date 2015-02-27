@@ -5,6 +5,8 @@
 #include <vector>
 #include <sstream>
 
+// used by Matt to test stuff
+/*
 int main () {
   char filein[100] = "World (small).map";
   char fileout[100] = "TestOut.map";
@@ -12,3 +14,4 @@ int main () {
   map.Save(fileout);
   return 0;
 }
+*/
