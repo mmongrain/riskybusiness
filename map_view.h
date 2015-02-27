@@ -8,7 +8,8 @@
 #include "player.h"
 #include "map.h"
 
-class MapView : Observer {
+class MapView : Observer 
+{
   public:
     MapView(Map *map); 
     ~MapView();
