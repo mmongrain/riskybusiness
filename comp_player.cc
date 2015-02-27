@@ -1,7 +1,7 @@
 #include "comp_player.h"
 #include "player.h"
 #include <iostream>
-#include "map.cc"
+#include "map.h"
 #include "battle.h"
 #include <stdlib.h> // rand(), need to find how to seed
 #include <vector>
@@ -10,7 +10,7 @@ CompPlayer::CompPlayer() : Player() {
 	strategy = new Aggressive();
 }
 
-void Player::Reinforce() {
+void CompPlayer::Reinforce() {
 	Player::Reinforce(); 
 
 	// pick a territory

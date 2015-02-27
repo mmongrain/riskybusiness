@@ -21,6 +21,7 @@ public:
 	~CompPlayer(){ delete strategy; strategy = 0; }
 protected:
 	void Attack();
+	void Reinforce();
 private:
 	Strategy *strategy;
 };
