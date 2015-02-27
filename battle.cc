@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdlib.h> // rand()
 #include <algorithm> // sort()
+#include <functional> // greater()
 #include <vector>
 #include <time.h> // time()
 #include "game.h"
@@ -85,11 +86,11 @@ int battle::AllInAttack (Map::Territory *attacking, Map::Territory *defending) {
   while (attacking->get_units() > 1 && defending->get_units() > 0) {
     // If there are 2 or more attacking dice, roll 2 defending dice,
     // otherwise roll 1.
-    int num_def_dice = (defending->get_units() - 2 >= 0 && attacking->get_units() > 2) ? 2 : 1;
+    int num_def_dice = (defending->get_units() >= 2 && attacking->get_units() > 2) ? 2 : 1;
     // Then figure out how many atk_dice there can be without reducing the
     // number of units in the attacking country to below 1
     int num_atk_dice = 1;
-    while (attacking->get_units() - num_atk_dice > 1 && num_atk_dice < 3) {
+    while (attacking->get_units() > num_atk_dice + 1 && num_atk_dice < 3) {
       ++num_atk_dice;
     }
     std::vector<int> atk_dice = Dice(num_atk_dice);
@@ -116,7 +117,7 @@ int battle::AllInAttack (Map::Territory *attacking, Map::Territory *defending) {
 // Actually determining the Victory condition (i.e., that there are no units
 // remaining in the defending country and at least one unit remaining in the
 // attacking country) is left to the main() method.
-int battle::Victory (Map::Territory *attacking, Map::Territory *defending, int dice, int num_units, std::string &out) {
+int battle::UpdateOwnership (Map::Territory *attacking, Map::Territory *defending, int dice, int num_units, std::string &out) {
   if (defending->get_units() > 0) {
     out = "Conquered country is not empty!";
 	return 0;
@@ -137,7 +138,7 @@ int battle::Victory (Map::Territory *attacking, Map::Territory *defending, int d
 }
 
 // TODO: Break this monster up into subfunctions
-int battle::Battle (Map::Territory *attacking, Map::Territory *defending) {
+void battle::Battle (Map::Territory *attacking, Map::Territory *defending) {
   srand(time(NULL)); // Generates a unique-ish seed for the RNG
   int winners; // Will store the number of conquering armies
 
@@ -158,7 +159,7 @@ int battle::Battle (Map::Territory *attacking, Map::Territory *defending) {
       std::cin >> imperialists;
       imperialists -= winners;
       std::string message;
-      if (Victory(attacking, defending, winners, imperialists, message)) {
+	  if (UpdateOwnership(attacking, defending, winners, imperialists, message)) {
         std::cout << message << std::endl;
         std::cout << "After the dust settles, " << attacking->get_name() << " has " << attacking->get_units()
                   << " remaining, and the attacking army has installed "

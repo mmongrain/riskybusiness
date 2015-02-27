@@ -20,6 +20,8 @@ void Player::PlayTurn() {
 
 int Player::player_id = 0;
 
+// set total num of units
+
 void Player::Reinforce(){	
 	std::cout << "Reinforcement phase:" << std::endl;
 
@@ -27,7 +29,7 @@ void Player::Reinforce(){
 	// http://www.hasbro.com/common/instruct/risk.pdf
 	// (game rules source)
 
-	reinforcements = floor(owned_territories.size() / 3);
+	reinforcements = owned_territories.size() / 3;
 	if (reinforcements < 3)
 		reinforcements = 3;
 	for (unsigned int i = 0; i < owned_continents.size(); i++) {

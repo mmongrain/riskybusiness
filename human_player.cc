@@ -77,8 +77,8 @@ void HumanPlayer::Attack() {
 			attacking = StringToOwnedTerritory(name);
 
 			if (attacking != NULL){
-				if (attacking->get_units < 2){
-					std::cout << "You don't have enough units in " << attacking->get_name << "to attack!" << std::endl;
+				if (attacking->Map::Territory::get_units < 2){
+					std::cout << "You don't have enough units in " << attacking->Map::Territory::get_name << "to attack!" << std::endl;
 					attacking = NULL;
 		}
 			}
@@ -168,15 +168,15 @@ bool HumanPlayer::AttackIsValid(Map::Territory *attacking, std::string s){
 	Map::Territory *defending = 0;
 
 	for (unsigned int i = 0; i < Map::get_continents().size(); i++){
-		if (Map::get_continent[i]->get_name() == s){
-			defending = get_continent[i];
+		if (Map::get_continents[i]->get_name() == s){
+			defending = get_continents[i];
 			break;
 		}
 		else {
 			std::cout << "There is no such territory!" << std::endl;
 			return false;
 		}
-		if (defending->get_owner == this){
+		if (defending->Map::Territory::get_owner == (Player*)this){
 			std::cout << "You can't attack your own people!";
 			return false;
 		}
