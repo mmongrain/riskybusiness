@@ -27,6 +27,14 @@ std::string Map::Territory::ToString() {
   return out;
 }
 
+bool Map::Territory::AreAdjacent(Map::Territory *bordering) {
+  std::string border_name = bordering->get_name();
+  for (int i = 0; i < adjacency_list.size(); i++) {
+    if (adjacency_list[i]->get_name().compare(border_name)) { return true; }
+  }
+  return false;
+}
+
 Map::Map() {}
 
 Map::Map(char* filename) {
@@ -108,7 +116,7 @@ void Map::ParseMapInfo(const std::vector<std::string> &section_map) {
     map_info.warn = true; */
     std::size_t delim = section_map[i].find("=");
     /**
-     * WARNING: Possible portability problem 
+     * XXX: Possible portability problem 
      * For some reason each line on my system is followed by two invisible
      * characters that badly bork the strings. (This might be a feature of
      * Windows-formatted files). -2 is a magic number, and may be different on 
@@ -182,6 +190,7 @@ void Map::ParseTerritoryInfo(const std::vector<std::string> &section_territories
     for (int i = 0; i < continents.size(); i++) {
       if (continents[i]->get_name().compare(territory[3]) == 0) {
         temp.continent = continents[i];
+        continents[i]->get_territories().push_back(&temp);
       }
     }
     if (temp.continent == NULL) {
