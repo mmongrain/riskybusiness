@@ -10,13 +10,14 @@ public:
 	void PlayGame();
 
 private:
-	Player** players;
-	bool game_over;
+  std::vector<Player*> players;
+  bool game_over;
 	int num_human_players;
 	int num_comp_players;
 	void Startup();
 	void MainPhase();
 	void AssignCountries();
+  Map game_map;
 };
 
 #endif

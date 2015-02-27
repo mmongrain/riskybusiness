@@ -100,8 +100,8 @@ class Map: public Observable {
 
   private:
 
-    static std::vector<Continent*> continents;
-    static std::vector<Territory*> territories;
+    std::vector<Continent*> continents;
+    std::vector<Territory*> territories;
 
     void ParseMapInfo(const std::vector<std::string> &section_map);
     void ParseContinentInfo(const std::vector<std::string> &section_continents);
@@ -121,8 +121,9 @@ class Map: public Observable {
     char get_scroll()        { return map_info.scroll; }
     bool get_warn()          { return map_info.warn;   }
 
-    static std::vector<Continent*> *get_continents()  { return &continents; }
-    static std::vector<Territory*> *get_territories() { return &territories; }
+    std::vector<Continent*> *get_continents()      { return &continents;  }
+    std::vector<Territory*> *get_territories()     { return &territories; }
+    std::vector<Territory*> get_copy_territories() { return territories;  }
 };
 
 #endif
