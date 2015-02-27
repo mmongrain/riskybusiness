@@ -7,6 +7,8 @@
 #include <vector>
 #include <sstream>
 
+#include "observer.h"
+
 class Player;
 class Map { 
 
@@ -22,7 +24,7 @@ class Map {
 
   public:
      class Continent;
-     class Territory: public Observable {
+     class Territory : Observable {
       friend class Map;
 
       private:
@@ -47,7 +49,6 @@ class Map {
         int get_y()                { return y; }
         Player *get_owner()        { return owner; }
         int get_num_units()        { return num_units; }
-		    void set_num_units(int u)  { num_units = u; }
         Continent *get_continent() { return continent; }
 
         Player* set_owner(Player *owner) { 
@@ -69,7 +70,7 @@ class Map {
         bool AreAdjacent(Territory *bordering);
     };
   
-    class Continent: public Observable {
+    class Continent : Observable {
       friend class Map;
       private:
         std::string name;
