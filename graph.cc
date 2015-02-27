@@ -1,7 +1,10 @@
 #include "graph.h"
 #include "country.h"
 
+// TODO: convert these functions to use Map::Territory and associated accessors
+
 // In source files, how to properly declare methods and stuff?
+// This is exactly correct!   --Matthew
 
 Graph::Graph(int size) {
 	this->size = size;

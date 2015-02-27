@@ -5,7 +5,8 @@
 
 HumanPlayer::HumanPlayer() {}
 HumanPlayer::~HumanPlayer() {}
-
+  
+//YAY COMMENT
 // Asks the user to input the name of a territory and a number of 
 // reinforcements, does the necessary checks and performs the reinforcement
 
@@ -18,13 +19,13 @@ void HumanPlayer::Reinforce() {
 			<< "\nChoose which country you want to reinforce: " << std::endl;
 		Map::Territory *to_reinforce;
 		std::string name;
-		std::cin >> name;
+		std::cin >> name;		
 
-		to_reinforce = StringToOwnedTerritory(name);
+		to_reinforce = StringToOwnedTerritory(name); 
 
-		if (to_reinforce == NULL)
+		if (to_reinforce == NULL) 
 			continue; // if the no such territory is found, we restart the "while" loop
-
+		
 		// ask for number of armies to put in the chosen territory
 		std::cout << "How many armies do you want to place in " << to_reinforce->get_name() << "?" << std::endl;
 		int armies;
@@ -79,7 +80,7 @@ void HumanPlayer::Attack() {
 				if (attacking->get_units < 2){
 					std::cout << "You don't have enough units in " << attacking->get_name << "to attack!" << std::endl;
 					attacking = NULL;
-				}
+		}
 			}
 		}
 		while (defending == NULL){
@@ -124,7 +125,7 @@ void HumanPlayer::Move()
 			std::cin >> name;
 			move_from = StringToOwnedTerritory(name);
 		}
-
+		
 		// How many armies to move
 		while (!(std::cin >> armies) || (armies < 1 || armies > move_from->get_units() - 1)){
 			std::cout << "How many armies do you want to move from " << move_from->get_name() << " to " << move_to->get_name() << std::endl;
@@ -142,7 +143,7 @@ void HumanPlayer::Move()
 		move_from->set_units(get_units() - armies);
 		move_to->set_units(get_units() + armies);
 		std::cout << armies << " armies successfully moved from " << move_from->get_name() << " to " << move_to->get_name() << std::endl;
-
+		
 	}
 	else std::cout << "Player " << id << " chose not to fortify" << std::endl;
 }

@@ -1,11 +1,11 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
+#include "map.h"
+#include "observer.h"
 
 #include <vector>
 #include <string>
 
-#include "map.h"
-#include "observer.h"
 
 class Player: public Observable {
   protected:
