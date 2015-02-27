@@ -6,6 +6,7 @@
 HumanPlayer::HumanPlayer() {}
 HumanPlayer::~HumanPlayer() {}
   
+//YAY COMMENT
 // Asks the user to input the name of a territory and a number of 
 // reinforcements, does the necessary checks and performs the reinforcement
 
