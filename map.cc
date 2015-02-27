@@ -39,9 +39,9 @@ bool Map::Territory::AttackIsValid(std::string s){
 	Map::Territory *attacking = this;
 	Map::Territory *defending = 0;
 
-	for (unsigned int i = 0; i < territories.size(); i++){
-		if (territories[i]->name == s){
-			defending = territories[i];
+	for (unsigned int i = 0; i < Map::Instance().territories.size(); i++){
+		if (Map::Instance().territories[i]->name == s){
+			defending = Map::Instance().territories[i];
 			break;
 		}
 		else {
