@@ -12,8 +12,7 @@ Game::Game() {
 	game_over = false;
 }
 
-void Game::PlayGame()
-{
+void Game::PlayGame() {
 	Startup();
 	MainPhase();
 
@@ -56,7 +55,7 @@ void Game::Startup()
 
 void Game::AssignCountries() {
   // Get a copy of the territories
-  std::vector<Map::Territory*> territories = game_map.get_copy_territories();
+  std::vector<Map::Territory*> territories = Map::Instance().get_copy_territories();
   // For each territory
   for (int i = 0; territories.size() > 0; i++) {
     // Random number between 0 and the size of territories
