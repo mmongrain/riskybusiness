@@ -86,9 +86,12 @@ void HumanPlayer::Attack() {
 		while (defending == NULL){
 			std::cout << "Which territory do you want to attack?" << std::endl;
 			std::cin >> name;
-			bool valid = AttackIsValid(attacking, name);
+			bool valid = Map::Territory::AttackIsValid(*attacking, name);
+			if (!valid){
+				defending = NULL;
+			}
 		}
-		battle::AllInAttack(attacking, defending);
+		battle::AllInAttack(attacking, defending);;
 	}
 	else std::cout << "Player " << id << " chose not to attack" << std::endl;
 }
@@ -127,11 +130,11 @@ void HumanPlayer::Move()
 		}
 		
 		// How many armies to move
-		while (!(std::cin >> armies) || (armies < 1 || armies > move_from->get_units() - 1)){
+		while (!(std::cin >> armies) || (armies < 1 || armies > move_from->get_num_units() - 1)){
 			std::cout << "How many armies do you want to move from " << move_from->get_name() << " to " << move_to->get_name() << std::endl;
 			if (armies < 1)
 				std::cout << "You have to move at least 1 army!" << std::endl;
-			else if (armies > move_from->get_units() - 1)
+			else if (armies > move_from->get_num_units() - 1)
 				std::cout << "You must leave at least 1 army behind!" << std::endl;
 			else
 				std::cout << "Wrong input!" << std::endl;
@@ -164,32 +167,4 @@ Map::Territory* HumanPlayer::StringToOwnedTerritory(std::string s){
 	return terr;
 }
 
-bool HumanPlayer::AttackIsValid(Map::Territory *attacking, std::string s){
-	Map::Territory *defending = 0;
 
-	for (unsigned int i = 0; i < Map::get_continents().size(); i++){
-		if (Map::get_continents[i]->get_name() == s){
-			defending = get_continents[i];
-			break;
-		}
-		else {
-			std::cout << "There is no such territory!" << std::endl;
-			return false;
-		}
-		if (defending->Map::Territory::get_owner == (Player*)this){
-			std::cout << "You can't attack your own people!";
-			return false;
-		}
-		else if (defending->get_units() < 1) {
-			std::cout << "This country is empty!";
-			return false;
-		}
-		else if (attacking->IsAdjacent(defending)){
-			std::cout << "Those two countries are not adjacent!";
-			return false;
-		}
-		else
-			return true;
-	}
-
-}

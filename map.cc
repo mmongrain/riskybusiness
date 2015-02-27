@@ -35,6 +35,36 @@ bool Map::Territory::AreAdjacent(Map::Territory *bordering) {
   return false;
 }
 
+bool Map::Territory::AttackIsValid(Map::Territory *attacking, std::string s){
+	Map::Territory *defending = 0;
+
+	for (unsigned int i = 0; i < territories.size(); i++){
+		if (territories[i]->name == s){
+			defending = territories[i];
+			break;
+		}
+		else {
+			std::cout << "There is no such territory!" << std::endl;
+			return false;
+		}
+		if (defending->owner == attacking->owner){
+			std::cout << "You can't attack your own people!";
+			return false;
+		}
+		else if (defending->num_units < 1) {
+			std::cout << "This country is empty!";
+			return false;
+		}
+		else if (!attacking->AreAdjacent(defending)){
+			std::cout << "Those two countries are not adjacent!";
+			return false;
+		}
+		else
+			return true;
+	}
+
+}
+
 Map::Map() {}
 
 Map::Map(char* filename) {

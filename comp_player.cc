@@ -17,7 +17,7 @@ void Player::Reinforce() {
 	Map::Territory *to_reinforce = owned_territories[std::rand() % owned_territories.size() + 1];
 
 	// put all reinforcements there
-	to_reinforce->set_units(get_units() + reinforcements);
+	to_reinforce->set_num_units(Map::Territory::get_num_units() + reinforcements);
 
 	std::cout << reinforcements << " armies have been added to " << to_reinforce->get_name() << std::endl;
 }
@@ -40,9 +40,9 @@ void Player::Move() {
 	}
 
 	// move everything there
-	armies = move_from->get_units() - 1;	
-	move_from->set_units(get_units() - armies);
-	move_to->set_units(get_units() + armies);
+	armies = move_from->get_num_units() - 1;	
+	move_from->set_num_units(get_num_units() - armies);
+	move_to->set_num_units(get_num_units() + armies);
 	std::cout << armies << " armies successfully moved from " << move_from->get_name() << " to " << move_to->get_name() << std::endl;
 }
 
@@ -54,15 +54,16 @@ void Aggressive::execute(CompPlayer *c_player){
 
 	// iterates through its own terrirories
 	for (unsigned int i = 0; i < c_player->owned_territories.size(); i++){
-		std::vector<Map::Territory*> neighbors = c_player->owned_territories[i]->get_adjacency_list();
+
+		std::vector<Map::Territory*> *neighbors = c_player->owned_territories[i]->get_adjacency_list();
 
 		// iterates through adjacent territories
-		for (unsigned int j = 0; j < neighbors.size(); j++){
+		for (unsigned int j = 0; j < neighbors->size(); j++){
 
-			if (c_player->owned_territories[i]->get_owner() != neighbors[j]->get_owner()
-				&& c_player->owned_territories[i]->get_units() > neighbors[j]->get_units()){				
+			if (c_player->owned_territories[i]->get_owner() != (*neighbors)[j]->get_owner()
+				&& c_player->owned_territories[i]->get_num_units() > (*neighbors)[j]->get_num_units()){				
 					
-				battle::AllInAttack(c_player->owned_territories[i], neighbors[j]);
+				battle::AllInAttack(c_player->owned_territories[i], (*neighbors)[j]);
 			}
 		}
 	}
