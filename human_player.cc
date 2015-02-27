@@ -76,8 +76,8 @@ void HumanPlayer::Attack() {
 			attacking = StringToOwnedTerritory(name);
 
 			if (attacking != NULL){
-				if (attacking->Map::Territory::get_num_units < 2){
-					std::cout << "You don't have enough units in " << attacking->Map::Territory::get_name << "to attack!" << std::endl;
+				if (attacking->Map::Territory::get_num_units() < 2){
+					std::cout << "You don't have enough units in " << attacking->Map::Territory::get_name() << "to attack!" << std::endl;
 					attacking = NULL;
 		}
 			}
@@ -85,7 +85,7 @@ void HumanPlayer::Attack() {
 		while (defending == NULL){
 			std::cout << "Which territory do you want to attack?" << std::endl;
 			std::cin >> name;
-			bool valid = Map::Territory::AttackIsValid(*attacking, name);
+			bool valid = attacking->Map::Territory::AttackIsValid(name);
 			if (!valid){
 				defending = NULL;
 			}

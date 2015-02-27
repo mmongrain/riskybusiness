@@ -51,7 +51,7 @@ class Map: public Observable {
         Player *get_owner()        { return owner; }
         int get_num_units()        { return num_units; }
         Continent *get_continent() { return continent; }
-		bool AttackIsValid(Map::Territory *attacking, std::string s);
+		bool AttackIsValid(std::string s);
 
         Player* set_owner(Player *owner) { 
           Player *temp = this->owner;

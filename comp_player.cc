@@ -17,7 +17,7 @@ void Player::Reinforce() {
 	Map::Territory *to_reinforce = owned_territories[std::rand() % owned_territories.size() + 1];
 
 	// put all reinforcements there
-	to_reinforce->set_num_units(Map::Territory::get_num_units() + reinforcements);
+	to_reinforce->set_num_units(to_reinforce->get_num_units() + reinforcements);
 
 	std::cout << reinforcements << " armies have been added to " << to_reinforce->get_name() << std::endl;
 }
@@ -41,8 +41,8 @@ void Player::Move() {
 
 	// move everything there
 	armies = move_from->get_num_units() - 1;	
-	move_from->set_num_units(get_num_units() - armies);
-	move_to->set_num_units(get_num_units() + armies);
+	move_from->set_num_units(move_from->get_num_units() - armies);
+	move_to->set_num_units(move_to->get_num_units() + armies);
 	std::cout << armies << " armies successfully moved from " << move_from->get_name() << " to " << move_to->get_name() << std::endl;
 }
 

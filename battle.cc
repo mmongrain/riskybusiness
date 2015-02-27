@@ -20,7 +20,7 @@ bool battle::AttackIsValid(Map::Territory *attacking, Map::Territory *defending,
   } else if (def_dice.size() < 1 || def_dice.size() > 2) {
     out = "Invalid number of defending dice!";
     return false;
-  } else if (attacking->get_units() - atk_dice.size() < 1) {
+  } else if (attacking->get_num_units() - atk_dice.size() < 1) {
     out = "Attacker does not have enough units!";
     return false;
   } else if (def_dice.size() > atk_dice.size()) {
@@ -68,12 +68,12 @@ int battle::Attack(Map::Territory *attacking, Map::Territory *defending, std::ve
   {
   // If the attacker's dice is greater, decrement the number of defending units;
     if (atk_dice[i] > def_dice[i]) {
-      defending->set_units(defending->get_units() - 1);
+      defending->set_num_units(defending->get_num_units() - 1);
   // Otherwise decrement the number of attacking units.
     } else {
-      attacking->set_units(attacking->get_units() - 1);
+      attacking->set_num_units(attacking->get_num_units() - 1);
     }
-    if (defending->get_units() == 0) {
+    if (defending->get_num_units() == 0) {
       return 1;
     }
   }
@@ -83,14 +83,14 @@ int battle::Attack(Map::Territory *attacking, Map::Territory *defending, std::ve
 // Triggers an all-out attack, using the maximum of dice on both sides
 // until a victor is determined.
 int battle::AllInAttack (Map::Territory *attacking, Map::Territory *defending) {
-  while (attacking->get_units() > 1 && defending->get_units() > 0) {
+  while (attacking->get_num_units() > 1 && defending->get_num_units() > 0) {
     // If there are 2 or more attacking dice, roll 2 defending dice,
     // otherwise roll 1.
-    int num_def_dice = (defending->get_units() >= 2 && attacking->get_units() > 2) ? 2 : 1;
+    int num_def_dice = (defending->get_num_units() >= 2 && attacking->get_num_units() > 2) ? 2 : 1;
     // Then figure out how many atk_dice there can be without reducing the
     // number of units in the attacking country to below 1
     int num_atk_dice = 1;
-    while (attacking->get_units() > num_atk_dice + 1 && num_atk_dice < 3) {
+    while (attacking->get_num_units() > num_atk_dice + 1 && num_atk_dice < 3) {
       ++num_atk_dice;
     }
     std::vector<int> atk_dice = Dice(num_atk_dice);
@@ -103,7 +103,7 @@ int battle::AllInAttack (Map::Territory *attacking, Map::Territory *defending) {
       std::cout << message << std::endl;
       return 0;
     }
-    if (defending->get_units() == 0)
+    if (defending->get_num_units() == 0)
     {
       return num_atk_dice;
     }
@@ -118,10 +118,10 @@ int battle::AllInAttack (Map::Territory *attacking, Map::Territory *defending) {
 // remaining in the defending country and at least one unit remaining in the
 // attacking country) is left to the main() method.
 int battle::UpdateOwnership (Map::Territory *attacking, Map::Territory *defending, int dice, int num_units, std::string &out) {
-  if (defending->get_units() > 0) {
+  if (defending->get_num_units() > 0) {
     out = "Conquered country is not empty!";
 	return 0;
-  } else if (attacking->get_units() - num_units < 1) {
+  } else if (attacking->get_num_units() - num_units < 1) {
     out = "Not enough armies in conquering country!";
     return 0;
   } else {
@@ -129,8 +129,8 @@ int battle::UpdateOwnership (Map::Territory *attacking, Map::Territory *defendin
     defending->get_owner()->remove_territory(defending);
     attacking->get_owner()->add_territory(defending);
     defending->set_owner(attacking->get_owner());
-    attacking->set_units(attacking->get_units() - num_units - dice);
-    defending->set_units(num_units + dice);
+    attacking->set_num_units(attacking->get_num_units() - num_units - dice);
+    defending->set_num_units(num_units + dice);
     attacking->get_owner()->NotifyObservers();
     defending->get_owner()->NotifyObservers();
     return 1;
@@ -144,14 +144,14 @@ void battle::Battle (Map::Territory *attacking, Map::Territory *defending) {
 
   while (true) {
     // CONDITION 1: The attacking army loses.
-    if (attacking->get_units() == 1 && defending->get_units() > 0) {
+    if (attacking->get_num_units() == 1 && defending->get_num_units() > 0) {
       std::cout << "The attacking army, humbled, retreats!" << std::endl;
       break;
     }
     
     // CONDITION 2: The defending army loses.
-    if (defending->get_units() == 0) {
-      int max_imperialists = attacking->get_units() - 1;
+    if (defending->get_num_units() == 0) {
+      int max_imperialists = attacking->get_num_units() - 1;
       std::cout << "The attacking army has taken " << attacking->get_name() << "!" << std::endl
                 << "How many battalions (" << winners << "-"
                 << max_imperialists << ") will it install?" << std::endl;
@@ -161,18 +161,18 @@ void battle::Battle (Map::Territory *attacking, Map::Territory *defending) {
       std::string message;
 	  if (UpdateOwnership(attacking, defending, winners, imperialists, message)) {
         std::cout << message << std::endl;
-        std::cout << "After the dust settles, " << attacking->get_name() << " has " << attacking->get_units()
+        std::cout << "After the dust settles, " << attacking->get_name() << " has " << attacking->get_num_units()
                   << " remaining, and the attacking army has installed "
-                  << defending->get_units() << " battalions in " << defending->get_name() << std::endl;
+                  << defending->get_num_units() << " battalions in " << defending->get_name() << std::endl;
       } else { 
         std::cout << message << std::endl; 
       } 
       break;
     }
 
-    std::cout << "How many get_units() (1-3) will you send to battle? (Enter 4 for an "
+    std::cout << "How many get_num_units() (1-3) will you send to battle? (Enter 4 for an "
 			<< "all-out attack, or 5 to quit.)" << std::endl;
-    std::cout << attacking->get_units() << "-" << defending->get_units() << ": ";
+    std::cout << attacking->get_num_units() << "-" << defending->get_num_units() << ": ";
     int attackers;
     std::cin >> attackers;
 
@@ -187,18 +187,18 @@ void battle::Battle (Map::Territory *attacking, Map::Territory *defending) {
       winners = AllInAttack(attacking, defending);
       std::cout << "The attacking army launches a devastating, all-in attack!!"
                 << std::endl << "After the dust settles, there are "
-                << attacking->get_units() << " attacking battalions and "
-                << defending->get_units() << " defending battalions remaining."
+                << attacking->get_num_units() << " attacking battalions and "
+                << defending->get_num_units() << " defending battalions remaining."
                 << std::endl;
     }
 
     // CONDITION 5: The user launches a single attack.
     if (attackers > 0 && attackers < 4) {
       std::vector<int> attack_dice = battle::Dice(attackers);
-      std::vector<int> defend_dice = battle::Dice((attackers >= 2 && defending->get_units() > 1) ? 2 : 1);
-      std::cout << "The attacking army, numbering " << attacking->get_units()
+      std::vector<int> defend_dice = battle::Dice((attackers >= 2 && defending->get_num_units() > 1) ? 2 : 1);
+      std::cout << "The attacking army, numbering " << attacking->get_num_units()
                 << ", launches an attack on the defending army, numbering "
-                << defending->get_units() << "." << std::endl;
+                << defending->get_num_units() << "." << std::endl;
       std::string message; 
       if (battle::AttackIsValid(attacking, defending, attack_dice, defend_dice, message)) {
         std::cout << message << std::endl;
@@ -212,22 +212,22 @@ void battle::Battle (Map::Territory *attacking, Map::Territory *defending) {
           std::cout << defend_dice[i] << " ";
         }
         std::cout << std::endl << "As a result, the attacking army now numbers "
-                  << attacking->get_units() << " and the defending army now numbers "
-                  << defending->get_units() << "." << std::endl;
+                  << attacking->get_num_units() << " and the defending army now numbers "
+                  << defending->get_num_units() << "." << std::endl;
 
       } else { 
         std::cout << message << std::endl; 
       }  
-      if (defending->get_units() == 0) { 
+      if (defending->get_num_units() == 0) { 
         winners = attackers;
       }
-      else if (attacking->get_units() > 1) {  
+      else if (attacking->get_num_units() > 1) {  
         int max_dice;
-        if (attacking->get_units() == 2) { max_dice = 1; }
-        else if (attacking->get_units() == 3) { max_dice = 2; }
+        if (attacking->get_num_units() == 2) { max_dice = 1; }
+        else if (attacking->get_num_units() == 3) { max_dice = 2; }
         else { max_dice = 3; }
         std::cout << "How many dice (1-" << max_dice << ") will you roll? "
-                  << attacking->get_units() << " battalions remain." << std::endl;
+                  << attacking->get_num_units() << " battalions remain." << std::endl;
       }
     }
   }

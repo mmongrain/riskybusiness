@@ -35,7 +35,8 @@ bool Map::Territory::AreAdjacent(Map::Territory *bordering) {
   return false;
 }
 
-bool Map::Territory::AttackIsValid(Map::Territory *attacking, std::string s){
+bool Map::Territory::AttackIsValid(std::string s){
+	Map::Territory *attacking = this;
 	Map::Territory *defending = 0;
 
 	for (unsigned int i = 0; i < territories.size(); i++){
@@ -62,7 +63,6 @@ bool Map::Territory::AttackIsValid(Map::Territory *attacking, std::string s){
 		else
 			return true;
 	}
-
 }
 
 Map::Map() {}
