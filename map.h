@@ -7,7 +7,7 @@
 #include <vector>
 #include <sstream>
 
-class Player; // does not "see" the Player class unless we forward declare it
+class Player;
 class Map { 
 
   private:
@@ -45,8 +45,8 @@ class Map {
         int get_x()                { return x; }
         int get_y()                { return y; }
         Player *get_owner()        { return owner; }
-        int get_units()        { return num_units; }
-		void set_units(int u) { num_units = u; }
+        int get_units()            { return num_units; }
+		    void set_units(int u)      { num_units = u; }
         Continent *get_continent() { return continent; }
 
         Player* set_owner(Player *owner) { 
@@ -69,28 +69,26 @@ class Map {
       friend class Map;
       private:
         std::string name;
-        int victory_value;
-		int bonus; // used to calculate reinforcements
-        std::vector<Territory> territories;
+		    int bonus; // used to calculate reinforcements
+        std::vector<Territory*> territories;
         Player *owner;
       public:
-        Player *getOwner() { return owner; }
+        Player *getOwner()     { return owner; }
         std::string get_name() { return name; }
         std::string set_name(std::string name) {
           std::string temp = this->name;
           this->name = name;
           return temp;
         }
-        int get_victory_value() { return victory_value; }
-		int get_bonus() { return bonus; }
-        std::vector<Territory> get_territories() { return territories; }
+        int get_bonus() { return bonus; }
+        std::vector<Territory*> get_territories() { return territories; }
         std::string ToString();
     };
 
   private:
 
-    std::vector<Continent> continents;
-    std::vector<Territory> territories;
+    std::vector<Continent*> continents;
+    std::vector<Territory*> territories;
 
     void ParseMapInfo(const std::vector<std::string> &section_map);
     void ParseContinentInfo(const std::vector<std::string> &section_continents);
@@ -110,8 +108,8 @@ class Map {
     char get_scroll()        { return map_info.scroll; }
     bool get_warn()          { return map_info.warn;   }
 
-    std::vector<Continent> get_continents()  { return continents; }
-    std::vector<Territory> get_territories() { return territories; }
+    std::vector<Continent*> get_continents()  { return continents; }
+    std::vector<Territory*> get_territories() { return territories; }
 };
 
 #endif
