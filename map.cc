@@ -18,8 +18,8 @@ std::string Map::Continent::ToString() {
 std::string Map::Territory::ToString() {
   std::string out = name + "," + std::to_string(x) + "," + std::to_string(y)
                     + "," + continent->get_name() + ",";
-  for (unsigned int i = 0; i < adjacency_list.size(); i ++) {
-    out = out + adjacency_list[i]->ToString(); 
+  for (unsigned int i = 0; i < adjacency_list.size(); i++) {
+    out = out + adjacency_list[i]->name; 
     if (i < adjacency_list.size() - 1) {
       out = out + ",";
     }
@@ -112,8 +112,8 @@ void Map::Save(char *filename) {
     out << continents[i]->ToString() << std::endl;
   }
   out << "\n[Territories]\n";
-  for (unsigned int i = 0; i < territories.size(); i++) {
-    out << territories[i]->ToString() << std::endl;
+  for (unsigned int j = 0; j < territories.size(); j++) {
+    out << territories[j]->ToString() << std::endl;
   }
 }
 
@@ -170,19 +170,21 @@ void Map::ParseContinentInfo(const std::vector<std::string> &section_continents)
   for (unsigned int i = 0; i < section_continents.size(); i++) {
     // continents.clear();
     std::size_t delim = section_continents[i].find("=");
-    Continent continent;
-    continent.name = section_continents[i].substr(0, delim);
+    Continent *continent = new Continent;
+    continent->name = section_continents[i].substr(0, delim);
     // stoi is available in c++11, make sure your compiler supports, it converts int to str
     // compilation flag is -std=c++11
-    continent.bonus = std::stoi(section_continents[i].substr(delim + 1));
-    continents.push_back(&continent);
+    continent->bonus = std::stoi(section_continents[i].substr(delim + 1));
+    // std::cout << continent << std::endl;
+    continents.push_back(continent);
   }
 }
 
 void Map::ParseTerritoryInfo(const std::vector<std::string> &section_territories) {
   for (unsigned int i = 0; i < section_territories.size(); i++) {
+
     // territories.clear();
-    Territory temp;
+    Territory *temp = new Territory;
     std::vector<std::string> territory;
     std::stringstream input(section_territories[i]);
     std::string token;
@@ -196,27 +198,28 @@ void Map::ParseTerritoryInfo(const std::vector<std::string> &section_territories
     territory[last] = territory[last].substr(0, territory[last].length() - 1);
 
     // Write to the territory struct and add it to the master territories list
-    temp.name = territory[0];
-    temp.x = std::stoi(territory[1]);
-    temp.y = std::stoi(territory[2]);
+    temp->name = territory[0];
+    temp->x = std::stoi(territory[1]);
+    temp->y = std::stoi(territory[2]);
 
     // Find the continent it belongs to
-    for (int i = 0; i < continents.size(); i++) {
-      if (continents[i]->get_name().compare(territory[3]) == 0) {
-        temp.continent = continents[i];
-        continents[i]->get_territories().push_back(&temp);
+    for (int j = 0; j < continents.size(); j++) {
+      if (continents[j]->get_name().compare(territory[3]) == 0) {
+        temp->continent = continents[j];
+        continents[j]->get_territories().push_back(temp);
       }
     }
-    if (temp.continent == NULL) {
+    if (temp->continent == NULL) {
       std::cout << "Error in ParseTerritoryInfo: Continent not found for "
-                << temp.name << std::endl;
+                << temp->name << std::endl;
     }
-    for (unsigned int i = 4; i < territory.size(); i++) {
-      Territory *land;
-      land->name = territory[i];
-      temp.adjacency_list.push_back(land);
+    for (unsigned int j = 4; j < territory.size(); j++) {
+      Territory *land = new Territory();
+
+      land->name = territory[j];
+      temp->adjacency_list.push_back(land);
     }
-    territories.push_back(&temp);
+    territories.push_back(temp);
   }
 }
 
@@ -226,10 +229,13 @@ void Map::ReconcileTerritories() {
    * if that's even possible lol
    **/
   for (unsigned int i = 0; i < territories.size(); i++) {
-    for (unsigned int j = 0; i < territories[i]->adjacency_list.size(); i++) {
-      for (unsigned int k = 0; k < territories.size(); i++) {
+    for (unsigned int j = 0; j < territories[i]->adjacency_list.size(); j++) {
+      for (unsigned int k = 0; k < territories.size(); k++) {
         if (territories[i]->adjacency_list[j]->name.compare(territories[k]->name) == 0) {
+          Territory *temp = territories[i]->adjacency_list[j];
           territories[i]->adjacency_list[j] = territories[k];
+          delete temp;
+          temp = 0;
         }
       }
     }

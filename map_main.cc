@@ -6,9 +6,9 @@
 #include <sstream>
 
 int main () {
-  char filein[100] = "World (small).map";
+  char filein[100] = "World.map";
   char fileout[100] = "TestOut.map";
-  Map map(filein);
-  map.Save(fileout);
+  Map::Instance().Load(filein);
+  Map::Instance().Save(fileout);
   return 0;
 }
