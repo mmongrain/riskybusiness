@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include <vector>
+#include <map>
 #include <math.h>
 #include "player.h"
 #include "map.h"
@@ -20,7 +21,31 @@ void Player::PlayTurn() {
 
 int Player::player_id = 0;
 
+void Player::DetermineContinentOwnership() {
+  std::map<Map::Continent*, int> ownership;
+  for (int i = 0; i < owned_territories.size(); i++) {
+    Map::Continent *temp = owned_territories[i]->get_continent();
+    if (ownership[temp]) {
+      ownership[temp] = ownership[temp] + 1;
+    } else {
+      ownership[temp] = 1;
+    }
+  }
+  for (auto &it : ownership) {
+    if (it.first->get_territories().size() == it.second) {
+      if (!std::find(owned.continents.begin(), owned_continents.end(), it.first)) {
+        owned_continents.push_back(it.first);
+      }
+    } else {
+      owned_continents.erase(std::remove(owned_continents.begin(), owned_continents.end(), it.first), owned_continents.end());
+    }
+  }
+}
+
+
+
 void Player::Reinforce(){	
+  DetermineContinentOwnership();
 	std::cout << "Reinforcement phase:" << std::endl;
 
 	// calculate the number of reinforcements
