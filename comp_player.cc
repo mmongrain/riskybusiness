@@ -5,7 +5,7 @@
 #include "battle.h"
 #include <vector>
 
-CompPlayer::CompPlayer(int i) : Player(i) {
+CompPlayer::CompPlayer() : Player() {
 	strategy = new Aggressive();
 }
 
@@ -39,9 +39,9 @@ void Aggressive::execute(CompPlayer *c_player){
 		for (unsigned int j = 0; j < neighbors.size(); j++){
 
 			if (c_player->owned_territories[i]->get_owner() != neighbors[j]->get_owner()
-				&& c_player->owned_territories[i]->get_num_units() > neighbors[j]->get_num_units()){				
+				&& c_player->owned_territories[i]->get_units() > neighbors[j]->get_units()){				
 					
-				battle::all_in_attack(c_player->owned_territories[i], neighbors[j]);
+				battle::AllInAttack(c_player->owned_territories[i], neighbors[j]);
 			}
 		}
 	}

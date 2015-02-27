@@ -33,10 +33,11 @@ class Player: public Observable {
 
     /**
      * TODO: We have getters and setters for these members... should we make these
-     * public members protected?   --Matthew
+     * public members protected?   --Matthew 
+	 * I think so -- Alika 
      **/
     std::vector<Map::Territory *> owned_territories;
-    std::vector<Map::Continent *> owned_continents;
+    std::vector<Map::Continent *> owned_continents; // How is it determined if a Player owns a continent? --Alika
 
     int get_id()             { return id; }
     int get_victories()      { return victories; }

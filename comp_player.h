@@ -16,7 +16,7 @@ class Aggressive : public Strategy {
 
 class CompPlayer : public Player {
 public:
-	CompPlayer(int i);	
+	CompPlayer();	
 	Strategy *strategy;
 	void set_strategy(Strategy *strat) {strategy = strat;}
 	~CompPlayer(){ delete strategy; strategy = 0; }

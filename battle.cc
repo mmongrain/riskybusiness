@@ -12,6 +12,10 @@
 // clarify the logic of each condition.
 bool battle::AttackIsValid(Map::Territory *attacking, Map::Territory *defending, std::vector<int> atk_dice, std::vector<int> def_dice, std::string &out) {
   int current_player = 1;
+
+  // I propose to move some of these checks to the HumanPlayer Attack method,
+  // would be easier to handle each one of them. 
+
   if (attacking->get_owner() == defending->get_owner()) {
     out = "You can't attack your own people!";
     return false;
@@ -32,9 +36,9 @@ bool battle::AttackIsValid(Map::Territory *attacking, Map::Territory *defending,
     return false;
   } else if (def_dice.size() > atk_dice.size()) {
     out = "Cannot be more defenders than attackers!";
-    return false;
+    return false;	
   } else if (!Map::Territory::AreAdjacent(attacking, defending)) {
-    out = "Those two countries are not adjacent!";
+    out = "Those two countries are not adjacent!";  
     return false;
   } else {
     out = "All OK!";

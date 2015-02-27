@@ -13,6 +13,11 @@ protected:
 	void Reinforce();
 	void Attack();
 	void Move();
+
+private:
+	Map::Territory* HumanPlayer::StringToOwnedTerritory(std::string s);
 };
+
+
 
 #endif

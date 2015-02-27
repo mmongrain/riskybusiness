@@ -21,11 +21,19 @@ void Player::PlayTurn() {
 int Player::player_id = 0;
 
 void Player::Reinforce(){	
-	reinforcements = floor(owned_territories.size / 3);
+	std::cout << "Reinforcement phase:" << std::endl;
+
+	// calculate the number of reinforcements
+	// http://www.hasbro.com/common/instruct/risk.pdf
+	// (game rules source)
+
+	reinforcements = floor(owned_territories.size() / 3);
 	if (reinforcements < 3)
 		reinforcements = 3;
-	// TODO: 1. Determine whether or not the Player controls a Continent
-	//		 2. Risk Card bonus (?) later
+	for (unsigned int i = 0; i < owned_continents.size(); i++) {
+		reinforcements += owned_continents[i]->get_bonus();
+	}
+	// TODO: Risk Cards bonuses (?) later
 }
 
 void Player::add_continent(Map::Continent *new_continent) {
