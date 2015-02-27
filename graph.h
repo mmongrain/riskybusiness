@@ -8,7 +8,7 @@ struct GraphNode {
 	int destination;
 	struct GraphNode* next;
 };
-
+/*
 struct GraphList {
 	struct GraphNode *head;
 };
@@ -25,3 +25,4 @@ public:
 	void AddEdge(Country source, Country destination);
 	void PrintGraph();
 };
+*/

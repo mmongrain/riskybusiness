@@ -33,7 +33,7 @@ void Player::DetermineContinentOwnership() {
   }
   for (auto &it : ownership) {
     if (it.first->get_territories().size() == it.second) {
-      if (!std::find(owned_continents.begin(), owned_continents.end(), it.first)) {
+      if (std::find(owned_continents.begin(), owned_continents.end(), it.first)== owned_continents.end()) {
         owned_continents.push_back(it.first);
       }
     } else {
