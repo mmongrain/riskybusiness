@@ -61,7 +61,7 @@ std::vector<int> battle::Dice(int num_dice) {
   // Generates a random int between 1 and 6.
   // Will require some kind of seed to be generated in main() for the
   // distribution to be anything close to actually random.
-      out.push_back(std::rand() % 6 + 1);
+     out.push_back(std::rand() % 6 + 1);
     }
   // Sorts the vector, from begin() to end(), using the > operator
     std::sort(out.begin(), out.end(), std::greater<int>());

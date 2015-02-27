@@ -3,6 +3,7 @@
 #include <iostream>
 #include "map.cc"
 #include "battle.h"
+#include <stdlib.h> // rand(), need to find how to seed
 #include <vector>
 
 CompPlayer::CompPlayer() : Player() {
@@ -11,7 +12,14 @@ CompPlayer::CompPlayer() : Player() {
 
 void Player::Reinforce() {
 	Player::Reinforce(); 
-	std::cout << "Player " << id << " reinforced (computer)" << std::endl;
+
+	// pick a territory
+	Map::Territory *to_reinforce = owned_territories[std::rand() % owned_territories.size() + 1];
+
+	// put all reinforcements there
+	to_reinforce->set_units(get_units() + reinforcements);
+
+	std::cout << reinforcements << " armies have been added to " << to_reinforce->get_name() << std::endl;
 }
 
 void CompPlayer::Attack() {
@@ -20,10 +28,23 @@ void CompPlayer::Attack() {
 }
 
 void Player::Move() {
-	std::cout << "Player " << id << " moved (computer)" << std::endl;
+
+	// pick from where
+	Map::Territory *move_from = owned_territories[std::rand() % owned_territories.size() + 1];
+	Map::Territory *move_to = NULL;
+	int armies;
+
+	// pick to where
+	while (move_to == NULL || move_from == move_to){
+		move_to = owned_territories[std::rand() % owned_territories.size() + 1];
+	}
+
+	// move everything there
+	armies = move_from->get_units() - 1;	
+	move_from->set_units(get_units() - armies);
+	move_to->set_units(get_units() + armies);
+	std::cout << armies << " armies successfully moved from " << move_from->get_name() << " to " << move_to->get_name() << std::endl;
 }
-
-
 
 // attacks the first neighbor enemy territory which has less 
 // armies than one of its own territories acjacent to it

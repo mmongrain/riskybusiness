@@ -115,7 +115,7 @@ void HumanPlayer::Move()
 		}
 
 		// To which territory
-		while (move_from == NULL){ // TODO: also check if they are adjacent 
+		while (move_to == NULL || move_from == move_to){ // TODO: also check if they are adjacent 
 			std::cout << "To which territory do you want to move troops from " << move_from->get_name() << "?" << std::endl;
 			std::cin >> name;
 			move_from = StringToOwnedTerritory(name);

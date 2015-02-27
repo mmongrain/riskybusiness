@@ -12,7 +12,8 @@ public:
 private:
 	Player** players;
 	bool game_over;
-	int num_players;
+	int num_human_players;
+	int num_comp_players;
 	void Startup();
 	void MainPhase();
 	void AssignCountries();
