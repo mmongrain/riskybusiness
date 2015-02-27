@@ -17,11 +17,12 @@ class Aggressive : public Strategy {
 class CompPlayer : public Player {
 public:
 	CompPlayer();	
-	Strategy *strategy;
 	void set_strategy(Strategy *strat) {strategy = strat;}
 	~CompPlayer(){ delete strategy; strategy = 0; }
 protected:
 	void Attack();
+private:
+	Strategy *strategy;
 };
 
 

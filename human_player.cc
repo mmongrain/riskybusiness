@@ -5,7 +5,7 @@
 
 HumanPlayer::HumanPlayer() {}
 HumanPlayer::~HumanPlayer() {}
-  
+
 // Asks the user to input the name of a territory and a number of 
 // reinforcements, does the necessary checks and performs the reinforcement
 
@@ -18,13 +18,13 @@ void HumanPlayer::Reinforce() {
 			<< "\nChoose which country you want to reinforce: " << std::endl;
 		Map::Territory *to_reinforce;
 		std::string name;
-		std::cin >> name;		
+		std::cin >> name;
 
-		to_reinforce = StringToOwnedTerritory(name); 
+		to_reinforce = StringToOwnedTerritory(name);
 
-		if (to_reinforce == NULL) 
+		if (to_reinforce == NULL)
 			continue; // if the no such territory is found, we restart the "while" loop
-		
+
 		// ask for number of armies to put in the chosen territory
 		std::cout << "How many armies do you want to place in " << to_reinforce->get_name() << "?" << std::endl;
 		int armies;
@@ -74,14 +74,18 @@ void HumanPlayer::Attack() {
 			std::cout << "Which territory are you attacking from?" << std::endl;
 			std::cin >> name;
 			attacking = StringToOwnedTerritory(name);
+
+			if (attacking != NULL){
+				if (attacking->get_units < 2){
+					std::cout << "You don't have enough units in " << attacking->get_name << "to attack!" << std::endl;
+					attacking = NULL;
+				}
+			}
 		}
 		while (defending == NULL){
 			std::cout << "Which territory do you want to attack?" << std::endl;
 			std::cin >> name;
-
-			// TODO:	1. Iterate through all existing Territories to find the right one
-			//			2. Check if attacking and defending are adjacent
-			//			3. Move some of the checks from battle.cc AttackIsValid() here
+			bool valid = AttackIsValid(attacking, name);
 		}
 		battle::AllInAttack(attacking, defending);
 	}
@@ -120,7 +124,7 @@ void HumanPlayer::Move()
 			std::cin >> name;
 			move_from = StringToOwnedTerritory(name);
 		}
-		
+
 		// How many armies to move
 		while (!(std::cin >> armies) || (armies < 1 || armies > move_from->get_units() - 1)){
 			std::cout << "How many armies do you want to move from " << move_from->get_name() << " to " << move_to->get_name() << std::endl;
@@ -138,7 +142,7 @@ void HumanPlayer::Move()
 		move_from->set_units(get_units() - armies);
 		move_to->set_units(get_units() + armies);
 		std::cout << armies << " armies successfully moved from " << move_from->get_name() << " to " << move_to->get_name() << std::endl;
-		
+
 	}
 	else std::cout << "Player " << id << " chose not to fortify" << std::endl;
 }
@@ -157,4 +161,34 @@ Map::Territory* HumanPlayer::StringToOwnedTerritory(std::string s){
 		}
 	}
 	return terr;
+}
+
+bool HumanPlayer::AttackIsValid(Map::Territory *attacking, std::string s){
+	Map::Territory *defending = 0;
+
+	for (unsigned int i = 0; i < Map::get_continents().size(); i++){
+		if (Map::get_continent[i]->get_name() == s){
+			defending = get_continent[i];
+			break;
+		}
+		else {
+			std::cout << "There is no such territory!" << std::endl;
+			return false;
+		}
+		if (defending->get_owner == this){
+			std::cout << "You can't attack your own people!";
+			return false;
+		}
+		else if (defending->get_units() < 1) {
+			std::cout << "This country is empty!";
+			return false;
+		}
+		else if (attacking->IsAdjacent(defending)){
+			std::cout << "Those two countries are not adjacent!";
+			return false;
+		}
+		else
+			return true;
+	}
+
 }

@@ -13,33 +13,18 @@
 bool battle::AttackIsValid(Map::Territory *attacking, Map::Territory *defending, std::vector<int> atk_dice, std::vector<int> def_dice, std::string &out) {
   int current_player = 1;
 
-  // I propose to move some of these checks to the HumanPlayer Attack method,
-  // would be easier to handle each one of them. 
-
-  if (attacking->get_owner() == defending->get_owner()) {
-    out = "You can't attack your own people!";
-    return false;
-  } else if (attacking->get_units() < 1 || defending->get_units() < 1) {
-    out = "One of those countries is empty!";
-    return false;
-  } else if (atk_dice.size() < 1 || atk_dice.size() > 3) {
+	if (atk_dice.size() < 1 || atk_dice.size() > 3) {
     out = "Invalid number of attacking dice!";
     return false;
   } else if (def_dice.size() < 1 || def_dice.size() > 2) {
     out = "Invalid number of defending dice!";
-    return false;
-  } else if (attacking->get_owner() != Game::get_current_player()) {
-    out = "Not that player's turn!";
     return false;
   } else if (attacking->get_units() - atk_dice.size() < 1) {
     out = "Attacker does not have enough units!";
     return false;
   } else if (def_dice.size() > atk_dice.size()) {
     out = "Cannot be more defenders than attackers!";
-    return false;	
-  } else if (!Map::Territory::AreAdjacent(attacking, defending)) {
-    out = "Those two countries are not adjacent!";  
-    return false;
+    return false;	  
   } else {
     out = "All OK!";
     return true;

@@ -15,7 +15,8 @@ protected:
 	void Move();
 
 private:
-	Map::Territory* HumanPlayer::StringToOwnedTerritory(std::string s);
+	Map::Territory* StringToOwnedTerritory(std::string s);
+	bool AttackIsValid(Map::Territory *attacking, std::string s);
 };
 
 
