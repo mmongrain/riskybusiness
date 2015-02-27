@@ -33,7 +33,7 @@ void Player::DetermineContinentOwnership() {
   }
   for (auto &it : ownership) {
     if (it.first->get_territories().size() == it.second) {
-      if (!std::find(owned.continents.begin(), owned_continents.end(), it.first)) {
+      if (!std::find(owned_continents.begin(), owned_continents.end(), it.first)) {
         owned_continents.push_back(it.first);
       }
     } else {
@@ -52,7 +52,7 @@ void Player::Reinforce(){
 	// http://www.hasbro.com/common/instruct/risk.pdf
 	// (game rules source)
 
-	reinforcements = floor(owned_territories.size() / 3);
+	reinforcements = owned_territories.size() / 3;
 	if (reinforcements < 3)
 		reinforcements = 3;
 	for (unsigned int i = 0; i < owned_continents.size(); i++) {
@@ -97,8 +97,8 @@ void Player::set_reinforcements(int reinforcements) {
   NotifyObservers();
 }
 
-void Player::set_units(int units) {
-  this->units = units;
+void Player::set_total_units(int units) {
+  this->total_units = units;
   NotifyObservers();
 }
 

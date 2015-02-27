@@ -20,6 +20,7 @@ class Player: public Observable {
   private:
     static int player_id;
     std::string name;
+	void DetermineContinentOwnership();
 
   public:
     Player();

@@ -49,7 +49,7 @@ void HumanPlayer::Reinforce() {
 
 		// execute the reinforcement 
 		reinforcements -= armies;
-		to_reinforce->set_units(to_reinforce->get_units() + armies);
+		to_reinforce->set_num_units(to_reinforce->get_num_units() + armies);
 		std::cout << armies << " armies have been added to " << to_reinforce->get_name() << std::endl;
 	}
 }
@@ -77,7 +77,7 @@ void HumanPlayer::Attack() {
 			attacking = StringToOwnedTerritory(name);
 
 			if (attacking != NULL){
-				if (attacking->Map::Territory::get_units < 2){
+				if (attacking->Map::Territory::get_num_units < 2){
 					std::cout << "You don't have enough units in " << attacking->Map::Territory::get_name << "to attack!" << std::endl;
 					attacking = NULL;
 		}
@@ -140,8 +140,8 @@ void HumanPlayer::Move()
 		}
 
 		// Execute the movement
-		move_from->set_units(get_units() - armies);
-		move_to->set_units(get_units() + armies);
+		move_from->set_num_units(move_from->get_num_units() - armies);
+		move_to->set_num_units(move_to->get_num_units() + armies);
 		std::cout << armies << " armies successfully moved from " << move_from->get_name() << " to " << move_to->get_name() << std::endl;
 		
 	}
