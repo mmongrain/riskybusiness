@@ -22,7 +22,7 @@ class Map {
 
   public:
      class Continent;
-     class Territory {
+     class Territory: public Observable {
       friend class Map;
 
       private:
@@ -35,6 +35,7 @@ class Map {
         std::vector<Territory*> adjacency_list; 
 
       public:
+
         std::string get_name() { return name; }
         std::string set_name(std::string name) {
           std::string temp = this->name;
@@ -45,27 +46,30 @@ class Map {
         int get_x()                { return x; }
         int get_y()                { return y; }
         Player *get_owner()        { return owner; }
-        int get_units()            { return num_units; }
-		    void set_units(int u)      { num_units = u; }
+        int get_num_units()        { return num_units; }
+		    void set_num_units(int u)  { num_units = u; }
         Continent *get_continent() { return continent; }
 
         Player* set_owner(Player *owner) { 
           Player *temp = this->owner;
-          this->owner = owner; 
+          this->owner = owner;
+          NotifyObservers();
           return temp;
         }
 
         int set_num_units(int num_units) {
           int temp = this->num_units;
           this->num_units = num_units;
+          NotifyObservers();
           return temp;
         }
 
         std::vector<Territory*> *get_adjacency_list() { return &adjacency_list; }
         std::string ToString();
+        bool AreAdjacent(Territory *bordering);
     };
   
-    class Continent {
+    class Continent: public Observable {
       friend class Map;
       private:
         std::string name;
@@ -74,6 +78,12 @@ class Map {
         Player *owner;
       public:
         Player *getOwner()     { return owner; }
+        Player *setOwner(Player *new_owner) {
+          Player *temp = owner;
+          owner = new_owner;
+          NotifyObservers();
+          return temp;
+        }
         std::string get_name() { return name; }
         std::string set_name(std::string name) {
           std::string temp = this->name;
@@ -81,7 +91,7 @@ class Map {
           return temp;
         }
         int get_bonus() { return bonus; }
-        std::vector<Territory*> get_territories() { return territories; }
+        std::vector<Territory*> &get_territories() { return territories; }
         std::string ToString();
     };
 

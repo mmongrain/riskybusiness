@@ -12,7 +12,7 @@ class Player: public Observable {
     int id;
     int victories;
     int reinforcements;
-    int units;
+    int total_units;
 	virtual void Reinforce();
     virtual void Attack() = 0;
     virtual void Move() = 0;
@@ -42,7 +42,7 @@ class Player: public Observable {
     int get_id()             { return id; }
     int get_victories()      { return victories; }
     int get_reinforcements() { return reinforcements; }
-    int get_units()          { return units; }
+    int get_total_units()    { return total_units; }
     std::string get_name()   { return name; }
 
     std::vector<Map::Territory*> &get_owned_territories() { return owned_territories; }
@@ -50,7 +50,7 @@ class Player: public Observable {
 
     void set_victories(int victories);
     void set_reinforcements(int reinforcements);
-    void set_units(int units);
+    void set_total_units(int units);
     void set_name(std::string name);
 };
 
