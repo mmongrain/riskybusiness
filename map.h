@@ -8,7 +8,7 @@
 #include <sstream>
 
 class Player;
-class Map { 
+class Map: public Observable { 
 
   private:
 
@@ -42,6 +42,7 @@ class Map {
           return temp;
         }
 
+		// Are these part of Territory or Map?
         int get_x()                { return x; }
         int get_y()                { return y; }
         Player *get_owner()        { return owner; }
