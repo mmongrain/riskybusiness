@@ -85,7 +85,7 @@ void HumanPlayer::Attack() {
 		while (defending == NULL){
 			std::cout << "Which territory do you want to attack?" << std::endl;
 			std::cin >> name;
-			bool valid = attacking->Map::Territory::AttackIsValid(name);
+			bool valid = Map::Territory::AttackIsValid(name);
 			if (!valid){
 				defending = NULL;
 			}

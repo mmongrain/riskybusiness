@@ -35,19 +35,9 @@ bool Map::Territory::AreAdjacent(Map::Territory *bordering) {
   return false;
 }
 
-bool Map::Territory::AttackIsValid(std::string s){
-	Map::Territory *attacking = this;
-	Map::Territory *defending = 0;
-
-	for (unsigned int i = 0; i < territories.size(); i++){
-		if (territories[i]->name == s){
-			defending = territories[i];
-			break;
-		}
-		else {
-			std::cout << "There is no such territory!" << std::endl;
-			return false;
-		}
+bool Map::Territory::AttackIsValid(Map::Territory *defending) {
+  Map::Territory *attacking = this;
+	for (unsigned int i = 0; i < Map::Instance().territories.size(); i++){
 		if (defending->owner == attacking->owner){
 			std::cout << "You can't attack your own people!";
 			return false;
@@ -61,14 +51,8 @@ bool Map::Territory::AttackIsValid(std::string s){
 			return false;
 		}
 		else
-			return true;
+    return true;
 	}
-}
-
-Map::Map() {}
-
-Map::Map(char* filename) {
-  Load(filename);
 }
 
 void Map::Load(char* filename) {
