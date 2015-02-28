@@ -69,6 +69,7 @@ class Map: public Observable {
        std::string ToString();
        bool AreAdjacent(Territory *bordering);
        bool AttackIsValid(Territory *defending);
+       void PrintAdjacentTerritories();
     };
   
     class Continent : Observable {
@@ -102,6 +103,7 @@ class Map: public Observable {
     std::vector<Continent*> continents;
     std::vector<Territory*> territories;
 
+
     void ParseMapInfo(const std::vector<std::string> &section_map);
     void ParseContinentInfo(const std::vector<std::string> &section_continents);
     void ParseTerritoryInfo(const std::vector<std::string> &section_continents);
@@ -121,6 +123,8 @@ class Map: public Observable {
 
     void Load(char* filename);
     void Save(char* filename);
+
+    Map::Territory* StringToTerritory(std::string s);
 
     std::string get_author() { return map_info.author; }
     std::string get_image()  { return map_info.image;  }

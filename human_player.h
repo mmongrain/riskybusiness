@@ -15,7 +15,6 @@ protected:
 	void Move();
 
 private:
-	Map::Territory* StringToOwnedTerritory(std::string s);
 	bool AttackIsValid(Map::Territory *attacking, std::string s);
 };
 

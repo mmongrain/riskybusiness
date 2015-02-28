@@ -13,19 +13,22 @@ class Player: public Observable {
     int victories;
     int reinforcements;
     int total_units;
-	virtual void Reinforce();
+    virtual void Reinforce();
     virtual void Attack() = 0;
     virtual void Move() = 0;
 
   private:
     static int player_id;
     std::string name;
-	void DetermineContinentOwnership();
+    void DetermineContinentOwnership();
 
   public:
     Player();
     virtual ~Player();
     virtual void PlayTurn();
+    void PrintOwnedTerritories();
+    Map::Territory *StringToTerritory(std::string s);
+    Map::Territory *StringToOwnedTerritory(std::string s);
 
     void add_territory(Map::Territory *new_territory);
     void add_continent(Map::Continent *new_continent);

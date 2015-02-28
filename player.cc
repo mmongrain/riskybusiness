@@ -42,7 +42,13 @@ void Player::DetermineContinentOwnership() {
   }
 }
 
-
+void Player::PrintOwnedTerritories() {
+  for (int i = 0; i < owned_territories.size(); i++) {
+    std::cout << owned_territories[i]->get_name() << " (" 
+              << owned_territories[i]->get_num_units() << ")";
+    (i < owned_territories.size() - 1) ? std::cout << ", " : std::cout << ".\n";
+  }
+}
 
 void Player::Reinforce(){	
   DetermineContinentOwnership();
@@ -105,4 +111,18 @@ void Player::set_total_units(int units) {
 void Player::set_name(std::string name) {
   this->name = name;
   NotifyObservers();
+}
+
+// converts a string to one of the Territory objects owned by Player
+// or outputs an error message and returns a null pointer
+Map::Territory* Player::StringToOwnedTerritory(std::string s) {
+	Map::Territory *territory = 0;
+	for (unsigned int i = 0; i < owned_territories.size(); i++){
+		if (owned_territories[i]->get_name().compare(s) == 0) {
+			territory = owned_territories[i];
+		  return territory;	
+    }
+  }
+  std::cout << "You don't own this territory!" << std::endl;
+	return territory;
 }

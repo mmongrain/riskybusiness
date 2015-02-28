@@ -15,13 +15,15 @@ void HumanPlayer::Reinforce() {
 
 		// ask for a territory to reinforce
 		std::cout << "You have " << reinforcements << " reinforcements."
-			<< "\nChoose which country you want to reinforce: " << std::endl;
+			<< "\nChoose which territory you want to reinforce: " << std::endl;
+    PrintOwnedTerritories();
 		Map::Territory *to_reinforce;
+
 		std::string name;
-		std::cin >> name;		
-
+    std::cin.clear();
+    std::cin.ignore(1, '\n');
+		getline(std::cin, name);
 		to_reinforce = StringToOwnedTerritory(name); 
-
 		if (to_reinforce == NULL) 
 			continue; // if the no such territory is found, we restart the "while" loop
 		
@@ -33,17 +35,17 @@ void HumanPlayer::Reinforce() {
 		while (!(std::cin >> armies) || (armies < 1 && armies > reinforcements))
 		{
 			if (armies > reinforcements){
-				std::cout << "You don't have that many armies!" << std::endl;
+				std::cout << "You don't have that many reinforcements!" << std::endl;
 			}
 			else if (armies < 1){
-				std::cout << "You have to place at least 1 army!" << std::endl;
+				std::cout << "You have to place at least 1 reinforcement!" << std::endl;
 			}
 			else {
 				std::cout << "Wrong input!" << std::endl;
 			}
 			std::cin.clear();
 			std::cin.ignore(1000, '\n');
-			std::cout << "So how many armies do you want to place in " << to_reinforce->get_name() << "?" << std::endl;
+			std::cout << "How many reinforcements do you want to place in " << to_reinforce->get_name() << "?" << std::endl;
 		}
 
 		// execute the reinforcement 
@@ -72,26 +74,45 @@ void HumanPlayer::Attack() {
 
 		while (attacking == NULL){
 			std::cout << "Which territory are you attacking from?" << std::endl;
-			std::cin >> name;
+      PrintOwnedTerritories();
+      // Use getline instead of std::cin so it doesn't break on spaces
+      std::cin.ignore(1, '\n');
+      std::cin.clear();
+			getline(std::cin, name);
 			attacking = StringToOwnedTerritory(name);
 
 			if (attacking != NULL){
-				if (attacking->Map::Territory::get_num_units() < 2){
-					std::cout << "You don't have enough units in " << attacking->Map::Territory::get_name() << "to attack!" << std::endl;
+				if (attacking->get_num_units() < 2){
+					std::cout << "You don't have enough units in " << attacking->get_name() << " to attack!" << std::endl;
 					attacking = NULL;
 		}
 			}
 		}
+
+    /**
+     * TODO: Rewrite this section, it's causing segfaults.
+     * Since null pointers are returned by StringToTerritory and
+     * StringToOwnedTerritory, (and because defending is initialized to NULL),
+     * this code is a segfault paradise. Rewrite those
+     * functions and the code below without referencing NULL to fix.
+     * Consider using just Map::StringToTerritory and using other existing logic
+     * to determine ownership.
+     **/
 		while (defending == NULL){
 			std::cout << "Which territory do you want to attack?" << std::endl;
-			std::cin >> name;
-			Map::Territory* defending = HumanPlayer::StringToOwnedTerritory(name);
-			bool valid = attacking->Map::Territory::AttackIsValid(defending);
-			if (!valid){
+      attacking->PrintAdjacentTerritories();
+      std::cin.ignore(1, '\n');
+      std::cin.clear();
+			getline(std::cin, name);
+      Player *defender = Map::Instance().StringToTerritory(name)->get_owner();
+			Map::Territory* defending = defender->StringToOwnedTerritory(name);
+      std::cout << defending->get_name() << std::endl;
+			bool valid = attacking->AttackIsValid(defending);
+			if (!valid) {
 				defending = NULL;
 			}
 		}
-		battle::AllInAttack(attacking, defending);;
+		battle::AllInAttack(attacking, defending);
 	}
 	else std::cout << "Player " << id << " chose not to attack" << std::endl;
 }
@@ -125,7 +146,9 @@ void HumanPlayer::Move()
 		// To which territory
 		while (move_to == NULL || move_from == move_to){ // TODO: also check if they are adjacent 
 			std::cout << "To which territory do you want to move troops from " << move_from->get_name() << "?" << std::endl;
-			std::cin >> name;
+      std::cin.clear();
+      std::cin.ignore(1000, '\n');
+			getline(std::cin, name);
 			move_from = StringToOwnedTerritory(name);
 		}
 		
@@ -150,21 +173,4 @@ void HumanPlayer::Move()
 	}
 	else std::cout << "Player " << id << " chose not to fortify" << std::endl;
 }
-
-// converts a string to one of the Territory objects owned by Player
-// or outputs an error message and returns a null pointer
-Map::Territory* HumanPlayer::StringToOwnedTerritory(std::string s){
-	Map::Territory *terr = 0;
-	for (unsigned int i = 0; i < owned_territories.size(); i++){
-		if (owned_territories[i]->get_name() == s){
-			terr = owned_territories[i];
-			break;
-		}
-		else {
-			std::cout << "You don't own this territory!" << std::endl;
-		}
-	}
-	return terr;
-}
-
 

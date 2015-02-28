@@ -55,6 +55,16 @@ bool Map::Territory::AttackIsValid(Map::Territory *defending) {
 	}
 }
 
+void Map::Territory::PrintAdjacentTerritories() {
+  for (int i = 0; i < adjacency_list.size(); i++) {
+    std::cout << adjacency_list[i]->get_name() << " (" 
+              << adjacency_list[i]->get_num_units() << ", Player " 
+              << adjacency_list[i]->get_owner()->get_id() << ")";
+    (i < adjacency_list.size() - 1) ? std::cout << ", " : std::cout << ".\n";
+  }
+}
+
+
 void Map::Load(char* filename) {
   std::ifstream file(filename);
   std::vector<std::string> section_map;
@@ -240,4 +250,15 @@ void Map::ReconcileTerritories() {
       }
     }
   }
+}
+
+Map::Territory *Map::StringToTerritory(std::string s) {
+	Map::Territory *territory;
+	for (int i = 0; i < territories.size(); i++) {
+		if (territories[i]->get_name().compare(s) == 0) {
+			territory = territories[i];
+		  return territory;	
+    }
+  }
+	return 0;
 }
