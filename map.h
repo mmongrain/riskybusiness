@@ -110,7 +110,8 @@ class Map: public Observable {
     void ReconcileTerritories();
 
   public:
-    // BEGIN SINGLETON GARBAGE, taken from http://stackoverflow.com/questions/1008019/c-singleton-design-pattern
+    // BEGIN SINGLETON GARBAGE, taken from 
+    // http://stackoverflow.com/questions/1008019/c-singleton-design-pattern
     static Map &Instance() {
       static Map instance;
       return instance;
@@ -119,7 +120,7 @@ class Map: public Observable {
     Map() {}
     Map(Map const&) = delete;
     void operator=(Map const&) = delete;
-    // END SINGLETON
+    // END SINGLETON GARBAGE
 
     void Load(char* filename);
     void Save(char* filename);

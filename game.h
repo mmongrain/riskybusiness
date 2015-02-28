@@ -4,7 +4,18 @@
 #include "player.h"
 class Game {
 public:
-	Game();
+  // BEGIN SINGLETON, modeled from 
+  // http://stackoverflow.com/questions/1008019/c-singleton-design-pattern
+  static Game &Instance() {
+    static Game instance;
+    return instance;
+  }
+
+  Game() {}
+  Game(Map const&) = delete;
+  void operator=(Game const&) = delete;
+  // END SINGLETON
+  
 	~Game();
 
 	void PlayGame();

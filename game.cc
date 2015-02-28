@@ -9,10 +9,6 @@
 #include <vector>
 #include <algorithm>
 
-Game::Game() {
-	game_over = false;
-}
-
 void Game::PlayGame() {
 	Startup();
 	MainPhase();
