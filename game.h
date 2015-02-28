@@ -19,6 +19,7 @@ public:
 	~Game();
 
 	void PlayGame();
+  std::vector<Player*> *get_players() { return &players; }
 
 private:
   std::vector<Player*> players;
