@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #ifndef GAME_H_
 #define GAME_H_
 
@@ -33,27 +32,3 @@ private:
 };
 
 #endif
-=======
-#ifndef GAME_H_
-#define GAME_H_
-
-#include "player.h"
-class Game {
-public:
-	Game();
-	~Game();
-
-	void PlayGame();
-
-private:
-	std::vector<Player*> players;
-	bool game_over;
-	int num_human_players;
-	int num_comp_players;
-	void Startup();
-	void MainPhase();
-	void AssignCountries();
-};
-
-#endif
->>>>>>> cadfb050949d9b4fff7a68d48259675877031a7b
