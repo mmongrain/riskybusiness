@@ -27,6 +27,7 @@ class Player: public Observable {
     virtual ~Player();
     virtual void PlayTurn();
     void PrintOwnedTerritories();
+	void victory();
     Map::Territory *StringToTerritory(std::string s);
     Map::Territory *StringToOwnedTerritory(std::string s);
 
