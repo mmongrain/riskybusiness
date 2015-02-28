@@ -6,7 +6,6 @@
 #include "player.h"
 #include "map.h"
 #include "game.h"
-#include "game.cc"
 
 Player::Player() {
 	id = player_id++;
@@ -17,16 +16,16 @@ Player::~Player() {}
 void Player::PlayTurn() {
 	std::cout << "\n\n=== PLAYER " << id << "'S TURN ==" << std::endl;
 
-	//check to see length of vector of players
-	if(Game::Instance().get_players.size() == 1 && std::find(Game::Instance().get_players.begin(), Game::Instance().get_players.end(), id))
+	/** check to see length of vector of players
+	if(Game::Instance().get_players()->size() == 1 && std::find(Game::Instance().get_players()->begin(), Game::Instance().get_players()->end(), id))
 		victory();
 
 	if(id.owned_territories.size() == 0)
 	{
-		Game::Instance().get_players.erase(Game::Instance().get_players.begin()+(id-1));
+		Game::Instance().get_players()->erase(Game::Instance().get_players()->begin()+(id-1));
 		std::cout << "You lose, sorry." << std::endl;
 
-	}
+	}*/
 
 	Reinforce();
 	Attack();
