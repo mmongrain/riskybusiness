@@ -257,7 +257,7 @@ Map::Territory *Map::StringToTerritory(std::string s) {
 	for (int i = 0; i < territories.size(); i++) {
 		if (territories[i]->get_name().compare(s) == 0) {
 			territory = territories[i];
-		  return territory;	
+		  return territory;
     }
   }
 	return 0;
