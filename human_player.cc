@@ -5,7 +5,7 @@
 
 HumanPlayer::HumanPlayer() {}
 HumanPlayer::~HumanPlayer() {}
-  
+
 // Asks the user to input the name of a territory and a number of 
 // reinforcements, does the necessary checks and performs the reinforcement
 
@@ -16,17 +16,19 @@ void HumanPlayer::Reinforce() {
 		// ask for a territory to reinforce
 		std::cout << "You have " << reinforcements << " reinforcements."
 			<< "\nChoose which territory you want to reinforce: " << std::endl;
-    PrintOwnedTerritories();
+		PrintOwnedTerritories();
 		Map::Territory *to_reinforce;
 
 		std::string name;
-    std::cin.clear();
-    std::cin.ignore(1, '\n');
+		std::cin.clear();
+		std::cin.ignore(1, '\n');
 		getline(std::cin, name);
-		to_reinforce = StringToOwnedTerritory(name); 
-		if (to_reinforce == NULL) 
+		to_reinforce = StringToOwnedTerritory(name);
+		if (to_reinforce == NULL){
+			std::cin.clear();
+			std::cin.ignore(1000, '\n');
 			continue; // if the no such territory is found, we restart the "while" loop
-		
+		}
 		// ask for number of armies to put in the chosen territory
 		std::cout << "How many armies do you want to place in " << to_reinforce->get_name() << "?" << std::endl;
 		int armies;
@@ -74,10 +76,10 @@ void HumanPlayer::Attack() {
 
 		while (attacking == NULL){
 			std::cout << "Which territory are you attacking from?" << std::endl;
-      PrintOwnedTerritories();
-      // Use getline instead of std::cin so it doesn't break on spaces
-      std::cin.ignore(1, '\n');
-      std::cin.clear();
+			PrintOwnedTerritories();
+			// Use getline instead of std::cin so it doesn't break on spaces
+			std::cin.clear();
+			std::cin.ignore(1000, '\n');
 			getline(std::cin, name);
 			attacking = StringToOwnedTerritory(name);
 
@@ -85,34 +87,51 @@ void HumanPlayer::Attack() {
 				if (attacking->get_num_units() < 2){
 					std::cout << "You don't have enough units in " << attacking->get_name() << " to attack!" << std::endl;
 					attacking = NULL;
-		}
+				}
 			}
 		}
 
-    /**
-     * TODO: Rewrite this section, it's causing segfaults.
-     * Since null pointers are returned by StringToTerritory and
-     * StringToOwnedTerritory, (and because defending is initialized to NULL),
-     * this code is a segfault paradise. Rewrite those
-     * functions and the code below without referencing NULL to fix.
-     * Consider using just Map::StringToTerritory and using other existing logic
-     * to determine ownership.
-     **/
+		/**
+		 * TODO: Rewrite this section, it's causing segfaults.
+		 * Since null pointers are returned by StringToTerritory and
+		 * StringToOwnedTerritory, (and because defending is initialized to NULL),
+		 * this code is a segfault paradise. Rewrite those
+		 * functions and the code below without referencing NULL to fix.
+		 * Consider using just Map::StringToTerritory and using other existing logic
+		 * to determine ownership.
+		 **/
+
+		// I don't see this as a problem, because if you carefully handle them, there shouldn't be errors. 
+		// Plus, these errors can be caught through the debugger. 
+		// Any other logic that I'd use would still give errors if not used properly 
+		// -- Ali
+
 		while (defending == NULL){
 			std::cout << "Which territory do you want to attack?" << std::endl;
-      attacking->PrintAdjacentTerritories();
-      std::cin.ignore(1, '\n');
-      std::cin.clear();
+			attacking->PrintAdjacentTerritories();
 			getline(std::cin, name);
-      Player *defender = Map::Instance().StringToTerritory(name)->get_owner();
-			Map::Territory* defending = defender->StringToOwnedTerritory(name);
-      std::cout << defending->get_name() << std::endl;
-			bool valid = attacking->AttackIsValid(defending);
-			if (!valid) {
-				defending = NULL;
+
+			// Code below seems redundant, I commented it out and rewrote.
+			// Also, defending is RE-defined here (it's already defined above),
+			// so it will be local to the while loop's scope and won't work. 
+
+			//Player *defender = Map::Instance().StringToTerritory(name)->get_owner();
+			//Map::Territory* defending = defender->StringToOwnedTerritory(name);
+
+			defending = Map::Instance().StringToTerritory(name);
+			if (defending != NULL){
+				std::cout << defending->get_name() << std::endl;
+				bool valid = attacking->AttackIsValid(defending);
+				if (!valid) {
+					defending = NULL;
+				}
+			}
+			if (defending == NULL){
+				std::cin.clear();
+				std::cin.ignore(1000, '\n');
 			}
 		}
-		battle::AllInAttack(attacking, defending);
+		battle::Battle(attacking, defending);
 	}
 	else std::cout << "Player " << id << " chose not to attack" << std::endl;
 }
@@ -141,35 +160,39 @@ void HumanPlayer::Move()
 			std::cout << "From which of your territories do you want to send troops?" << std::endl;
 			std::cin >> name;
 			move_from = StringToOwnedTerritory(name);
+			std::cin.clear();
+			std::cin.ignore(1000, '\n');
 		}
 
 		// To which territory
 		while (move_to == NULL || move_from == move_to){ // TODO: also check if they are adjacent 
 			std::cout << "To which territory do you want to move troops from " << move_from->get_name() << "?" << std::endl;
-      std::cin.clear();
-      std::cin.ignore(1000, '\n');
 			getline(std::cin, name);
-			move_from = StringToOwnedTerritory(name);
+			move_to = StringToOwnedTerritory(name);
+			std::cin.clear();
+			std::cin.ignore(1000, '\n');
 		}
-		
+
 		// How many armies to move
+		std::cout << "How many armies do you want to move from " << move_from->get_name() << " to " << move_to->get_name() << std::endl;
 		while (!(std::cin >> armies) || (armies < 1 || armies > move_from->get_num_units() - 1)){
-			std::cout << "How many armies do you want to move from " << move_from->get_name() << " to " << move_to->get_name() << std::endl;
 			if (armies < 1)
 				std::cout << "You have to move at least 1 army!" << std::endl;
 			else if (armies > move_from->get_num_units() - 1)
 				std::cout << "You must leave at least 1 army behind!" << std::endl;
-			else
+			else{
 				std::cout << "Wrong input!" << std::endl;
-			std::cin.clear();
-			std::cin.ignore(1000, '\n');
+				std::cout << "How many armies do you want to move from " << move_from->get_name() << " to " << move_to->get_name() << std::endl;
+				std::cin.clear();
+				std::cin.ignore(1000, '\n');
+			}
 		}
 
 		// Execute the movement
 		move_from->set_num_units(move_from->get_num_units() - armies);
 		move_to->set_num_units(move_to->get_num_units() + armies);
 		std::cout << armies << " armies successfully moved from " << move_from->get_name() << " to " << move_to->get_name() << std::endl;
-		
+
 	}
 	else std::cout << "Player " << id << " chose not to fortify" << std::endl;
 }

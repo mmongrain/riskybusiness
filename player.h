@@ -28,7 +28,7 @@ class Player: public Observable {
     virtual void PlayTurn();
     void PrintOwnedTerritories();
 	void victory();
-    Map::Territory *StringToTerritory(std::string s);
+    //Map::Territory *StringToTerritory(std::string s); moved to map.cc
     Map::Territory *StringToOwnedTerritory(std::string s);
 
     void add_territory(Map::Territory *new_territory);
@@ -42,7 +42,7 @@ class Player: public Observable {
 	 * I think so -- Alika 
      **/
     std::vector<Map::Territory*> owned_territories;
-    std::vector<Map::Continent*> owned_continents; // How is it determined if a Player owns a continent? --Alika
+    std::vector<Map::Continent*> owned_continents; 
 
     int get_id()             { return id; }
     int get_victories()      { return victories; }

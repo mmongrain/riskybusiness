@@ -152,7 +152,7 @@ void battle::Battle (Map::Territory *attacking, Map::Territory *defending) {
     // CONDITION 2: The defending army loses.
     if (defending->get_num_units() == 0) {
       int max_imperialists = attacking->get_num_units() - 1;
-      std::cout << "The attacking army has taken " << attacking->get_name() << "!" << std::endl
+      std::cout << "The attacking army has taken " << defending->get_name() << "!" << std::endl
                 << "How many battalions (" << winners << "-"
                 << max_imperialists << ") will it install?" << std::endl;
       int imperialists;
@@ -161,9 +161,10 @@ void battle::Battle (Map::Territory *attacking, Map::Territory *defending) {
       std::string message;
 	  if (UpdateOwnership(attacking, defending, winners, imperialists, message)) {
         std::cout << message << std::endl;
-        std::cout << "After the dust settles, " << attacking->get_name() << " has " << attacking->get_num_units()
-                  << " remaining, and the attacking army has installed "
-                  << defending->get_num_units() << " battalions in " << defending->get_name() << std::endl;
+        std::cout << "After the dust settles, the attacking army has installed "
+			<< defending->get_num_units() << " battalions in " << defending->get_name() << ", and "
+			<< attacking->get_name() << " has " << attacking->get_num_units()
+                  << " remaining." << std::endl;
       } else { 
         std::cout << message << std::endl; 
       } 

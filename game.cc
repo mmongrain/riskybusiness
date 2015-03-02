@@ -36,8 +36,8 @@ void Game::Startup()
 
 	// creating ComputerPlayer objects
 	if (num_human_players < 6) {
-		std::cout << "Please enter a number of computer players between 0 and " << 6 - num_human_players 
-			<< ":\n (So there will be at most 6 players)"<< std::endl;
+		std::cout << "Please enter a number of computer players between 0 and " << 6 - num_human_players
+			<< ":\n (So there will be at most 6 players)" << std::endl;
 		// verify input
 		while (!(std::cin >> num_comp_players) || num_comp_players < 0 || num_comp_players > 6 - num_human_players)
 		{
@@ -54,24 +54,37 @@ void Game::Startup()
 }
 
 void Game::AssignCountries() {
-  // Get a copy of the territories
-  std::vector<Map::Territory*> territories = Map::Instance().get_copy_territories();
-  // For each territory
-  for (int i = 0; territories.size() > 0; i++) {
-    // Random number between 0 and the size of territories
-    int rando = rand() % territories.size();
-    // Iterates thru the players using the index
-    Player *current_player = players[i % players.size()];
-    // Add that random territory to that player
-    current_player->add_territory(territories[rando]);
-    // Assign it to the player
-    territories[rando]->set_owner(current_player);
-    // Give it one unit
-    territories[rando]->set_num_units(1);
-    // Remove it from the territories vector, rinse, repeat
-    territories.erase(std::remove(territories.begin(), territories.end(), territories[rando]), territories.end());
-  }
-	std::cout << "Countries have been assigned randomly!" << std::endl;
+	// Get a copy of the territories
+	std::vector<Map::Territory*> territories = Map::Instance().get_copy_territories();
+	// For each territory
+	for (int i = 0; territories.size() > 0; i++) {
+		// Random number between 0 and the size of territories
+		int rando = rand() % territories.size();
+		// Iterates thru the players using the index
+		Player *current_player = players[i % players.size()];
+		// Add that random territory to that player
+		current_player->add_territory(territories[rando]);
+		// Assign it to the player
+		territories[rando]->set_owner(current_player);
+		// Give it one unit
+		territories[rando]->set_num_units(1);
+		// Remove it from the territories vector, rinse, repeat
+		territories.erase(std::remove(territories.begin(), territories.end(), territories[rando]), territories.end());
+	}
+	std::cout << "Countries have been assigned randomly ugh!" << std::endl;
+
+	// used for testing
+	/* 
+	std::vector<Map::Territory*> terr = *(Map::Instance().get_territories());
+	for (int i = 0; i < terr.size(); i++){
+		std::cout << terr[i]->get_name() << ": Player " << terr[i]->get_owner()->get_id() << std::endl;
+	}
+
+	for (int i = 0; i < players.size(); ++i){
+		std::cout << "Player " << players[i]->get_id() << ": " << std::endl;
+		players[i]->PrintOwnedTerritories();
+	} 
+	*/
 }
 
 void Game::MainPhase()
@@ -79,7 +92,7 @@ void Game::MainPhase()
 	std::cout << "\n===== MAIN PLAY PHASE =====\n";
 	while (game_over == false) {
 		for (int i = 0; i < num_human_players; i++) // round-robin loop over the players 
-    {
+		{
 			players[i]->PlayTurn();
 		}
 
@@ -100,7 +113,7 @@ void Game::MainPhase()
 
 Game::~Game()
 {
-  std::vector<Player*> *player_point = &players;
+	std::vector<Player*> *player_point = &players;
 	delete player_point;
 	player_point = 0;
 }

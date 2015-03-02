@@ -147,7 +147,7 @@ void Map::ParseMapInfo(const std::vector<std::string> &section_map) {
      * your system. 
      * TODO: Find out what's actually going on
      */
-    int end_of_string = section_map[i].length() - delim - 2;
+    int end_of_string = section_map[i].length() - delim - 2; 
     std::string field = section_map[i].substr(0, delim);
     std::string value = section_map[i].substr(delim + 1, end_of_string); 
 
@@ -203,9 +203,12 @@ void Map::ParseTerritoryInfo(const std::vector<std::string> &section_territories
       territory.push_back(token);
     }
 
-    // Eats the EOF character, which breaks everything
-    int last = territory.size() - 1;
-    territory[last] = territory[last].substr(0, territory[last].length() - 1);
+	// This does not work for me, it eats the last character of the adjacency list
+	// and breaks everything! -- Alika
+
+			// Eats the EOF character, which breaks everything
+			//int last = territory.size() - 1;
+			//territory[last] = territory[last].substr(0, territory[last].length() - 1);
 
     // Write to the territory struct and add it to the master territories list
     temp->name = territory[0];
