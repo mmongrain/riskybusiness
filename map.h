@@ -119,9 +119,9 @@ class Map: public Observable {
       return instance;
     }
 
-    Map() {}
-    Map(Map const&) = delete;
-    void operator=(Map const&) = delete;
+    Map() {};
+    Map(Map const&);
+    void operator=(Map const&);
     // END SINGLETON GARBAGE
 
     void Load(char* filename);

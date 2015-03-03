@@ -11,9 +11,9 @@ public:
     return instance;
   }
 
-  Game() {}
-  Game(Map const&) = delete;
-  void operator=(Game const&) = delete;
+  Game() {};
+  Game(Map const&);
+  void operator=(Game const&);
   // END SINGLETON
 	~Game() {}
 
