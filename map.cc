@@ -236,7 +236,14 @@ void Map::ParseTerritoryInfo(const std::vector<std::string> &section_territories
       territory.push_back(token);
     }
 
+    // TODO: Figure out a syntax to logical-or these two ifdefs
 #ifdef __APPLE__
+    // Eats the EOF character, which breaks everything on Linux
+    int last = territory.size() - 1;
+    territory[last] = territory[last].substr(0, territory[last].length() - 1);
+#endif
+
+#ifdef __linux__
     // Eats the EOF character, which breaks everything on Linux
     int last = territory.size() - 1;
     territory[last] = territory[last].substr(0, territory[last].length() - 1);
