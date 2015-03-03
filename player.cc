@@ -14,7 +14,7 @@ Player::Player() {
 Player::~Player() {}
 
 void Player::PlayTurn() {
-	std::cout << "\n\n=== PLAYER " << id << "'S TURN ==" << std::endl;
+	std::cout << "\n\n=== PLAYER " << id << "'S TURN ===" << std::endl;
 
 	/** check to see length of vector of players
 	if(Game::Instance().get_players()->size() == 1 && std::find(Game::Instance().get_players()->begin(), Game::Instance().get_players()->end(), id))

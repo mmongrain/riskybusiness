@@ -71,7 +71,7 @@ void Game::AssignCountries() {
 		// Remove it from the territories vector, rinse, repeat
 		territories.erase(std::remove(territories.begin(), territories.end(), territories[rando]), territories.end());
 	}
-	std::cout << "Countries have been assigned randomly ugh!" << std::endl;
+	std::cout << "Countries have been assigned randomly!" << std::endl;
 
 	// used for testing
 	/* 

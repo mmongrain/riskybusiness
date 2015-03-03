@@ -50,9 +50,8 @@ bool Map::Territory::AttackIsValid(Map::Territory *defending) {
 			std::cout << "Those two countries are not adjacent!";
 			return false;
 		}
-		else
-    return true;
 	}
+  return true;
 }
 
 void Map::Territory::PrintAdjacentTerritories() {
@@ -61,6 +60,40 @@ void Map::Territory::PrintAdjacentTerritories() {
               << adjacency_list[i]->get_num_units() << ", Player " 
               << adjacency_list[i]->get_owner()->get_id() << ")";
     (i < adjacency_list.size() - 1) ? std::cout << ", " : std::cout << ".\n";
+  }
+}
+
+void Map::Territory::PrintAttackableTerritories(Player* player) {
+  std::vector<Map::Territory*> attackable;
+  for (int i = 0; i < adjacency_list.size(); i++) {
+    if (adjacency_list[i]->get_owner() != player) {  
+      attackable.push_back(adjacency_list[i]);
+    }
+  }
+  for (int i = 0; i < attackable.size(); i++) {
+    if (attackable[i]->get_owner() != player) {  
+      std::cout << attackable[i]->get_name() << " (" 
+                << attackable[i]->get_num_units() << ", Player " 
+                << attackable[i]->get_owner()->get_id() << ")";
+      (i < attackable.size() - 1) ? std::cout << ", " : std::cout << ".\n";
+    }
+  }
+}
+
+void Map::Territory::PrintAdjacentOwnedTerritories(Player* player) {
+  std::vector<Map::Territory*> owned;
+  for (int i = 0; i < adjacency_list.size(); i++) {
+    if (adjacency_list[i]->get_owner() != player) {  
+      owned.push_back(adjacency_list[i]);
+    }
+  }
+  for (int i = 0; i < owned.size(); i++) {
+    if (owned[i]->get_owner() != player) {  
+      std::cout << owned[i]->get_name() << " (" 
+                << owned[i]->get_num_units() << ", Player " 
+                << owned[i]->get_owner()->get_id() << ")";
+      (i < owned.size() - 1) ? std::cout << ", " : std::cout << ".\n";
+    }
   }
 }
 
@@ -203,12 +236,12 @@ void Map::ParseTerritoryInfo(const std::vector<std::string> &section_territories
       territory.push_back(token);
     }
 
-	// This does not work for me, it eats the last character of the adjacency list
-	// and breaks everything! -- Alika
+#ifdef __APPLE__
+    // Eats the EOF character, which breaks everything on Linux
+    int last = territory.size() - 1;
+    territory[last] = territory[last].substr(0, territory[last].length() - 1);
+#endif
 
-			// Eats the EOF character, which breaks everything
-			//int last = territory.size() - 1;
-			//territory[last] = territory[last].substr(0, territory[last].length() - 1);
 
     // Write to the territory struct and add it to the master territories list
     temp->name = territory[0];

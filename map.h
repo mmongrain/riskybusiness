@@ -70,6 +70,8 @@ class Map: public Observable {
        bool AreAdjacent(Territory *bordering);
        bool AttackIsValid(Territory *defending);
        void PrintAdjacentTerritories();
+       void PrintAttackableTerritories(Player *player);
+       void PrintAdjacentOwnedTerritories(Player *player);
     };
   
     class Continent : Observable {
