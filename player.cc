@@ -7,12 +7,6 @@
 #include "map.h"
 #include "game.h"
 
-Player::Player() {
-	id = player_id++;
-}
-
-Player::~Player() {}
-
 void Player::PlayTurn() {
 	std::cout << "\n\n=== PLAYER " << id << "'S TURN ===" << std::endl;
 

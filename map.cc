@@ -83,12 +83,12 @@ void Map::Territory::PrintAttackableTerritories(Player* player) {
 void Map::Territory::PrintAdjacentOwnedTerritories(Player* player) {
   std::vector<Map::Territory*> owned;
   for (int i = 0; i < adjacency_list.size(); i++) {
-    if (adjacency_list[i]->get_owner() != player) {  
+    if (adjacency_list[i]->get_owner() == player) {  
       owned.push_back(adjacency_list[i]);
     }
   }
   for (int i = 0; i < owned.size(); i++) {
-    if (owned[i]->get_owner() != player) {  
+    if (owned[i]->get_owner() == player) {  
       std::cout << owned[i]->get_name() << " (" 
                 << owned[i]->get_num_units() << ", Player " 
                 << owned[i]->get_owner()->get_id() << ")";

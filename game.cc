@@ -16,6 +16,14 @@ void Game::PlayGame() {
 	std::cout << "\nGame over. GGWP!\n" << std::endl;
 }
 
+void Game::PlayerViewTestHelper(int num_players) {
+	Game::players = *(new std::vector<Player*>);
+	for (int i = 0; i < num_players; i++){
+		players.push_back(new HumanPlayer());
+	}
+  AssignCountries();
+}
+
 void Game::Startup()
 {
 	std::cout << "===== STARTUP PHASE =====\n\n";
@@ -111,9 +119,3 @@ void Game::MainPhase()
 	}
 }
 
-Game::~Game()
-{
-	std::vector<Player*> *player_point = &players;
-	delete player_point;
-	player_point = 0;
-}

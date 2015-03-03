@@ -6,8 +6,8 @@
 class HumanPlayer : public Player {
 
 public:
-	HumanPlayer();
-  ~HumanPlayer();
+	HumanPlayer() {}
+  ~HumanPlayer() {}
 
 protected:
 	void Reinforce();

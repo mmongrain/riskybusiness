@@ -24,7 +24,8 @@ void PlayerView::Update() {
 }
 
 std::string PlayerView::to_string() {
-  std::string out = "[" + player->get_name() + "]\nTerritories controlled: ";
+  std::string out = "[" + player->get_name() + ", ID: " + std::to_string(player->get_id()) 
+                    + "]\nTerritories controlled: ";
   for (int i = 0; i < territories.size(); i++) {
     out += territories[i]->get_name();
     (i < territories.size() - 1) ? out += ", " : out += ".";

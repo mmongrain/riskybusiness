@@ -3,9 +3,6 @@
 #include "human_player.h"
 #include "battle.h"
 
-HumanPlayer::HumanPlayer() {}
-HumanPlayer::~HumanPlayer() {}
-
 // Asks the user to input the name of a territory and a number of 
 // reinforcements, does the necessary checks and performs the reinforcement
 
@@ -139,7 +136,7 @@ void HumanPlayer::Move()
         PrintOwnedTerritories();
         std::cin.ignore(1, '\n');
         std::cin.clear();
-        std::cin >> name;
+        getline(std::cin, name);
         if (Map::Instance().StringToTerritory(name)) {
           move_from = Map::Instance().StringToTerritory(name);
           if (move_from->get_owner() == this) break;
@@ -151,9 +148,12 @@ void HumanPlayer::Move()
       for (;;) {
         std::cout << "To which of your territories do you want to send troops?" << std::endl;
         move_from->PrintAdjacentOwnedTerritories(this);
-        std::cin.ignore(1, '\n');
+        // XXX: This ignore and the next break the entry on my system, idk why rn
+        // If it works fine on yours please delete this comment and the line
+        // If not please wrap in a linux #ifdef, thanks!!   --Matthew
+        // std::cin.ignore(1, '\n');
         std::cin.clear();
-        std::cin >> name;
+        getline(std::cin, name);
         if (Map::Instance().StringToTerritory(name)) {
           move_to = Map::Instance().StringToTerritory(name);
           if (move_to->get_owner() == this) break;
@@ -169,7 +169,7 @@ void HumanPlayer::Move()
 			std::cout << "How many armies do you want to move from " 
                 << move_from->get_name() << " to " << move_to->get_name() << "?\n";
 			std::cin.clear();
-			std::cin.ignore(1, '\n');
+			// std::cin.ignore(1, '\n');
      		std::cin >> armies;
       
 			if (armies < 1) {

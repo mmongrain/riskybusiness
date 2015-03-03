@@ -15,11 +15,12 @@ public:
   Game(Map const&) = delete;
   void operator=(Game const&) = delete;
   // END SINGLETON
-  
-	~Game();
+	~Game() {}
 
 	void PlayGame();
   std::vector<Player*> *get_players() { return &players; }
+
+  void PlayerViewTestHelper(int num_players);
 
 private:
   std::vector<Player*> players;

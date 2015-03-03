@@ -1,38 +1,53 @@
+#include "game.h"
 #include "player.h"
 #include "player_view.h"
 #include "human_player.h"
+#include <vector>
 
-/*
+
+/**
+ * NOTE: Please don't comment out main() methods used for testing.
+ * Exclude them from compilation using Build Actions in Visual Studio, or by
+ * setting your own compilation settings in the makefile.
+ **/
+
+static const int NUM_PLAYERS = 8;
 
 int main () {
   // Initialize the objects
-  Player *player = new HumanPlayer();
-  PlayerView *player_view = new PlayerView(player);
+  char FILENAME[100] = "World.map";
+  Map::Instance().Load(FILENAME);
+  Game::Instance().PlayerViewTestHelper(NUM_PLAYERS);
 
-  // Make a couple of dummy continents and territories;
-  Map::Territory* canada = new Map::Territory;
-  canada->set_name("Canada");
-  Map::Territory* russia = new Map::Territory;
-  russia->set_name("Russia");
-  Map::Continent* asia = new Map::Continent;
-  asia->set_name("Asia");
+  // Create views for each player 
+  std::vector<Player*> players = *(Game::Instance().get_players());
+  std::vector<PlayerView*> player_views = *(new std::vector<PlayerView*>(NUM_PLAYERS));
+  for (int i = 0; i < NUM_PLAYERS; i++) {
+    player_views[i] = new PlayerView(players[i]);
+  }
 
-  // Change some members, which will call NotifyObservers()
-  player->set_name("Paul");
-  player->set_victories(3);
-  player->set_reinforcements(7);
-  player->set_total_units(12);
-  player->add_territory(canada);
-  player->add_territory(russia);
-  player->add_continent(asia);
-  player->remove_territory(russia);
+  // Change some fields, triggering NotifyObservers();
+  for (int i = 0; i < players.size(); i++) {
+    switch (i % 4) {
+      case 0: players[i]->set_name("John");
+              break;
+      case 1: players[i]->set_name("Paul");
+              break;
+      case 2: players[i]->set_name("George");
+              break;
+      case 3: players[i]->set_name("Ringo");
+              break;
+    }
+    players[i]->set_victories(i + 1);
+    players[i]->set_reinforcements((i + 1) * 2);
+    players[i]->set_total_units((i + 1) * 4);
+    players[i]->remove_territory(players[i]->get_owned_territories()[0]);
+  }
 
   // Delete 'em all
-  delete player;
-  delete player_view;
-  delete canada;
-  delete russia;
-  delete asia;
+  for (int i = 0; i < NUM_PLAYERS; i++) {
+    delete player_views[i];
+  }
 }
 
-*/
+

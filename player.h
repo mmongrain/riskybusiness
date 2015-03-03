@@ -23,8 +23,8 @@ class Player: public Observable {
     void DetermineContinentOwnership();
 
   public:
-    Player();
-    virtual ~Player();
+    Player(): total_units(0), reinforcements(0), victories(0), id(player_id++) {}
+    virtual ~Player() {}
     virtual void PlayTurn();
     void PrintOwnedTerritories();
 	void victory();
