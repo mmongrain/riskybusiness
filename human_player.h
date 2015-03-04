@@ -12,7 +12,7 @@ public:
 protected:
 	void Reinforce();
 	void Attack();
-	void Move();
+	void Fortify();
 
 private:
 	bool AttackIsValid(Map::Territory *attacking, std::string s);

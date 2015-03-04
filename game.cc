@@ -58,6 +58,8 @@ void Game::Startup()
 			players.push_back(new CompPlayer());
 		}
 	}
+  std::cin.clear();
+  std::cin.ignore(10000, '\n');
 	AssignCountries();
 }
 
@@ -97,7 +99,7 @@ void Game::AssignCountries() {
 
 void Game::MainPhase()
 {
-	std::cout << "\n===== MAIN PLAY PHASE =====\n";
+	std::cout << "\n===== MAIN PLAY PHASE =====";
 	while (game_over == false) {
 		for (int i = 0; i < num_human_players; i++) // round-robin loop over the players 
 		{

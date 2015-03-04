@@ -23,7 +23,7 @@ void Player::PlayTurn() {
 
 	Reinforce();
 	Attack();
-	Move();
+	Fortify();
 }
 
 int Player::player_id = 0;
@@ -57,7 +57,7 @@ void Player::PrintOwnedTerritories() {
 	}
 }
 
-void Player::Reinforce(){	
+void Player::CalculateReinforcements() {	
 	DetermineContinentOwnership();
 	std::cout << "Reinforcement phase:" << std::endl;
 
@@ -124,7 +124,7 @@ void Player::set_name(std::string name) {
 // or outputs an error message and returns a null pointer
 Map::Territory* Player::StringToOwnedTerritory(std::string s) {
 	Map::Territory *territory = 0;
-	for (unsigned int i = 0; i < owned_territories.size(); i++){
+	for (unsigned int i = 0; i < owned_territories.size(); i++) {
 		if (owned_territories[i]->get_name().compare(s) == 0) {
 			territory = owned_territories[i];
 			return territory;	

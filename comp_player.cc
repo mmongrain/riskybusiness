@@ -11,7 +11,7 @@ CompPlayer::CompPlayer() : Player() {
 }
 
 void CompPlayer::Reinforce() {
-	Player::Reinforce(); 
+	CalculateReinforcements(); 
 
 	// pick a territory
 	Map::Territory *to_reinforce = owned_territories[std::rand() % owned_territories.size() + 1];
@@ -27,8 +27,7 @@ void CompPlayer::Attack() {
 	std::cout << "Player " << Player::id << " attacked (computer)" << std::endl;
 }
 
-void CompPlayer::Move() {
-
+void CompPlayer::Fortify() {
 	// pick from where
 	Map::Territory *move_from = owned_territories[std::rand() % owned_territories.size() + 1];
 	Map::Territory *move_to = NULL;

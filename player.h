@@ -13,9 +13,10 @@ class Player: public Observable {
     int victories;
     int reinforcements;
     int total_units;
-    virtual void Reinforce();
+    virtual void Reinforce() = 0;
     virtual void Attack() = 0;
-    virtual void Move() = 0;
+    virtual void Fortify() = 0;
+    void CalculateReinforcements();
 
   private:
     static int player_id;

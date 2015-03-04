@@ -1,6 +1,3 @@
-
-#include "map.h"
-
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -8,6 +5,7 @@
 #include <sstream>
 
 #include "player.h"
+#include "map.h"
 
 std::string Map::Continent::ToString() {
   std::string out = "";
@@ -54,6 +52,22 @@ bool Map::Territory::AttackIsValid(Map::Territory *defending) {
   return true;
 }
 
+bool Map::Territory::CanAttack() {
+  if (this->num_units < 2) { return false; }
+  for (int i = 0; i < adjacency_list.size(); i++) {
+    if (adjacency_list[i]->get_owner() != this->owner) { return true; }
+  }
+  return false;
+}
+
+bool Map::Territory::CanFortify () { 
+  if (this->num_units < 2) { return false; }
+  for (int i = 0; i < adjacency_list.size(); i++) {
+    if (adjacency_list[i]->get_owner() == this->owner) { return true; }
+  }
+  return false;
+}
+  
 void Map::Territory::PrintAdjacentTerritories() {
   for (int i = 0; i < adjacency_list.size(); i++) {
     std::cout << adjacency_list[i]->get_name() << " (" 
