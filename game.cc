@@ -109,10 +109,14 @@ void Game::MainPhase()
 		// END OF GAME
 		// temporary way to end the game (to be replaced by actual conditions for ending the game)
 		std::cout << "\n\nPress 1 to continue playing or 0 to stop" << std::endl;
-		int answer;
-		while (!(std::cin >> answer) || (answer != 0 && answer != 1))
+    int answer;
+    std::cin >> answer;
+    std::cin.clear();
+    std::cin.ignore(1000, '\n');
+		while (answer != 0 && answer != 1)
 		{
 			std::cout << "Wrong input! Press 1 to continue playing or 0 to stop" << std::endl;
+      std::cin >> answer;
 			std::cin.clear();
 			std::cin.ignore(1000, '\n');
 		}

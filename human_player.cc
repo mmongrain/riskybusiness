@@ -52,7 +52,7 @@ void HumanPlayer::Reinforce() {
 }
 
 void HumanPlayer::Attack() {
-  bool skip_flag;
+  bool skip_flag = false;
 	int answer;
   std::cin.clear();
   std::cin.ignore(10000, '\n');
@@ -144,9 +144,13 @@ void HumanPlayer::Fortify() {
 
 		// From which territory to move armies
     for (;;) {
-      std::cout << "From which of your territories do you want to send troops?" << std::endl;
+      std::cout << "From which of your territories do you want to send troops? (Enter q to skip.)" << std::endl;
       PrintOwnedTerritories();
       getline(std::cin, name);
+      if (name.compare("q") == 0) {
+        skip_flag = true;
+        break;
+      }
       if (Map::Instance().StringToTerritory(name)) {
         move_from = Map::Instance().StringToTerritory(name);
         if (move_from->get_owner() != this) {
@@ -156,29 +160,31 @@ void HumanPlayer::Fortify() {
         } else break;
       }
     }
+    
+    if (!skip_flag) {
 
-    // To which territory
-    for (;;) {
-      std::cout << "To which of your territories do you want to send troops? (Enter q to skip.)" << std::endl;
-      move_from->PrintAdjacentOwnedTerritories(this);
-      getline(std::cin, name);
-      if (name.compare("q") == 0) {
-        skip_flag = true;
-        break;
-      }
-      if (Map::Instance().StringToTerritory(name)) {
-        move_to = Map::Instance().StringToTerritory(name);
-        if (move_to->get_owner() != this) {
-          std::cout << "That country doesn't belong to you!" << std::endl;
-        } else if (!(move_from->AreAdjacent(move_to))) {
-          std::cout << "Those countries aren't adjacent!" << std::endl;
-        } else break;
+      // To which territory
+      for (;;) {
+        std::cout << "To which of your territories do you want to send troops? (Enter q to skip.)" << std::endl;
+        move_from->PrintAdjacentOwnedTerritories(this);
+        getline(std::cin, name);
+        if (name.compare("q") == 0) {
+          skip_flag = true;
+          break;
+        }
+        if (Map::Instance().StringToTerritory(name)) {
+          move_to = Map::Instance().StringToTerritory(name);
+          if (move_to->get_owner() != this) {
+            std::cout << "That country doesn't belong to you!" << std::endl;
+          } else if (!(move_from->AreAdjacent(move_to))) {
+            std::cout << "Those countries aren't adjacent!" << std::endl;
+          } else break;
+        }
       }
     }
 
-    // If user hasn't quit
     if (!skip_flag) {
-      // How many armies to move
+
       for (;;) {
         std::cout << "How many armies do you want to move from " 
                   << move_from->get_name() << " to " << move_to->get_name() << "?\n";
@@ -198,9 +204,8 @@ void HumanPlayer::Fortify() {
       move_to->set_num_units(move_to->get_num_units() + armies);
       std::cout << armies << " armies successfully moved from " 
                 << move_from->get_name() << " to " << move_to->get_name() << "!\n";
-    }
-  } 
-
+    } 
+  }
   if (answer == 0 || skip_flag) {
     std::cout << "Player " << id << " chose not to fortify" << std::endl;
   }
