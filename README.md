@@ -1,10 +1,10 @@
 # Team "Risky Business (1983)" Conquest Game
 
 ## Team Members
-Anne-Marie Dube, #26456383
-Matthew Mongrain, #26991793
-Tan Trung Nguyen, #26621856
-Alika Utepova, #26917046
+Anne-Marie Dube, #26456383   
+Matthew Mongrain, #26991793   
+Tan Trung Nguyen, #26621856   
+Alika Utepova, #26917046   
 
 ## State of the Project
 At this stage of intermediate delivery, the game is in a playable state, but is missing some features. (This being a Risk clone, you would likely lose several hours and several friends before you discovered those missing features, however.) Following is a list of currently implemented features, a list of features still being worked on, and a list of features that will be added later, along with compilation instructions for the current set of files.
