@@ -19,7 +19,7 @@ At this stage of intermediate delivery, the game is in a playable state, but is 
 
 ### In Progress
 * Map editor
-* Computer players
+* Computer players and strategies
 * Victory conditions for main game loop
 
 ### Roadmap 
@@ -31,7 +31,7 @@ A makefile is included with the files in this .zip.
 ```
 make
 ```
-is sufficient to compile it using gcc, and has been tested under Ubuntu Linux 14.04 and Mac OSX 10.10. Compilation has also been tested in Windows 8 using Visual Studio 2012. 
+is sufficient to compile it using gcc, and has been tested under Ubuntu Linux 14.04 and Mac OSX 10.10. Compilation has also been tested in Windows 8 using Visual Studio 2013. 
 
 ## Operation Notes
 Though the program deals more or less gracefully with invalid input, there are some times where it can misbehave when reading commands from the keyboard. Since interaction with the final game will be done entirely through the mouse, we don't intend to fix text input--it's only there to demonstrate the operation of the program.
