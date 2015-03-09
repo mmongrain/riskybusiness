@@ -14,7 +14,6 @@
 #include <string>
 #include "map.h"
 
-//Is a friend of Map
 
 class MapEditor {
     
