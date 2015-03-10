@@ -125,6 +125,13 @@ class Map: public Observable {
     std::vector<Continent*> *get_continents()      { return &continents;  }
     std::vector<Territory*> *get_territories()     { return &territories; }
     std::vector<Territory*> get_copy_territories() { return territories;  }
+    
+    //Map Editor Functions
+    static void introMapEditor();
+    static void theMapEditor();
+    static void CountryCreator();
+    static void AdjacencyDefiner();
+    static void ContinentCreator();
 
   private:
 
