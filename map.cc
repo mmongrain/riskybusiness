@@ -1,3 +1,4 @@
+#include <boost/algorithm/string.hpp>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -60,7 +61,7 @@ bool Map::Territory::CanAttack() {
   return false;
 }
 
-bool Map::Territory::CanFortify () { 
+bool Map::Territory::CanFortify() { 
   if (this->num_units < 2) { return false; }
   for (int i = 0; i < adjacency_list.size(); i++) {
     if (adjacency_list[i]->get_owner() == this->owner) { return true; }
@@ -143,6 +144,7 @@ void Map::Load(char* filename) {
     }
   }
 
+  ClearMap();
   ParseMapInfo(section_map);
   ParseContinentInfo(section_continents);
   ParseTerritoryInfo(section_territories);
@@ -174,51 +176,44 @@ void Map::Save(char *filename) {
   }
 }
 
-void Map::ParseMapInfo(const std::vector<std::string> &section_map) {
-  for (unsigned int i = 0; i < section_map.size(); i++) {
-    /* TODO: Fix the clearing for all three Parse methods
-     * right now the clear is happening at the end of method execution,
-     * which obviously borks everything, idk why
-     * Clear out the existing struct
+void Map::ClearMap() {
     map_info.author = "";
     map_info.image = "";
     map_info.wrap = true;
     map_info.scroll = 'n';
-    map_info.warn = true; */
-    std::size_t delim = section_map[i].find("=");
-    /**
-     * XXX: Possible portability problem 
-     * For some reason each line on my system is followed by two invisible
-     * characters that badly bork the strings. (This might be a feature of
-     * Windows-formatted files). -2 is a magic number, and may be different on 
-     * your system. 
-     * TODO: Find out what's actually going on
-     */
-    int end_of_string = section_map[i].length() - delim - 2; 
-    std::string field = section_map[i].substr(0, delim);
-    std::string value = section_map[i].substr(delim + 1, end_of_string); 
+    map_info.warn = true;
+}
 
-    // Convert field to an enum when you get the chance
-    if (field.compare("author") == 0) { // "If strings are identical" 
+
+void Map::ParseMapInfo(const std::vector<std::string> &section_map) {
+  for (unsigned int i = 0; i < section_map.size(); i++) {
+    std::size_t delim = section_map[i].find("=");
+    int end_of_string = section_map[i].length() - delim; 
+    std::string field = section_map[i].substr(0, delim);
+    boost::trim(field);
+    std::string value = section_map[i].substr(delim + 1, end_of_string);
+    boost::trim(value);
+
+    if (boost::iequals(field, "author")) { // "If strings are identical" 
       map_info.author = value;
 
-    } else if (field.compare("image") == 0) {
+    } else if (boost::iequals(field, "image")) {
       map_info.image = value;
 
-    } else if (field.compare("wrap") == 0) {
-      map_info.wrap = (value.compare("yes") == 0);
+    } else if (boost::iequals(field, "wrap")) {
+      map_info.wrap = (boost::iequals(value, "yes"));
     
-    } else if (field.compare("scroll") == 0) {
-      if (value.compare("horizontal") == 0) {
+    } else if (boost::iequals(field, "scroll")) {
+      if (boost::iequals(value, "horizontal")) {
         map_info.scroll = 'h';
-      } else if (value.compare("vertical") == 0) {
+      } else if (boost::iequals(value, "vertical")) {
         map_info.scroll = 'v';
       } else {
         map_info.scroll = 'n';
       }
 
-    } else if (field.compare("warn") == 0) {
-      map_info.warn = (value.compare("yes") == 0);
+    } else if (boost::iequals(field, "warn")) {
+      map_info.warn = boost::iequals(value, "yes");
     }
   }
 }
@@ -229,6 +224,7 @@ void Map::ParseContinentInfo(const std::vector<std::string> &section_continents)
     std::size_t delim = section_continents[i].find("=");
     Continent *continent = new Continent;
     continent->name = section_continents[i].substr(0, delim);
+    boost::trim(continent->name);
     // stoi is available in c++11, make sure your compiler supports, it converts int to str
     // compilation flag is -std=c++11
     continent->bonus = std::stoi(section_continents[i].substr(delim + 1));
@@ -246,23 +242,9 @@ void Map::ParseTerritoryInfo(const std::vector<std::string> &section_territories
     std::stringstream input(section_territories[i]);
     std::string token;
     while (getline(input, token, ',')) {
-      token = token.substr(0, token.length());
+      boost::trim(token);
       territory.push_back(token);
     }
-
-    // TODO: Figure out a syntax to logical-or these two ifdefs
-#ifdef __APPLE__
-    // Eats the EOF character, which breaks everything on Linux
-    int last = territory.size() - 1;
-    territory[last] = territory[last].substr(0, territory[last].length() - 1);
-#endif
-
-#ifdef __linux__
-    // Eats the EOF character, which breaks everything on Linux
-    int last = territory.size() - 1;
-    territory[last] = territory[last].substr(0, territory[last].length() - 1);
-#endif
-
 
     // Write to the territory struct and add it to the master territories list
     temp->name = territory[0];
@@ -271,7 +253,8 @@ void Map::ParseTerritoryInfo(const std::vector<std::string> &section_territories
 
     // Find the continent it belongs to
     for (int j = 0; j < continents.size(); j++) {
-      if (continents[j]->get_name().compare(territory[3]) == 0) {
+      //  boost::iequals returns true if two strings are equal ignoring case
+      if (boost::iequals(continents[j]->get_name(), territory[3])) {
         temp->continent = continents[j];
         continents[j]->get_territories().push_back(temp);
       }
@@ -282,8 +265,8 @@ void Map::ParseTerritoryInfo(const std::vector<std::string> &section_territories
     }
     for (unsigned int j = 4; j < territory.size(); j++) {
       Territory *land = new Territory();
-
       land->name = territory[j];
+      boost::trim(land->name);
       temp->adjacency_list.push_back(land);
     }
     territories.push_back(temp);
