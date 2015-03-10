@@ -4,6 +4,7 @@
 #include <fstream>
 #include <vector>
 #include <sstream>
+#include <algorithm> //std::find()
 
 #include "player.h"
 #include "map.h"
