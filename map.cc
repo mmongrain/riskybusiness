@@ -304,7 +304,7 @@ Map::Territory *Map::StringToTerritory(std::string s) {
 	return 0;
 }
 
-// --Beginning of Map Editor--
+/*/ --Beginning of Map Editor--
 // General opening of the Map Editor
 void Map::introMapEditor() {
     int answer;
@@ -439,4 +439,4 @@ void  Map::ContinentCreator() {
     
     
 }
-//--End of Map Editor--
+//--End of Map Editor--*/
