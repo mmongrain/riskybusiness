@@ -2,17 +2,7 @@
 #define COMP_PLAYER_H_
 
 #include "player.h"
-
-class CompPlayer;
-class Strategy {
-public:
-	virtual void execute(CompPlayer *c_player) = 0;
-	virtual ~Strategy(){};
-};
-
-class Aggressive : public Strategy {
-	void execute(CompPlayer *c_player);
-};
+#include"strategy.h"
 
 class CompPlayer : public Player {
 public:
@@ -26,7 +16,5 @@ protected:
 private:
 	Strategy *strategy;
 };
-
-
 
 #endif

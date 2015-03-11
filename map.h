@@ -54,6 +54,7 @@ class Map: public Observable {
          bool CanFortify();
          void PrintAdjacentTerritories();
          void PrintAttackableTerritories(Player *player);
+		 std::vector<Territory*> GetAttackableTerritories(Player* player);
          void PrintAdjacentOwnedTerritories(Player *player);
 
        private:

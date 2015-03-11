@@ -3,6 +3,7 @@
 #include <iostream>
 #include "map.h"
 #include "battle.h"
+#include "strategy_aggressive.h"
 #include <stdlib.h> // rand(), need to find how to seed
 #include <vector>
 
@@ -24,7 +25,6 @@ void CompPlayer::Reinforce() {
 
 void CompPlayer::Attack() {
 	this->strategy->execute(this); 
-	std::cout << "Player " << Player::id << " attacked (computer)" << std::endl;
 }
 
 void CompPlayer::Fortify() {
@@ -49,21 +49,4 @@ void CompPlayer::Fortify() {
 // armies than one of its own territories acjacent to it
 
 
-void Aggressive::execute(CompPlayer *c_player){
 
-	// iterates through its own terrirories
-	for (unsigned int i = 0; i < c_player->owned_territories.size(); i++){
-
-		std::vector<Map::Territory*> *neighbors = c_player->owned_territories[i]->get_adjacency_list();
-
-		// iterates through adjacent territories
-		for (unsigned int j = 0; j < neighbors->size(); j++){
-
-			if (c_player->owned_territories[i]->get_owner() != (*neighbors)[j]->get_owner()
-				&& c_player->owned_territories[i]->get_num_units() > (*neighbors)[j]->get_num_units()){				
-					
-				battle::AllInAttack(c_player->owned_territories[i], (*neighbors)[j]);
-			}
-		}
-	}
-}
