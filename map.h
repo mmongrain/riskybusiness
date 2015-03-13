@@ -56,6 +56,7 @@ class Map: public Observable {
          void PrintAttackableTerritories(Player *player);
 		 std::vector<Territory*> GetAttackableTerritories(Player* player);
          void PrintAdjacentOwnedTerritories(Player *player);
+		 std::vector<Map::Territory*> GetAdjacentOwnedTerritories(Player* player);
 
        private:
 

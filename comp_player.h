@@ -15,6 +15,9 @@ protected:
 	void Fortify();
 private:
 	Strategy *strategy;
+	bool WillFortify();
+	Map::Territory* ChoosePointOfDepart();
+	Map::Territory* ChooseDestination(Map::Territory* move_from);
 };
 
 #endif

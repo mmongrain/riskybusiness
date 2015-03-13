@@ -6,6 +6,9 @@ class CompPlayer;
 
 class Defensive : public Strategy {
 	void execute(CompPlayer *c_player);
+
+private:
+	bool hasAttacked;
 };
 
 #endif

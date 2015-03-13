@@ -6,6 +6,9 @@
 
 class CompPlayer;
 
+// attacks the first neighbor enemy territory which has less 
+// armies than one of its own territories acjacent to it
+
 void Aggressive::execute(CompPlayer *c_player){
 
 	// iterates through its own terrirories
@@ -18,7 +21,9 @@ void Aggressive::execute(CompPlayer *c_player){
 
 			if (c_player->owned_territories[i]->get_owner() != (attackable)[j]->get_owner()
 				&& c_player->owned_territories[i]->get_num_units() > attackable[j]->get_num_units()){
-
+				std::cout << "\n" << c_player->owned_territories[i]->get_name() << " attacks "
+					<< attackable[j]->get_name() << " (Player " << attackable[j]->get_owner()->get_id()
+					<< ")!" << std::endl;
 				battle::Battle(c_player->owned_territories[i], (attackable)[j]);
 			}
 		}

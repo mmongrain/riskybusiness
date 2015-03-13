@@ -1,6 +1,7 @@
 #ifndef strategy_random_h
 #define strategy_random_h
 #include "strategy.h"
+#include "map.h"
 
 class CompPlayer;
 

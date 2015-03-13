@@ -70,47 +70,49 @@ bool Map::Territory::CanFortify() {
   return false;
 }
   
-void Map::Territory::PrintAdjacentTerritories() {
-  for (int i = 0; i < adjacency_list.size(); i++) {
-    std::cout << adjacency_list[i]->get_name() << " (" 
-              << adjacency_list[i]->get_num_units() << ", Player " 
-              << adjacency_list[i]->get_owner()->get_id() << ")";
-    (i < adjacency_list.size() - 1) ? std::cout << ", " : std::cout << ".\n";
-  }
-}
-
-void Map::Territory::PrintAttackableTerritories(Player* player) {
-  std::vector<Map::Territory*> attackable;
-  for (int i = 0; i < adjacency_list.size(); i++) {
-    if (adjacency_list[i]->get_owner() != player) {  
-      attackable.push_back(adjacency_list[i]);
-    }
-  }
-  for (int i = 0; i < attackable.size(); i++) {
-    if (attackable[i]->get_owner() != player) {  
-      std::cout << attackable[i]->get_name() << " (" 
-                << attackable[i]->get_num_units() << ", Player " 
-                << attackable[i]->get_owner()->get_id() << ")";
-      (i < attackable.size() - 1) ? std::cout << ", " : std::cout << ".\n";
-    }
-  }
-}
-
 void Map::Territory::PrintAdjacentOwnedTerritories(Player* player) {
-  std::vector<Map::Territory*> owned;
-  for (int i = 0; i < adjacency_list.size(); i++) {
-    if (adjacency_list[i]->get_owner() == player) {  
-      owned.push_back(adjacency_list[i]);
-    }
-  }
-  for (int i = 0; i < owned.size(); i++) {
-    if (owned[i]->get_owner() == player) {  
-      std::cout << owned[i]->get_name() << " (" 
-                << owned[i]->get_num_units() << ", Player " 
-                << owned[i]->get_owner()->get_id() << ")";
-      (i < owned.size() - 1) ? std::cout << ", " : std::cout << ".\n";
-    }
-  }
+	std::vector<Map::Territory*> owned = Map::Territory::GetAdjacentOwnedTerritories(player);
+	for (int i = 0; i < owned.size(); i++) {
+		if (owned[i]->get_owner() == player) {
+			std::cout << owned[i]->get_name() << " ("
+				<< owned[i]->get_num_units() << ", Player "
+				<< owned[i]->get_owner()->get_id() << ")";
+			(i < owned.size() - 1) ? std::cout << ", " : std::cout << ".\n";
+		}
+	}
+}
+
+std::vector<Map::Territory*> Map::Territory::GetAdjacentOwnedTerritories(Player* player){
+	std::vector<Map::Territory*> adjacent_owned;
+	for (int i = 0; i < adjacency_list.size(); i++) {
+		if (adjacency_list[i]->get_owner() == player) {
+			adjacent_owned.push_back(adjacency_list[i]);
+		}
+	}
+	return adjacent_owned;
+}
+
+// splitted in two methods for easier reuse (needed in Strategies)
+void Map::Territory::PrintAttackableTerritories(Player* player) {
+	std::vector<Map::Territory*> attackable = Map::Territory::GetAttackableTerritories(player);
+	for (int i = 0; i < attackable.size(); i++) {
+		if (attackable[i]->get_owner() != player) {
+			std::cout << attackable[i]->get_name() << " ("
+				<< attackable[i]->get_num_units() << ", Player "
+				<< attackable[i]->get_owner()->get_id() << ")";
+			(i < attackable.size() - 1) ? std::cout << ", " : std::cout << ".\n";
+		}
+	}
+}
+
+std::vector<Map::Territory *> Map::Territory::GetAttackableTerritories(Player* player) {
+	std::vector<Map::Territory*> attackable;
+	for (int i = 0; i < adjacency_list.size(); i++) {
+		if (adjacency_list[i]->get_owner() != player) {
+			attackable.push_back(adjacency_list[i]);
+		}
+	}
+	return attackable;
 }
 
 

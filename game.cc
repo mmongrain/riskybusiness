@@ -8,6 +8,10 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include "strategy.h"
+#include "strategy_aggressive.h"
+#include "strategy_defensive.h"
+#include "strategy_random.h"
 
 void Game::PlayGame() {
 	Startup();
@@ -21,7 +25,7 @@ void Game::PlayerViewTestHelper(int num_players) {
 	for (int i = 0; i < num_players; i++){
 		players.push_back(new HumanPlayer());
 	}
-  AssignCountries();
+	AssignCountries();
 }
 
 void Game::Startup()
@@ -42,8 +46,8 @@ void Game::Startup()
 		players.push_back(new HumanPlayer());
 	}
 
-	// creating ComputerPlayer objects
-	if (num_human_players < 6) {
+	// creating ComputerPlayer objects, this long thing can be simplified a bit I think..
+	if (num_human_players > 3) {
 		std::cout << "Please enter a number of computer players between 0 and " << 6 - num_human_players
 			<< ":\n (So there will be at most 6 players)" << std::endl;
 		// verify input
@@ -54,13 +58,81 @@ void Game::Startup()
 			std::cin.clear();
 			std::cin.ignore(1000, '\n');
 		}
-		for (int i = 0; i < num_comp_players; i++){
-			players.push_back(new CompPlayer());
+		std::cout << num_comp_players << "Computer Players are being created..." << std::endl;
+		CustomCompPlayers();
+	}
+	else {
+		std::cout << "Please enter a number of computer players between 2 and 6 "
+			<< "\nor press any other key and I will create one Computer player of each kind: "
+			<< "\nAggressive, Defensive and Random." << std::endl;
+		Game::players = *(new std::vector<Player*>);
+
+		// making default CompPlayers
+		if (!(std::cin >> num_comp_players) || num_comp_players < 2 || num_comp_players > 6)
+		{
+			std::cout << "Three default Computer Players are being created... " << std::endl;
+			DefaultCompPlayers();
+		}
+
+		// making custom CompPlayers
+		else {
+			std::cout << num_comp_players << " custom Computer Players are being created..." << std::endl;
+			CustomCompPlayers();
 		}
 	}
-  std::cin.clear();
-  std::cin.ignore(10000, '\n');
+	std::cin.clear();
+	std::cin.ignore(10000, '\n');
 	AssignCountries();
+}
+
+// Makes one CompPlayer of each kind (aggressive, defensive, random)
+void Game::DefaultCompPlayers(){
+	for (int i = 0; i < 3; i++){
+		players.push_back(new CompPlayer());
+	}
+	for (int i = 0; i < players.size(); i++){
+		ApplyStrategyChoice(i + 1, (CompPlayer*)players[i]);
+	}
+}
+
+// Lets the user choose a strategy for each CompPlayer
+void Game::CustomCompPlayers(){
+	for (int i = 0; i < num_comp_players; i++){
+		players.push_back(new CompPlayer());
+	}
+	for (int i = 0; i < players.size(); i++){
+		int choice = 1;
+		std::cout << "Choose desired strategy for Computer Player " << players[i]->get_id()
+			<< ": \nAggressive(1)\nDefensive(2)\nRandom(3)" << std::endl;
+		while (!(std::cin >> choice) || choice < 1 || choice > 3)
+		{
+			std::cout << "Wrong input! Please choose a strategy for Computer Player " << players[i]->get_id()
+				<< " between the following options:\nAggressive(1)\nDefensive(2)\nRandom(3)" << std::endl;
+			std::cin.clear();
+			std::cin.ignore(1000, '\n');
+		}
+		ApplyStrategyChoice(choice, (CompPlayer*)players[i]);
+	}
+}
+
+// Translates the user's input integer into the corresponding strategy
+void Game::ApplyStrategyChoice(int choice, CompPlayer* player){
+	switch (choice){
+	case 1:
+		player->set_strategy(new Aggressive());
+		std::cout << "Strategy of Computer Player " << player->get_id() << " has been set to Aggressive" << std::endl;
+		break;
+	case 2:
+		player->set_strategy(new Defensive());
+		std::cout << "Strategy of Computer Player " << player->get_id() << " has been set to Defensive" << std::endl;
+		break;
+	case 3:
+		player->set_strategy(new Random());
+		std::cout << "Strategy of Computer Player " << player->get_id() << " has been set to Random" << std::endl;
+		break;
+	default:
+		std::cout << "Invalid strategy choice!" << std::endl;
+	}
 }
 
 void Game::AssignCountries() {
@@ -84,16 +156,16 @@ void Game::AssignCountries() {
 	std::cout << "Countries have been assigned randomly!" << std::endl;
 
 	// used for testing
-	/* 
+	/*
 	std::vector<Map::Territory*> terr = *(Map::Instance().get_territories());
 	for (int i = 0; i < terr.size(); i++){
-		std::cout << terr[i]->get_name() << ": Player " << terr[i]->get_owner()->get_id() << std::endl;
+	std::cout << terr[i]->get_name() << ": Player " << terr[i]->get_owner()->get_id() << std::endl;
 	}
 
 	for (int i = 0; i < players.size(); ++i){
-		std::cout << "Player " << players[i]->get_id() << ": " << std::endl;
-		players[i]->PrintOwnedTerritories();
-	} 
+	std::cout << "Player " << players[i]->get_id() << ": " << std::endl;
+	players[i]->PrintOwnedTerritories();
+	}
 	*/
 }
 
@@ -109,14 +181,14 @@ void Game::MainPhase()
 		// END OF GAME
 		// temporary way to end the game (to be replaced by actual conditions for ending the game)
 		std::cout << "\n\nPress 1 to continue playing or 0 to stop" << std::endl;
-    int answer;
-    std::cin >> answer;
-    std::cin.clear();
-    std::cin.ignore(1000, '\n');
+		int answer;
+		std::cin >> answer;
+		std::cin.clear();
+		std::cin.ignore(1000, '\n');
 		while (answer != 0 && answer != 1)
 		{
 			std::cout << "Wrong input! Press 1 to continue playing or 0 to stop" << std::endl;
-      std::cin >> answer;
+			std::cin >> answer;
 			std::cin.clear();
 			std::cin.ignore(1000, '\n');
 		}

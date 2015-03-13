@@ -10,15 +10,20 @@ void Random::execute(CompPlayer *c_player){
 
 	// decide between attacking or not
 	if (!WillAttack()) {
-		std::cout << "CompPlayer " << c_player->get_id() << "chose not to attack" << std::endl;
+		std::cout << "CompPlayer " << c_player->get_id() << " chose not to attack" << std::endl;
 		return;
 	}
 
 	// choose attacker and defender territories
 	Map::Territory* attacking = FromWhereToAttack(c_player);
+	if (attacking == NULL)
+		return;
 	Map::Territory* defending = WhomToAttack(c_player, attacking);
 
 	// proceed to attack
+	std::cout << "\n" << attacking->get_name() << " attacks " << defending->get_name()
+		<< " (Player " << defending->get_owner()->get_id()
+		<< ")!" << std::endl;
 	battle::Battle(attacking, defending);
 
 }
@@ -32,11 +37,11 @@ bool Random::WillAttack(){
 // returns a random valid attacking territory or null if no such territory is found
 Map::Territory* Random::FromWhereToAttack(CompPlayer* c_player){
 	std::vector <Map::Territory*> valid_attackers;
-	std::vector <Map::Territory*> owned_territories = *(c_player->get_owned_territories);
+	std::vector <Map::Territory*> owned_territories = c_player->get_owned_territories();
 
 	// gathers all valid_attackers 
-	for (unsigned int i = 0; i < c_player->get_owned_territories->size(); ++i){
-		if (owned_territories[i]->CanAttack)
+	for (unsigned int i = 0; i < owned_territories.size(); ++i){
+		if (owned_territories[i]->CanAttack())
 			valid_attackers.push_back(owned_territories[i]);
 	}
 
