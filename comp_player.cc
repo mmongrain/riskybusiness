@@ -8,7 +8,7 @@
 #include <vector>
 
 CompPlayer::CompPlayer() : Player() {
-	//strategy = new Aggressive();
+	strategy = new Aggressive();
 }
 
 void CompPlayer::Reinforce() {
