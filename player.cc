@@ -26,7 +26,7 @@ void Player::PlayTurn() {
 	Fortify();
 }
 
-int Player::player_id = 0;
+int Player::player_id = 1;
 
 void Player::DetermineContinentOwnership() {
 	std::map<Map::Continent*, int> ownership;
@@ -59,7 +59,6 @@ void Player::PrintOwnedTerritories() {
 
 void Player::CalculateReinforcements() {	
 	DetermineContinentOwnership();
-	std::cout << "Reinforcement phase:" << std::endl;
 
 	// calculate the number of reinforcements
 	// http://www.hasbro.com/common/instruct/risk.pdf
