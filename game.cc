@@ -33,10 +33,10 @@ void Game::Startup()
 	std::cout << "===== STARTUP PHASE =====\n\n";
 
 	// creating HumanPlayer objects
-	std::cout << "Please enter a number of human players between 2 and 6:\n";
-	while (!(std::cin >> num_human_players) || num_human_players < 2 || num_human_players > 6)
+	std::cout << "Please enter a number of human players between 0 and 6:\n";
+	while (!(std::cin >> num_human_players) || num_human_players < 0 || num_human_players > 6)
 	{
-		std::cout << "Wrong input! Please enter a number of players between 2 and 6:\n";
+		std::cout << "Wrong input! Please enter a number of players between 0 and 6:\n";
 		std::cin.clear();
 		std::cin.ignore(1000, '\n');
 	}
@@ -46,10 +46,9 @@ void Game::Startup()
 		players.push_back(new HumanPlayer());
 	}
 
-	// creating ComputerPlayer objects, this long thing can be simplified a bit I think..
+	// creating ComputerPlayer objects, to be re-done using exceptions
 	if (num_human_players > 3) {
-		std::cout << "Please enter a number of computer players between 0 and " << 6 - num_human_players
-			<< ":\n (So there will be at most 6 players)" << std::endl;
+		std::cout << "Please enter a number of computer players between 0 and " << 6 - num_human_players << std::endl;
 		// verify input
 		while (!(std::cin >> num_comp_players) || num_comp_players < 0 || num_comp_players > 6 - num_human_players)
 		{
@@ -58,27 +57,44 @@ void Game::Startup()
 			std::cin.clear();
 			std::cin.ignore(1000, '\n');
 		}
-		std::cout << num_comp_players << "Computer Players are being created..." << std::endl;
-		CustomCompPlayers();
+		if (!num_comp_players == 0){
+			std::cout << num_comp_players << " Computer Players are being created..." << std::endl;
+			CustomCompPlayers();
+		}
 	}
 	else {
-		std::cout << "Please enter a number of computer players between 2 and 6 "
-			<< "\nor press any other key and I will create one Computer player of each kind: "
-			<< "\nAggressive, Defensive and Random." << std::endl;
-		Game::players = *(new std::vector<Player*>);
+		// if more than 1 human player, can have 0 CompPlayers, otherwise make CompPlayer(s) to make sure we have 2 players total
+		int min_comp_players = (num_human_players > 1) ? 0 : 2 - num_human_players;
+		int max_comp_players = 6 - num_human_players;
+
+		std::cout << "Please enter a number of computer players between " << min_comp_players << " and " << max_comp_players
+			<< "\nor press " << max_comp_players + 1 << " and I will create one Computer player of each kind: "
+			<< "\nAggressive, Defensive and Random." << std::endl;	
+
+		// get and check input
+		while (!(std::cin >> num_comp_players) || num_comp_players < min_comp_players || num_comp_players > max_comp_players + 1)
+		{
+			std::cout << "Wrong input! Please enter a number of computer players between " << min_comp_players << " and "
+				<< max_comp_players << "\nor press " << max_comp_players + 1
+				<< " and I will create one Computer player of each kind: " << "\nAggressive, Defensive and Random."
+				<< ":\n" << std::endl;
+			std::cin.clear();
+			std::cin.ignore(1000, '\n');
+		}
 
 		// making default CompPlayers
-		if (!(std::cin >> num_comp_players) || num_comp_players < 2 || num_comp_players > 6)
-		{
+		if (num_comp_players == max_comp_players + 1){
 			std::cout << "Three default Computer Players are being created... " << std::endl;
 			DefaultCompPlayers();
 		}
-
+			
 		// making custom CompPlayers
 		else {
-			std::cout << num_comp_players << " custom Computer Players are being created..." << std::endl;
-			CustomCompPlayers();
-		}
+			if (!num_comp_players == 0){
+				std::cout << num_comp_players << " custom Computer Players are being created..." << std::endl;
+				CustomCompPlayers();
+			}
+		}		
 	}
 	std::cin.clear();
 	std::cin.ignore(10000, '\n');
@@ -90,8 +106,8 @@ void Game::DefaultCompPlayers(){
 	for (int i = 0; i < 3; i++){
 		players.push_back(new CompPlayer());
 	}
-	for (int i = 0; i < players.size(); i++){
-		ApplyStrategyChoice(i + 1, (CompPlayer*)players[i]);
+	for (int i = num_human_players; i < players.size(); i++){
+		ApplyStrategyChoice(i % 3 + 1, (CompPlayer*)players[i]);
 	}
 }
 
@@ -100,7 +116,7 @@ void Game::CustomCompPlayers(){
 	for (int i = 0; i < num_comp_players; i++){
 		players.push_back(new CompPlayer());
 	}
-	for (int i = 0; i < players.size(); i++){
+	for (int i = num_human_players; i < players.size(); i++){
 		int choice = 1;
 		std::cout << "Choose desired strategy for Computer Player " << players[i]->get_id()
 			<< ": \nAggressive(1)\nDefensive(2)\nRandom(3)" << std::endl;
@@ -173,7 +189,7 @@ void Game::MainPhase()
 {
 	std::cout << "\n===== MAIN PLAY PHASE =====";
 	while (game_over == false) {
-		for (int i = 0; i < num_human_players; i++) // round-robin loop over the players 
+		for (int i = 0; i < players.size(); i++) // round-robin loop over the players 
 		{
 			players[i]->PlayTurn();
 		}
