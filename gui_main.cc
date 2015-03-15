@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include "map.h"
+#include "territory.h"
 
 int main() {
   // Load the .map file, load the font, get the relevant image from there
@@ -21,6 +22,16 @@ int main() {
   sf::Sprite map_sprite;
   map_sprite.setTexture(map_texture);
 
+  // Get the spritesheet and set a default rect
+  sf::Texture sprite_sheet;
+  sprite_sheet.loadFromFile("textures/1945.png");
+  sf::IntRect subrect;
+  subrect.left = 4;
+  subrect.width = 31;
+  subrect.top = 4;
+  subrect.height = 31;
+  sf::Sprite marker(sprite_sheet, subrect);
+
   // Get the window size to open from the texture size
   // Vector2u is a typedef for Vector2<unsigned int>
   sf::Vector2u window_size = map_texture.getSize();
@@ -29,7 +40,8 @@ int main() {
   // Creates the map_info textbox
   std::string map_info_text = "Author: " + Map::Instance().get_author() + "\n"
                             + "Image: " + Map::Instance().get_image() + "\n"
-                            + "Window size: " + std::to_string(window_size.x) + "x" + std::to_string(window_size.y) + "\n";
+                            + "Window size: " + std::to_string(window_size.x) 
+                            + "x" + std::to_string(window_size.y) + "\n";
   sf::Text map_info;
   map_info.setFont(pt_sans);
   map_info.setCharacterSize(18);
@@ -40,9 +52,17 @@ int main() {
   while (window.isOpen()) {
     sf::Event event;
     while (window.pollEvent(event)) {
+      // Create a vector to store all the sprites that will be drawn this loop
+      std::vector<sf::Sprite> sprites;
+      std::vector<sf::Text> texts;
+
+      // EVENTS //
+      // If window is closed, close the window (!)
       if (event.type == sf::Event::Closed) {
         window.close();
       }
+
+      // If mouse button is pressed, do something
       if (event.type == sf::Event::MouseButtonPressed) {
         if (event.mouseButton.button == sf::Mouse::Right) {
           std::cout << "Right click ";
@@ -51,9 +71,41 @@ int main() {
         }
         std::cout << "[x: " << event.mouseButton.x << ", y: " << event.mouseButton.y << "]" << std::endl;
       }
+
+      // Add all the objects to be drawn this cycle
+      std::vector<Territory*> territories = Map::Instance().get_copy_territories();
+
+      sprites.push_back(map_sprite);
+      for (auto &territory : territories) {
+        sprites.push_back(sf::Sprite(sprite_sheet, subrect));
+        sprites.back().setPosition(
+          sf::Vector2f(
+            (float)(territory->get_x() - 15),
+            (float)(territory->get_y() - 15)
+          )
+        );
+      }
+
+      texts.push_back(map_info);
+      for (auto &territory : territories) {
+        texts.push_back(sf::Text(
+          territory->get_name(),
+          pt_sans,
+          12
+        ));
+        texts.back().setColor(sf::Color::Red);
+        texts.back().setPosition(
+          sf::Vector2f(
+            (float)(territory->get_x() - 15),
+            (float)(territory->get_y() - 15)
+          )
+        );
+      }
+
+      // Clear, draw, display
       window.clear(sf::Color::Black);
-      window.draw(map_sprite);
-      window.draw(map_info);
+      for (auto sprite : sprites) { window.draw(sprite); }
+      for (auto text : texts)     { window.draw(text); }
       window.display();
     }
   }
