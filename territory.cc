@@ -1,3 +1,10 @@
+#include <string>
+#include <vector>
+
+#include "map.h"
+#include "player.h"
+#include "territory.h"
+
 std::string Territory::ToString() {
   std::string out = name + "," + std::to_string(x) + "," + std::to_string(y)
                     + "," + continent->get_name() + ",";
@@ -20,7 +27,7 @@ bool Territory::AreAdjacent(Territory *bordering) {
 
 bool Territory::AttackIsValid(Territory *defending) {
   Territory *attacking = this;
-	for (unsigned int i = 0; i < Map::Instance().territories.size(); i++){
+	for (unsigned int i = 0; i < Map::Instance().get_territories()->size(); i++){
 		if (defending->owner == attacking->owner){
 			std::cout << "You can't attack your own people!";
 			return false;
@@ -97,13 +104,24 @@ std::vector<Territory *> Territory::GetAttackableTerritories(Player* player) {
 	return attackable;
 }
 
-Territory* Map::StringToTerritory(std::string s) {
-	Territory *territory;
-	for (int i = 0; i < territories.size(); i++) {
-		if (territories[i]->get_name().compare(s) == 0) {
-			territory = territories[i];
-		  return territory;	
-    }
-  }
-	return 0;
+
+std::string Territory::set_name(std::string name) {
+  std::string temp = this->name;
+  this->name = name;
+  NotifyObservers();
+  return temp;
+}
+
+Player* Territory::set_owner(Player *owner) { 
+  Player *temp = this->owner;
+  this->owner = owner;
+  NotifyObservers();
+  return temp;
+}
+
+int Territory::set_num_units(int num_units) {
+  int temp = this->num_units;
+  this->num_units = num_units;
+  NotifyObservers();
+  return temp;
 }

@@ -61,7 +61,7 @@ void  Map::CountryCreator() {
         std::cin >> countryName;
     }
     
-    Map::Territory* newTerritory = new Map::Territory();
+    Territory* newTerritory = new Territory();
     newTerritory->set_name(countryName);
     Map::Instance().get_territories()->push_back(newTerritory);
     
@@ -84,8 +84,8 @@ void  Map::AdjacencyDefiner() {
         std::cin >> firstCountry;
         std::cin >> secondCountry;
     }
-    Map::Territory* aTerritory = new Map::Territory;
-    Map::Territory* anotherTerritory = new Map::Territory;
+    Territory* aTerritory = new Territory;
+    Territory* anotherTerritory = new Territory;
     // **Problem here**: std::find returns an iterator, but must be cast to Object itself, may be done by dereferencing the iterator pointer but could not find a way to do so
     //aTerritory = std::find(Map::Instance().get_territories()->begin(), Map::Instance().get_territories()->end(), firstCountry);
     //anotherTerritory = std::find(Map::Instance().get_territories()->begin(), Map::Instance().get_territories()->end(), secondCountry);
@@ -117,7 +117,7 @@ void  Map::AdjacencyDefiner() {
 }
 
 // Method called when the user wants to create a new continent
-void  Map::ContinentCreator() {
+void  ContinentCreator() {
     std::string continentName;
     std::cout << "Name of the Continent: " << std::endl;
     std::cin >> continentName;
@@ -127,7 +127,7 @@ void  Map::ContinentCreator() {
         std::cin >> continentName;
     }
     
-    Map::Continent* newContinent = new Map::Continent();
+    Continent* newContinent = new Continent();
     newContinent->set_name(continentName);
     Map::Instance().get_continents()->push_back(newContinent);
     

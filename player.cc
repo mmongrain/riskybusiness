@@ -3,9 +3,12 @@
 #include <vector>
 #include <map>
 #include <math.h>
-#include "player.h"
-#include "map.h"
+
+#include "continent.h"
 #include "game.h"
+#include "map.h"
+#include "player.h"
+#include "territory.h"
 
 void Player::PlayTurn() {
 	std::cout << "\n\n=== PLAYER " << id << "'S TURN ===" << std::endl;
@@ -29,9 +32,9 @@ void Player::PlayTurn() {
 int Player::player_id = 1;
 
 void Player::DetermineContinentOwnership() {
-	std::map<Map::Continent*, int> ownership;
+	std::map<Continent*, int> ownership;
 	for (int i = 0; i < owned_territories.size(); i++) {
-		Map::Continent *temp = owned_territories[i]->get_continent();
+		Continent *temp = owned_territories[i]->get_continent();
 		if (ownership[temp]) {
 			ownership[temp] = ownership[temp] + 1;
 		} else {
@@ -73,7 +76,7 @@ void Player::CalculateReinforcements() {
 	// TODO: Risk Cards bonuses (?) later
 }
 
-void Player::add_continent(Map::Continent *new_continent) {
+void Player::add_continent(Continent *new_continent) {
 	for (auto &continent : owned_continents) {
 		if (continent == new_continent) { return; }
 	}
@@ -81,7 +84,7 @@ void Player::add_continent(Map::Continent *new_continent) {
 	NotifyObservers();
 }
 
-void Player::add_territory(Map::Territory *new_territory) {
+void Player::add_territory(Territory *new_territory) {
 	for (auto &territory : owned_territories) {
 		if (territory == new_territory) { return; }
 	}
@@ -89,12 +92,12 @@ void Player::add_territory(Map::Territory *new_territory) {
 	NotifyObservers();
 }
 
-void Player::remove_territory(Map::Territory *old_territory) {
+void Player::remove_territory(Territory *old_territory) {
 	owned_territories.erase(std::remove(owned_territories.begin(), owned_territories.end(), old_territory), owned_territories.end());
 	NotifyObservers();
 }
 
-void Player::remove_continent(Map::Continent *old_continent) {
+void Player::remove_continent(Continent *old_continent) {
 	owned_continents.erase(std::remove(owned_continents.begin(), owned_continents.end(), old_continent), owned_continents.end());
 	NotifyObservers();
 }
@@ -121,8 +124,8 @@ void Player::set_name(std::string name) {
 
 // converts a string to one of the Territory objects owned by Player
 // or outputs an error message and returns a null pointer
-Map::Territory* Player::StringToOwnedTerritory(std::string s) {
-	Map::Territory *territory = 0;
+Territory* Player::StringToOwnedTerritory(std::string s) {
+	Territory *territory = 0;
 	for (unsigned int i = 0; i < owned_territories.size(); i++) {
 		if (owned_territories[i]->get_name().compare(s) == 0) {
 			territory = owned_territories[i];

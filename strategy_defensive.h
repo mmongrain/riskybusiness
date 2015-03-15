@@ -8,7 +8,7 @@ class Defensive : public Strategy {
 	void execute(CompPlayer *c_player);
 
 private:
-	bool hasAttacked;
+	bool has_attacked;
 };
 
 #endif

@@ -1,11 +1,13 @@
-#include "comp_player.h"
-#include "player.h"
 #include <iostream>
-#include "map.h"
-#include "battle.h"
-#include "strategy_aggressive.h"
 #include <stdlib.h> // rand(), need to find how to seed
 #include <vector>
+
+#include "battle.h"
+#include "comp_player.h"
+#include "map.h"
+#include "player.h"
+#include "strategy_aggressive.h"
+#include "territory.h"
 
 CompPlayer::CompPlayer() : Player() {
 	strategy = new Aggressive();
@@ -16,7 +18,7 @@ void CompPlayer::Reinforce() {
 	CalculateReinforcements();
 
 	// pick a territory
-	Map::Territory *to_reinforce = owned_territories[std::rand() % owned_territories.size()];
+	Territory *to_reinforce = owned_territories[std::rand() % owned_territories.size()];
 
 	// put all reinforcements there
 	to_reinforce->set_num_units(to_reinforce->get_num_units() + reinforcements);
@@ -37,12 +39,12 @@ void CompPlayer::Fortify() {
 	}
 
 	// pick from where
-	Map::Territory *move_from = ChoosePointOfDepart();
+	Territory *move_from = ChoosePointOfDepart();
 	if (move_from == NULL)
 		return;
 
 	// pick to where
-	Map::Territory *move_to = ChooseDestination(move_from);
+	Territory *move_to = ChooseDestination(move_from);
 	if (move_to == NULL)
 		return;
 
@@ -59,9 +61,9 @@ bool CompPlayer::WillFortify(){
 }
 
 // returns a random valid territory from which troops will be moved or null if no such territory is found
-Map::Territory* CompPlayer::ChoosePointOfDepart(){
-	std::vector <Map::Territory*> valid_points_of_depart;
-	std::vector <Map::Territory*> owned_territories = this->get_owned_territories();
+Territory* CompPlayer::ChoosePointOfDepart(){
+	std::vector <Territory*> valid_points_of_depart;
+	std::vector <Territory*> owned_territories = this->get_owned_territories();
 
 	// gathers all valid_points_of_depart
 	for (unsigned int i = 0; i < owned_territories.size(); ++i){
@@ -76,18 +78,18 @@ Map::Territory* CompPlayer::ChoosePointOfDepart(){
 	}
 
 	// randomly chooses and returns one of the valid_points_of_depart
-	Map::Territory* point_of_depart = valid_points_of_depart[std::rand() % valid_points_of_depart.size()];
+	Territory* point_of_depart = valid_points_of_depart[std::rand() % valid_points_of_depart.size()];
 	return point_of_depart;
 }
 
-Map::Territory* CompPlayer::ChooseDestination(Map::Territory* move_from){
-	std::vector <Map::Territory*> adjacent_owned_territories = move_from->GetAdjacentOwnedTerritories(this);
+Territory* CompPlayer::ChooseDestination(Territory* move_from){
+	std::vector <Territory*> adjacent_owned_territories = move_from->GetAdjacentOwnedTerritories(this);
 	if (adjacent_owned_territories.size() == 0){
 		std::cout << "CompPlayer " << this->get_id() << " wanted to fortify, but did not"
 			<< " find anywhere to move his troops to!" << std::endl;
 		return NULL;
 	}
-	Map::Territory* destination = adjacent_owned_territories[std::rand() % adjacent_owned_territories.size()];
+	Territory* destination = adjacent_owned_territories[std::rand() % adjacent_owned_territories.size()];
 	return destination;
 }
 

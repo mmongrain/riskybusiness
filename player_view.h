@@ -4,9 +4,11 @@
 #include <string>
 #include <vector>
 
+#include "continent.h"
+#include "map.h"
 #include "observer.h"
 #include "player.h"
-#include "map.h"
+#include "territories.h"
 
 class PlayerView : Observer {
   public:
@@ -16,8 +18,8 @@ class PlayerView : Observer {
     std::string to_string();
   private:
     Player *player; 
-    std::vector<Map::Territory*> territories;
-    std::vector<Map::Continent*> continents;
+    std::vector<Territory*> territories;
+    std::vector<Continent*> continents;
     int reinforcements;
     int units;
     int victories;

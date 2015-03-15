@@ -17,7 +17,7 @@ class MapView : Observer
     std::string to_string();
   private:
     Map *map;
-    std::vector<Map::Territory*> territories;
+    std::vector<Territory*> territories;
 	Player *player;
     int territory_units;
 };

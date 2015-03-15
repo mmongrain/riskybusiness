@@ -4,14 +4,16 @@
 #include <functional> // greater()
 #include <vector>
 #include <time.h> // time()
-#include "game.h"
+
 #include "battle.h"
+#include "game.h"
 #include "map.h"
+#include "territory.h"
 
 // Tests whether an attack is valid.
 // Returns verbose error messages as std::string "out", which also serve to
 // clarify the logic of each condition.
-bool battle::AttackIsValid(Map::Territory *attacking, Map::Territory *defending, std::vector<int> atk_dice, std::vector<int> def_dice, std::string &out) {
+bool battle::AttackIsValid(Territory *attacking, Territory *defending, std::vector<int> atk_dice, std::vector<int> def_dice, std::string &out) {
   if (attacking == defending) {
     out = "Can't attack yourself!";
     return false;
@@ -59,7 +61,7 @@ std::vector<int> battle::Dice(int num_dice) {
 // Stages a single attack.
 // Returns -1 on error (call AttackIsValid() for verbose error reporting),
 // 1 if the attacking country wins, and 0 otherwise.
-int battle::Attack(Map::Territory *attacking, Map::Territory *defending, std::vector<int> atk_dice, std::vector<int> def_dice) {
+int battle::Attack(Territory *attacking, Territory *defending, std::vector<int> atk_dice, std::vector<int> def_dice) {
   std::string message;
   if (!AttackIsValid(attacking, defending, atk_dice, def_dice, message)) {
     std::cout << message << std::endl;
@@ -106,7 +108,7 @@ int battle::Attack(Map::Territory *attacking, Map::Territory *defending, std::ve
 
 // Triggers an all-out attack, using the maximum of dice on both sides
 // until a victor is determined.
-int battle::AllInAttack (Map::Territory *attacking, Map::Territory *defending) {
+int battle::AllInAttack (Territory *attacking, Territory *defending) {
   while (attacking->get_num_units() > 1 && defending->get_num_units() > 0) {
     // If there are 2 or more attacking dice, roll 2 defending dice,
     // otherwise roll 1.
@@ -137,7 +139,7 @@ int battle::AllInAttack (Map::Territory *attacking, Map::Territory *defending) {
 // Performs the actions required once a country has prevailed!
 // Most notably, by transferring the appropriate number of armies to the
 // newly conquered country.
-int battle::UpdateOwnership (Map::Territory *attacking, Map::Territory *defending, int dice, int num_units, std::string &out) {
+int battle::UpdateOwnership (Territory *attacking, Territory *defending, int dice, int num_units, std::string &out) {
   if (defending->get_num_units() > 0) {
     out = "Conquered country is not empty!";
 	return 0;
@@ -158,7 +160,7 @@ int battle::UpdateOwnership (Map::Territory *attacking, Map::Territory *defendin
 }
 
 // TODO: Break this monster up into subfunctions
-void battle::Battle (Map::Territory *attacking, Map::Territory *defending) {
+void battle::Battle (Territory *attacking, Territory *defending) {
   int winners; // Will store the number of conquering armies
 
   while (true) {

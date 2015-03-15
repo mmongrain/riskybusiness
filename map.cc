@@ -6,8 +6,10 @@
 #include <sstream>
 #include <algorithm> //std::find()
 
-#include "player.h"
+#include "continent.h"
 #include "map.h"
+#include "player.h"
+#include "territory.h"
 
 void Map::Load(char* filename) {
   std::ifstream file(filename);
