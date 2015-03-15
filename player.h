@@ -1,36 +1,25 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
-#include "map.h"
-#include "observer.h"
 
 #include <vector>
 #include <string>
 
+#include "continent.h"
+#include "map.h"
+#include "observer.h"
+#include "territory.h"
 
-class Player: public Observable {
-  protected:
-    int id;
-    int victories;
-    int reinforcements;
-    int total_units;
-    virtual void Reinforce() = 0;
-    virtual void Attack() = 0;
-    virtual void Fortify() = 0;
-    void CalculateReinforcements();
 
-  private:
-    static int player_id;
-    std::string name;
-    void DetermineContinentOwnership();
+class Player : public Observable {
 
   public:
+
     Player(): total_units(0), reinforcements(0), victories(0), id(player_id++) {}
     virtual ~Player() {}
     virtual void PlayTurn();
     void PrintOwnedTerritories();
 	void victory();
-    //Map::Territory *StringToTerritory(std::string s); moved to map.cc
-    Map::Territory *StringToOwnedTerritory(std::string s);
+    Territory *StringToOwnedTerritory(std::string s);
 
 	virtual bool WantsToAutoAttack() = 0;
     void add_territory(Map::Territory *new_territory);
@@ -45,8 +34,8 @@ class Player: public Observable {
      * public members protected?   --Matthew 
 	 * I think so -- Alika 
      **/
-    std::vector<Map::Territory*> owned_territories;
-    std::vector<Map::Continent*> owned_continents; 
+    std::vector<Territory*> owned_territories;
+    std::vector<Continent*> owned_continents; 
 
     int get_id()             { return id; }
     int get_victories()      { return victories; }
@@ -54,13 +43,31 @@ class Player: public Observable {
     int get_total_units()    { return total_units; }
     std::string get_name()   { return name; }
 
-    std::vector<Map::Territory*> &get_owned_territories() { return owned_territories; }
-    std::vector<Map::Continent*> &get_owned_continents()  { return owned_continents; } 
+    std::vector<Territory*> &get_owned_territories() { return owned_territories; }
+    std::vector<Continent*> &get_owned_continents()  { return owned_continents; } 
 
     void set_victories(int victories);
     void set_reinforcements(int reinforcements);
     void set_total_units(int units);
     void set_name(std::string name);
+
+  protected:
+
+    int id;
+    int victories;
+    int reinforcements;
+    int total_units;
+    virtual void Reinforce() = 0;
+    virtual void Attack() = 0;
+    virtual void Fortify() = 0;
+    void CalculateReinforcements();
+
+  private:
+
+    static int player_id;
+    std::string name;
+    void DetermineContinentOwnership();
+
 };
 
 #endif

@@ -1,21 +1,23 @@
-#include "strategy_defensive.h"
 #include <vector>
-#include "map.h"
+
 #include "battle.h"
 #include "comp_player.h"
+#include "map.h"
+#include "strategy_defensive.h"
+#include "territory.h"
 
 class CompPlayer;
 
 void Defensive::execute(CompPlayer *c_player){
 	unsigned int j;
-	bool hasAttacked = false;
+	bool has_attacked = false;
 	bool ok_to_attack;
 	// iterates through its own terrirories
 	for (unsigned int i = 0; i < c_player->owned_territories.size(); i++){
 		ok_to_attack = true;
 		if (!c_player->owned_territories[i]->CanAttack() || c_player->owned_territories[i] == NULL)
 			continue;
-		std::vector<Map::Territory*> attackable = c_player->owned_territories[i]->GetAttackableTerritories(c_player);
+		std::vector<Territory*> attackable = c_player->owned_territories[i]->GetAttackableTerritories(c_player);
 
 		// iterates through attackable territories and checks if all of them have 
 		// at least 4 armies less than its own territory, if yes, then attacks the first one
@@ -30,10 +32,10 @@ void Defensive::execute(CompPlayer *c_player){
 				<< attackable[0]->get_name() << " (Player " << attackable[0]->get_owner()->get_id()
 				<< ")!" << std::endl;
 			battle::Battle(c_player->owned_territories[i], attackable[0]);
-			hasAttacked = true;
+			has_attacked = true;
 		}
 	}
-	if (!hasAttacked){
+	if (!has_attacked){
 		std::cout << "CompPlayer " << c_player->get_id() << " chose not to attack" << std::endl;
 	}
 }

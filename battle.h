@@ -4,9 +4,10 @@
 #include <string>
 #include <vector>
 #include "map.h"
+#include "territory.h"
 
 namespace battle {
-  bool AttackIsValid(Map::Territory* attacking, Map::Territory* defending, std::vector<int> atk_dice, std::vector<int> def_dice, std::string &out);
+  bool AttackIsValid(Territory* attacking, Territory* defending, std::vector<int> atk_dice, std::vector<int> def_dice, std::string &out);
   std::vector<int> Dice(int num_dice);
 
  

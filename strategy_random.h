@@ -1,7 +1,9 @@
 #ifndef strategy_random_h
 #define strategy_random_h
-#include "strategy.h"
+
 #include "map.h"
+#include "strategy.h"
+#include "territory.h"
 
 class CompPlayer;
 
@@ -10,8 +12,8 @@ class Random : public Strategy {
 
 private:
 	bool WillAttack();
-	Map::Territory* FromWhereToAttack(CompPlayer* c_player);
-	Map::Territory* WhomToAttack(CompPlayer* c_player, Map::Territory* attacking);
+	Territory* FromWhereToAttack(CompPlayer* c_player);
+	Territory* WhomToAttack(CompPlayer* c_player, Territory* attacking);
 };
 
 #endif

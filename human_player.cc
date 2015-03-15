@@ -1,7 +1,9 @@
+#include <iostream>
+
+#include "battle.h"
 #include "human_player.h"
 #include "player.h"
-#include <iostream>
-#include "battle.h"
+#include "territory.h"
 
 // Asks the user to input the name of a territory and a number of 
 // reinforcements, does the necessary checks and performs the reinforcement
@@ -14,7 +16,7 @@ void HumanPlayer::Reinforce() {
 		std::cout << "You have " << reinforcements << " reinforcements."
 			<< "\nWhich territory would you like to reinforce? " << std::endl;
 		PrintOwnedTerritories();
-		Map::Territory *to_reinforce;
+		Territory *to_reinforce;
 		std::string name;
 		getline(std::cin, name);
 		to_reinforce = StringToOwnedTerritory(name);
@@ -69,8 +71,8 @@ void HumanPlayer::Attack() {
 	while (answer == 1) {
     std::cin.clear();
     std::cin.ignore(10000, '\n');
-		Map::Territory *attacking = 0;
-		Map::Territory *defending = 0;
+		Territory *attacking = 0;
+		Territory *defending = 0;
 		std::string name;
 
     // Read in & verify attacking country
@@ -120,8 +122,8 @@ void HumanPlayer::Attack() {
 
 void HumanPlayer::Fortify() {
 
-  Map::Territory *move_from = 0;
-  Map::Territory *move_to = 0;
+  Territory *move_from = 0;
+  Territory *move_to = 0;
   int armies = 0;
   std::string name;
   bool skip_flag = false;

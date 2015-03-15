@@ -2,6 +2,7 @@
 #define HUMAN_PLAYER_H_
 
 #include "player.h"
+#include "territory.h"
 
 class HumanPlayer : public Player {
 
@@ -19,7 +20,7 @@ protected:
 	void Fortify();
 
 private:
-	bool AttackIsValid(Map::Territory *attacking, std::string s);
+	bool AttackIsValid(Territory *attacking, std::string s);
 };
 
 

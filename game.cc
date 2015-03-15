@@ -1,17 +1,19 @@
-#include "game.h"
-#include "player.h"
-#include "comp_player.h"
-#include "human_player.h"
-#include "map.h"
 #include <iostream>
 #include <stdlib.h> // rand()
 #include <string>
 #include <vector>
 #include <algorithm>
+
+#include "comp_player.h"
+#include "game.h"
+#include "human_player.h"
+#include "map.h"
+#include "player.h"
 #include "strategy.h"
 #include "strategy_aggressive.h"
 #include "strategy_defensive.h"
 #include "strategy_random.h"
+#include "territory.h"
 
 void Game::PlayGame() {
 	Startup();
@@ -153,7 +155,7 @@ void Game::ApplyStrategyChoice(int choice, CompPlayer* player){
 
 void Game::AssignCountries() {
 	// Get a copy of the territories
-	std::vector<Map::Territory*> territories = Map::Instance().get_copy_territories();
+	std::vector<Territory*> territories = Map::Instance().get_copy_territories();
 	// For each territory
 	for (int i = 0; territories.size() > 0; i++) {
 		// Random number between 0 and the size of territories
@@ -173,7 +175,7 @@ void Game::AssignCountries() {
 
 	// used for testing
 	/*
-	std::vector<Map::Territory*> terr = *(Map::Instance().get_territories());
+	std::vector<Territory*> terr = *(Map::Instance().get_territories());
 	for (int i = 0; i < terr.size(); i++){
 	std::cout << terr[i]->get_name() << ": Player " << terr[i]->get_owner()->get_id() << std::endl;
 	}

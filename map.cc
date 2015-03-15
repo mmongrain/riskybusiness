@@ -6,115 +6,10 @@
 #include <sstream>
 #include <algorithm> //std::find()
 
-#include "player.h"
+#include "continent.h"
 #include "map.h"
-
-std::string Map::Continent::ToString() {
-  std::string out = "";
-  out = get_name() + "=" + std::to_string(get_bonus());
-  return out;
-}
-
-std::string Map::Territory::ToString() {
-  std::string out = name + "," + std::to_string(x) + "," + std::to_string(y)
-                    + "," + continent->get_name() + ",";
-  for (unsigned int i = 0; i < adjacency_list.size(); i++) {
-    out = out + adjacency_list[i]->name; 
-    if (i < adjacency_list.size() - 1) {
-      out = out + ",";
-    }
-  }
-  return out;
-}
-
-bool Map::Territory::AreAdjacent(Map::Territory *bordering) {
-  std::string border_name = bordering->get_name();
-  for (int i = 0; i < adjacency_list.size(); i++) {
-    if (adjacency_list[i]->get_name().compare(border_name)) { return true; }
-  }
-  return false;
-}
-
-bool Map::Territory::AttackIsValid(Map::Territory *defending) {
-  Map::Territory *attacking = this;
-	for (unsigned int i = 0; i < Map::Instance().territories.size(); i++){
-		if (defending->owner == attacking->owner){
-			std::cout << "You can't attack your own people!";
-			return false;
-		}
-		else if (defending->num_units < 1) {
-			std::cout << "This country is empty!";
-			return false;
-		}
-		else if (!attacking->AreAdjacent(defending)){
-			std::cout << "Those two countries are not adjacent!";
-			return false;
-		}
-	}
-  return true;
-}
-
-bool Map::Territory::CanAttack() {
-  if (this->num_units < 2) { return false; }
-  for (int i = 0; i < adjacency_list.size(); i++) {
-    if (adjacency_list[i]->get_owner() != this->owner) { return true; }
-  }
-  return false;
-}
-
-bool Map::Territory::CanFortify() { 
-  if (this->num_units < 2) { return false; }
-  for (int i = 0; i < adjacency_list.size(); i++) {
-    if (adjacency_list[i]->get_owner() == this->owner) { return true; }
-  }
-  return false;
-}
-  
-void Map::Territory::PrintAdjacentOwnedTerritories(Player* player) {
-	std::vector<Map::Territory*> owned = Map::Territory::GetAdjacentOwnedTerritories(player);
-	for (int i = 0; i < owned.size(); i++) {
-		if (owned[i]->get_owner() == player) {
-			std::cout << owned[i]->get_name() << " ("
-				<< owned[i]->get_num_units() << ", Player "
-				<< owned[i]->get_owner()->get_id() << ")";
-			(i < owned.size() - 1) ? std::cout << ", " : std::cout << ".\n";
-		}
-	}
-}
-
-std::vector<Map::Territory*> Map::Territory::GetAdjacentOwnedTerritories(Player* player){
-	std::vector<Map::Territory*> adjacent_owned;
-	for (int i = 0; i < adjacency_list.size(); i++) {
-		if (adjacency_list[i]->get_owner() == player) {
-			adjacent_owned.push_back(adjacency_list[i]);
-		}
-	}
-	return adjacent_owned;
-}
-
-// splitted in two methods for easier reuse (needed in Strategies)
-void Map::Territory::PrintAttackableTerritories(Player* player) {
-	std::vector<Map::Territory*> attackable = Map::Territory::GetAttackableTerritories(player);
-	for (int i = 0; i < attackable.size(); i++) {
-		if (attackable[i]->get_owner() != player) {
-			std::cout << attackable[i]->get_name() << " ("
-				<< attackable[i]->get_num_units() << ", Player "
-				<< attackable[i]->get_owner()->get_id() << ")";
-			(i < attackable.size() - 1) ? std::cout << ", " : std::cout << ".\n";
-		}
-	}
-}
-
-std::vector<Map::Territory *> Map::Territory::GetAttackableTerritories(Player* player) {
-	std::vector<Map::Territory*> attackable;
-	for (int i = 0; i < adjacency_list.size(); i++) {
-		if (adjacency_list[i]->get_owner() != player) {
-			attackable.push_back(adjacency_list[i]);
-		}
-	}
-	return attackable;
-}
-
+#include "player.h"
+#include "territory.h"
 
 void Map::Load(char* filename) {
   std::ifstream file(filename);
@@ -147,7 +42,7 @@ void Map::Load(char* filename) {
     }
   }
 
-  ClearMap();
+  Clear();
   ParseMapInfo(section_map);
   ParseContinentInfo(section_continents);
   ParseTerritoryInfo(section_territories);
@@ -179,14 +74,15 @@ void Map::Save(char *filename) {
   }
 }
 
-void Map::ClearMap() {
+void Map::Clear() {
     map_info.author = "";
     map_info.image = "";
     map_info.wrap = true;
     map_info.scroll = 'n';
     map_info.warn = true;
+    territories.clear();
+    continents.clear();
 }
-
 
 void Map::ParseMapInfo(const std::vector<std::string> &section_map) {
   for (unsigned int i = 0; i < section_map.size(); i++) {
@@ -223,7 +119,6 @@ void Map::ParseMapInfo(const std::vector<std::string> &section_map) {
 
 void Map::ParseContinentInfo(const std::vector<std::string> &section_continents) {
   for (unsigned int i = 0; i < section_continents.size(); i++) {
-    // continents.clear();
     std::size_t delim = section_continents[i].find("=");
     Continent *continent = new Continent;
     continent->name = section_continents[i].substr(0, delim);
@@ -276,11 +171,9 @@ void Map::ParseTerritoryInfo(const std::vector<std::string> &section_territories
   }
 }
 
+// This function ensures the adjacency lists of every territory point to the
+// unique copy in the master territories vector
 void Map::ReconcileTerritories() {
-  /**
-   * TODO: Write a better algorithm than this O(n^3) piece of junk
-   * if that's even possible lol
-   **/
   for (unsigned int i = 0; i < territories.size(); i++) {
     for (unsigned int j = 0; j < territories[i]->adjacency_list.size(); j++) {
       for (unsigned int k = 0; k < territories.size(); k++) {
@@ -295,8 +188,8 @@ void Map::ReconcileTerritories() {
   }
 }
 
-Map::Territory *Map::StringToTerritory(std::string s) {
-	Map::Territory *territory;
+Territory* Map::StringToTerritory(std::string s) {
+	Territory *territory;
 	for (int i = 0; i < territories.size(); i++) {
 		if (territories[i]->get_name().compare(s) == 0) {
 			territory = territories[i];
@@ -305,140 +198,3 @@ Map::Territory *Map::StringToTerritory(std::string s) {
   }
 	return 0;
 }
-
-/*/ --Beginning of Map Editor--
-// General opening of the Map Editor
-void Map::introMapEditor() {
-    int answer;
-    char filename[100];
-    std::cout << "Welcome to the Interactive Map Editor." << std::endl;
-    std::cout << "What would you like to do?" << std::endl;
-    std::cout << "Create a new map (Enter 0) or modify an exisiting map (Enter 1)?" << std::endl;
-    std::cin >> answer;
-    
-    if (answer==0) {
-        // Creates a new map
-        Map::Instance();
-        // Ask the name of new file to create
-        std::cout << "Name of the file (.map): " << std::endl;
-        std::cin >> filename;
-    }
-    if (answer==1) {
-        // Loads an existing map from file
-        char filename[100] = "World.map";
-        Map::Instance().Load(filename);
-    }
-    theMapEditor();
-    
-    Map::Instance().Save(filename);
-    
-    
-}
-
-void Map::theMapEditor() {
-    int answer;
-    
-    std::cout << "Enter 1 to add a new Country" << std::endl
-    << "Enter 2 to define Adjacency between 2 countries" << std::endl
-    << "Enter 3 to add a new Continent" << std::endl;
-    std::cin >> answer;
-    
-    // User choice decides which modification to do
-    if(answer==1)
-        CountryCreator();
-    else if(answer==2)
-        AdjacencyDefiner();
-    else if(answer==3)
-        ContinentCreator();
-    
-    
-    while (answer!=1||answer!=2||answer!=3) {
-        std::cout << "Please enter an accepted value." << std::endl;
-        std::cin >> answer;
-    }
-}
-
-// Method called when the user wants to create a new country
-void  Map::CountryCreator() {
-    std::string countryName;
-    std::cout << "Name of the Country: ";
-    std::cin >> countryName;
-    // Iterates through territories to see if already exist
-    while (std::find(Map::Instance().get_territories()->begin(), Map::Instance().get_territories()->end(), countryName)!=Map::Instance().get_territories()->end()) {
-        std::cout << "This country name is already taken. Pick another name: " << std::endl;
-        std::cin >> countryName;
-    }
-    
-    Map::Territory* newTerritory = new Map::Territory();
-    newTerritory->set_name(countryName);
-    Map::Instance().get_territories()->push_back(newTerritory);
-    
-    
-}
-
-// Method called when the user wants to define the adjacency between 2 countries
-// Load .map and browse to search for the name of these 2 countries and ask to be adjacent or not
-// If one or two of the country not found, error message
-void  Map::AdjacencyDefiner() {
-    int answer;
-    std::string firstCountry, secondCountry;
-    std::cout << "Name of first country: ";
-    std::cin >> firstCountry;
-    std::cout << "Name of second country: ";
-    std::cin >> secondCountry;
-    // Iterates through territories to see if they exists
-    while (std::find(Map::Instance().get_territories()->begin(), Map::Instance().get_territories()->end(), firstCountry)==Map::Instance().get_territories()->end()||std::find(Map::Instance().get_territories()->begin(), Map::Instance().get_territories()->end(), secondCountry)==Map::Instance().get_territories()->end()) {
-        std::cout << "ERROR: 1 or 2 countries couldn't be found. Please enter 2 other names: " << std::endl;
-        std::cin >> firstCountry;
-        std::cin >> secondCountry;
-    }
-    Map::Territory* aTerritory = new Map::Territory;
-    Map::Territory* anotherTerritory = new Map::Territory;
-    // **Problem here**: std::find returns an iterator, but must be cast to Object itself, may be done by dereferencing the iterator pointer but could not find a way to do so
-    //aTerritory = std::find(Map::Instance().get_territories()->begin(), Map::Instance().get_territories()->end(), firstCountry);
-    //anotherTerritory = std::find(Map::Instance().get_territories()->begin(), Map::Instance().get_territories()->end(), secondCountry);
-    // If they are adjacent
-    if (aTerritory->AreAdjacent(anotherTerritory)) {
-        std::cout << "These 2 territories are adjacent." << std::endl;
-        std::cout << "Make them nonadjacent? (1 for yes/0 for no)" << std::endl;
-        std::cin >> answer;
-        if (answer==1) {
-            // Removes each from other's adjacency list
-            aTerritory->get_adjacency_list()->erase(std::find(aTerritory->get_adjacency_list()->begin(),aTerritory->get_adjacency_list()->end(),secondCountry));
-            anotherTerritory->get_adjacency_list()->erase(std::find(anotherTerritory->get_adjacency_list()->begin(),anotherTerritory->get_adjacency_list()->end(),firstCountry));
-        }
-        
-    }
-    // If they are not adjacent
-    else {
-        std::cout << "These 2 territories are nonadjacent." << std::endl;
-        std::cout << "Make them adjacent? (1 for yes/0 for no)" << std::endl;
-        std::cin >> answer;
-        if(answer==1) {
-            // Add each country to the other's adjacency list
-            //aTerritory->get_adjacency_list()->push_back(secondCountry);
-            //anotherTerritory->get_adjacency_list()->push_back(firstCountry);
-            
-        }
-    }
-    
-}
-
-// Method called when the user wants to create a new continent
-void  Map::ContinentCreator() {
-    std::string continentName;
-    std::cout << "Name of the Continent: " << std::endl;
-    std::cin >> continentName;
-    // Iterates to see if continent already exist
-    while (std::find(Map::Instance().get_continents()->begin(), Map::Instance().get_continents()->end(), continentName)!=Map::Instance().get_continents()->end()) {
-        std::cout << "This continent name is already taken. Pick another name: " << std::endl;
-        std::cin >> continentName;
-    }
-    
-    Map::Continent* newContinent = new Map::Continent();
-    newContinent->set_name(continentName);
-    Map::Instance().get_continents()->push_back(newContinent);
-    
-    
-}
-//--End of Map Editor--*/

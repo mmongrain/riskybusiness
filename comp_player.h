@@ -2,7 +2,8 @@
 #define COMP_PLAYER_H_
 
 #include "player.h"
-#include"strategy.h"
+#include "strategy.h"
+#include "territory.h"
 
 class CompPlayer : public Player {
 public:
@@ -20,8 +21,8 @@ protected:
 private:
 	Strategy *strategy;
 	bool WillFortify();
-	Map::Territory* ChoosePointOfDepart();
-	Map::Territory* ChooseDestination(Map::Territory* move_from);
+	Territory* ChoosePointOfDepart();
+	Territory* ChooseDestination(Territory* move_from);
 };
 
 #endif

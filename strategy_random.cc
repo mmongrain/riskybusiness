@@ -1,8 +1,10 @@
-#include "strategy_random.h"
 #include <vector>
-#include "map.h"
+
 #include "battle.h"
 #include "comp_player.h"
+#include "map.h"
+#include "strategy_random.h"
+#include "territory.h"
 
 class CompPlayer;
 
@@ -15,10 +17,10 @@ void Random::execute(CompPlayer *c_player){
 	}
 
 	// choose attacker and defender territories
-	Map::Territory* attacking = FromWhereToAttack(c_player);
+	Territory* attacking = FromWhereToAttack(c_player);
 	if (attacking == NULL)
 		return;
-	Map::Territory* defending = WhomToAttack(c_player, attacking);
+	Territory* defending = WhomToAttack(c_player, attacking);
 
 	// proceed to attack
 	std::cout << "\n" << attacking->get_name() << " attacks " << defending->get_name()
@@ -35,9 +37,9 @@ bool Random::WillAttack(){
 }
 
 // returns a random valid attacking territory or null if no such territory is found
-Map::Territory* Random::FromWhereToAttack(CompPlayer* c_player){
-	std::vector <Map::Territory*> valid_attackers;
-	std::vector <Map::Territory*> owned_territories = c_player->get_owned_territories();
+Territory* Random::FromWhereToAttack(CompPlayer* c_player){
+	std::vector <Territory*> valid_attackers;
+	std::vector <Territory*> owned_territories = c_player->get_owned_territories();
 
 	// gathers all valid_attackers 
 	for (unsigned int i = 0; i < owned_territories.size(); ++i){
@@ -52,13 +54,13 @@ Map::Territory* Random::FromWhereToAttack(CompPlayer* c_player){
 	}
 
 	// randomly chooses and returns one of the valid_attackers
-	Map::Territory* attacking = valid_attackers[std::rand() % valid_attackers.size()];
+	Territory* attacking = valid_attackers[std::rand() % valid_attackers.size()];
 	return attacking;
 }
 
 // randomly chooses and returns a valid target territory to be attacked
-Map::Territory* Random::WhomToAttack(CompPlayer* c_player, Map::Territory* attacking){
-	std::vector <Map::Territory*> attackable = attacking->GetAttackableTerritories(c_player);
-	Map::Territory* defending = attackable[std::rand() % attackable.size()];
+Territory* Random::WhomToAttack(CompPlayer* c_player, Territory* attacking){
+	std::vector <Territory*> attackable = attacking->GetAttackableTerritories(c_player);
+	Territory* defending = attackable[std::rand() % attackable.size()];
 	return defending;
 }
