@@ -32,10 +32,13 @@ class Player: public Observable {
     //Map::Territory *StringToTerritory(std::string s); moved to map.cc
     Map::Territory *StringToOwnedTerritory(std::string s);
 
+	virtual bool WantsToAutoAttack() = 0;
     void add_territory(Map::Territory *new_territory);
     void add_continent(Map::Continent *new_continent);
     void remove_territory(Map::Territory *old_territory);
     void remove_continent(Map::Continent *old_continent);
+	void CaptureTerritory(Map::Territory* attacking, Map::Territory* defending, int min, int max);
+	virtual int NumConqueringArmiesToMove(int min, int max) = 0;
 
     /**
      * TODO: We have getters and setters for these members... should we make these

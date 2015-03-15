@@ -91,4 +91,12 @@ Map::Territory* CompPlayer::ChooseDestination(Map::Territory* move_from){
 	return destination;
 }
 
+bool CompPlayer::WantsToAutoAttack(){
+	return true;
+}
+
+int CompPlayer::NumConqueringArmiesToMove(int min, int max){
+	return max;
+}
+
 

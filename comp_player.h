@@ -9,10 +9,14 @@ public:
 	CompPlayer();	
 	void set_strategy(Strategy *strat) {strategy = strat;}
 	~CompPlayer(){ delete strategy; strategy = 0; }
+	bool WantsToAutoAttack();
+	int NumConqueringArmiesToMove(int min, int max);
+
 protected:
 	void Attack();
 	void Reinforce();
 	void Fortify();
+
 private:
 	Strategy *strategy;
 	bool WillFortify();

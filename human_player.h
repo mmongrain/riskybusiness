@@ -7,7 +7,11 @@ class HumanPlayer : public Player {
 
 public:
 	HumanPlayer() {}
-  ~HumanPlayer() {}
+	~HumanPlayer() {}
+	bool WantsToAutoAttack();
+	bool WantsToAttack();
+	void CaptureTerritory(Map::Territory* attacking, Map::Territory* defending, int min, int max);
+	int NumConqueringArmiesToMove(int min, int max);
 
 protected:
 	void Reinforce();

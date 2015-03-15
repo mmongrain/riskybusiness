@@ -1,6 +1,6 @@
-#include <iostream>
-#include "player.h"
 #include "human_player.h"
+#include "player.h"
+#include <iostream>
 #include "battle.h"
 
 // Asks the user to input the name of a territory and a number of 
@@ -210,3 +210,42 @@ void HumanPlayer::Fortify() {
     std::cout << "Player " << id << " chose not to fortify" << std::endl;
   }
 }
+
+// used for battles
+bool HumanPlayer::WantsToAutoAttack(){
+	char answer;
+	std::cout << "Do you want to auto-attack? (y/n)" << std::endl;
+	while (!std::cin >> answer || (answer != 'y' && answer != 'n')){
+		std::cout << "Wrong input! Do you want to auto-attack? (y/n)" << std::endl;
+		std::cin.clear();
+		std::cin.ignore(1000, '\n');
+	}
+	if (answer == 'y')
+		return true;
+	else return false;
+}
+
+bool HumanPlayer::WantsToAttack(){
+	char answer;
+	std::cout << "Continue attacking? (y/n)" << std::endl;
+	while (!std::cin >> answer || (answer != 'y' && answer != 'n')){
+		std::cout << "Wrong input! Continue attacking? (y/n)" << std::endl;
+		std::cin.clear();
+		std::cin.ignore(1000, '\n');
+	}
+	if (answer == 'y')
+		return true;
+	else return false;
+}
+
+int HumanPlayer::NumConqueringArmiesToMove(int min, int max){
+	int answer;
+	std::cout << "How many armies do you want to install in the conquered territory (" << min << "-" << max << ")?" << std::endl;
+	while (!std::cin >> answer || answer < min || answer > max){
+		std::cout << "Wrong input! How many armies do you want to install in the conquered territory (" << min << "-" << max << ")?" << std::endl;
+		std::cin.clear();
+		std::cin.ignore(1000, '\n');
+	}
+	return answer
+}
+

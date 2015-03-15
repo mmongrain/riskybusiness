@@ -132,3 +132,19 @@ Map::Territory* Player::StringToOwnedTerritory(std::string s) {
 	std::cout << "You don't own this territory!" << std::endl;
 	return territory;
 }
+
+// used for battles
+void Player::CaptureTerritory(Map::Territory* attacking, Map::Territory* defending, int min, int max){
+	defending->set_owner(this);
+	add_territory(defending);
+	defending->get_owner()->remove_territory(defending);
+	
+	int answer = NumConqueringArmiesToMove(min, max);
+	
+	defending->set_num_units(answer);
+	attacking->set_num_units(attacking->get_num_units() - answer);
+	NotifyObservers();
+	defending->get_owner()->NotifyObservers();
+	std::cout << answer << "armies have moved to " << defending->get_name()
+		<< ", and " << attacking->get_name() << " has " << attacking->get_num_units() - answer << " remaining" << std::endl;
+}
