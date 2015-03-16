@@ -18,16 +18,16 @@ class Player : public Observable {
     virtual ~Player() {}
     virtual void PlayTurn();
     void PrintOwnedTerritories();
-	void victory();
+    void victory();
     Territory *StringToOwnedTerritory(std::string s);
 
-	virtual bool WantsToAutoAttack() = 0;
+    virtual bool WantsToAutoAttack() = 0;
     void add_territory(Territory *new_territory);
     void add_continent(Continent *new_continent);
     void remove_territory(Territory *old_territory);
     void remove_continent(Continent *old_continent);
-	void CaptureTerritory(Territory* attacking, Territory* defending, int min, int max);
-	virtual int NumConqueringArmiesToMove(int min, int max) = 0;
+    void CaptureTerritory(Territory* attacking, Territory* defending, int min, int max);
+    virtual int NumConqueringArmiesToMove(int min, int max) = 0;
 
     /**
      * TODO: We have getters and setters for these members... should we make these

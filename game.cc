@@ -36,6 +36,8 @@ void Game::Startup()
 
 	// creating HumanPlayer objects
 	std::cout << "Please enter a number of human players between 0 and 6:\n";
+  std::cin.clear();
+  std::cin.ignore(1000, '\n');
 	while (!(std::cin >> num_human_players) || num_human_players < 0 || num_human_players > 6)
 	{
 		std::cout << "Wrong input! Please enter a number of players between 0 and 6:\n";

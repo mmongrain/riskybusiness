@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System/Vector2.hpp>
 #include <SFML/System.hpp>
+#include <stdlib.h> // srand();
 #include <iostream>
 #include <string>
 
@@ -11,6 +12,7 @@
 
 int main() {
   // Load the map, start the game. PlayerViewTestHelper randomly assigns countries.
+  srand(time(NULL));
   char FILENAME[100] = "World.map";
   Map::Instance().Load(FILENAME);
   sf::Thread test_thread(&Game::PlayGame);
