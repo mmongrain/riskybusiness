@@ -16,8 +16,8 @@
 #include "territory.h"
 
 void Game::PlayGame() {
-	Startup();
-	MainPhase();
+	Instance().Startup();
+	Instance().MainPhase();
 
 	std::cout << "\nGame over. GGWP!\n" << std::endl;
 }
