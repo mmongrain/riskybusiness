@@ -19,8 +19,9 @@ public:
   // END SINGLETON
 	~Game() {}
 
-	void PlayGame();
+	static void PlayGame();
   std::vector<Player*> *get_players() { return &players; }
+  std::vector<Player*> get_copy_players() { return players; }
 
   void PlayerViewTestHelper(int num_players);
 

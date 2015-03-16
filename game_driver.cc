@@ -11,6 +11,6 @@ int main(){
   Map::Instance().Load(filename);
 
   // Runs the game
-  Game::Instance().PlayGame();
+  Game::PlayGame();
 	return 0;
 }
