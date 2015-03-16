@@ -8,7 +8,7 @@
 #include "map.h"
 #include "observer.h"
 #include "player.h"
-#include "territories.h"
+#include "territory.h"
 
 class PlayerView : Observer {
   public:

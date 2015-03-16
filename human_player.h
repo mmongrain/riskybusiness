@@ -11,7 +11,7 @@ public:
 	~HumanPlayer() {}
 	bool WantsToAutoAttack();
 	bool WantsToAttack();
-	void CaptureTerritory(Map::Territory* attacking, Map::Territory* defending, int min, int max);
+	void CaptureTerritory(Territory* attacking, Territory* defending, int min, int max);
 	int NumConqueringArmiesToMove(int min, int max);
 
 protected:

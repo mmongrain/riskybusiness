@@ -11,19 +11,20 @@ namespace battle {
   std::vector<int> Dice(int num_dice);
 
  
-  int UpdateOwnership(Map::Territory* attacking, Map::Territory* defending, int dice, int num_units, std::string &out);
+  int UpdateOwnership(Territory* attacking, Territory* defending, int dice, int num_units, std::string &out);
 
 
-  void Battle(Map::Territory *attacking, Map::Territory *defending);
-  int AttackHandler(Map::Territory *attacking, Map::Territory *defending);
-  int AutoAttack(Map::Territory* attacking, Map::Territory* defending);
-  void SingleAttack(Map::Territory *attacking, Map::Territory *defending);  
-  void Retreat(Map::Territory* attacking, int result);
-  int DetermineAtkDice(Map::Territory *attacking);
-  int DetermineDefDice(Map::Territory *defending);
+  void Battle(Territory *attacking, Territory *defending);
+  int AttackHandler(Territory *attacking, Territory *defending);
+  int AutoAttack(Territory* attacking, Territory* defending);
+  void SingleAttack(Territory *attacking, Territory *defending);  
+  void Capture(Territory* attacking, Territory* defending);
+  void Retreat(Territory* attacking, int result);
+  int DetermineAtkDice(Territory *attacking);
+  int DetermineDefDice(Territory *defending);
 
-  // move this to Map::Territory, it belongs there
-  void DecrementUnits(Map::Territory* territory)
+  // move this to Territory, it belongs there
+  void DecrementUnits(Territory* territory);
 }
 
 #endif
