@@ -10,12 +10,13 @@
 #include "map.h"
 #include "human_player.h" 
 
-void battle::Battle(Territory* attacking, Territory* defending){
+void battle::Battle(Territory* attacking, Territory* defending) {
 	int result = AttackHandler(attacking, defending);
-	if (result = 1) // if attacking territory wins
+	if (result == 1) {
 		Capture(attacking, defending);
-	else
+  } else {
 		Retreat(attacking, result);
+}
 }
 
 // for HumanPlayer: will ask if he wants to AutoAttack or to attack only once,
@@ -24,23 +25,22 @@ void battle::Battle(Territory* attacking, Territory* defending){
 // 
 // A CompPlayer will always choose to AutoAttack
 
-int battle::AttackHandler(Territory *attacking, Territory *defending){
+int battle::AttackHandler(Territory *attacking, Territory *defending) {
+	bool will_attack = true;
 	bool auto_attack;
 
-	while (true){
+	while (true) {
 		auto_attack = attacking->get_owner()->WantsToAutoAttack(); // check if the Player wants to AutoAttack
-		if (auto_attack){
+		if (auto_attack) {
 			return AutoAttack(attacking, defending);
-		}
-		else { // If the player doesn't AutoAttack, perform a SingleAttack and determine if he will attack again
+		} else { // If the player doesn't AutoAttack, perform a SingleAttack and determine if he will attack again
 			SingleAttack(attacking, defending);
 
 			if (defending->get_num_units() <= 0)
 				return 1; // attacking territory wins			
 			else if (attacking->get_num_units() <= 1)
 				return 2; // attacking territory loses	
-			else
-				if (!(dynamic_cast<HumanPlayer*>(attacking->get_owner()))->WantsToAttack())
+			else if (!(dynamic_cast<HumanPlayer*>(attacking->get_owner()))->WantsToAttack())
 					return 3; // player chose to retreat			
 		}
 	}
@@ -74,12 +74,12 @@ void battle::SingleAttack(Territory *attacking, Territory *defending){
 
 void battle::Capture(Territory* attacking, Territory* defending){
 	std::cout << attacking->get_name() << " (Player " << attacking->get_owner()->get_id() << ") has prevailed!" << std::endl;
-	if (attacking->get_num_units() < 2){
+	if (attacking->get_num_units() < 2) {
 		std::cout << "The winner did not have enough armies left to capture the conquered territory, "
 			<< "so " << defending->get_name() << " is left empty!" << std::endl;
 		defending->set_owner(NULL);
-	}
-	else {
+    defending->get_owner()->remove_territory(defending);
+	} else {
 		int min = DetermineAtkDice(attacking);
 		int max = attacking->get_num_units() - 1;
 		attacking->get_owner()->CaptureTerritory(attacking, defending, min, max);
@@ -87,7 +87,7 @@ void battle::Capture(Territory* attacking, Territory* defending){
 }
 
 void battle::Retreat(Territory* attacking, int result){
-	if (result = 2)
+	if (result == 2)
 		std::cout << "The attacking army, humbled, retreats!" << std::endl;
 	else
 		std::cout << "The attacking army chose to retreat" << std::endl;

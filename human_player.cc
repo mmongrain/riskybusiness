@@ -253,12 +253,14 @@ bool HumanPlayer::WantsToAttack(){
 
 int HumanPlayer::NumConqueringArmiesToMove(int min, int max){
 	int answer;
+  max = (min > max) ? min : max;
 	std::cout << "How many armies do you want to install in the conquered territory (" << min << "-" << max << ")?" << std::endl;
 	std::cin >> answer;
 	while (answer < min || answer > max){
 		std::cout << "Wrong input! How many armies do you want to install in the conquered territory (" << min << "-" << max << ")?" << std::endl;
 		std::cin.clear();
 		std::cin.ignore(1000, '\n');
+    std::cin >> answer;
 	}
 	return answer;
 }

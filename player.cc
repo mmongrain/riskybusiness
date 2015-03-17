@@ -138,11 +138,10 @@ Territory* Player::StringToOwnedTerritory(std::string s) {
 
 // used for battles
 void Player::CaptureTerritory(Territory* attacking, Territory* defending, int min, int max){
-
 	// something in this ownership-updating logic doesn't work properly (when I test it)
+	defending->get_owner()->remove_territory(defending);
 	defending->set_owner(this);
 	add_territory(defending);
-	defending->get_owner()->remove_territory(defending);
 	
 	int answer = NumConqueringArmiesToMove(min, max);
 	
