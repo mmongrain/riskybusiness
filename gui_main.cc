@@ -4,6 +4,7 @@
 #include <stdlib.h> // srand();
 #include <iostream>
 #include <string>
+#include <thread>
 
 #include "game.h"
 #include "map.h"
@@ -13,19 +14,15 @@
 int main() {
   // Load the map, start the game. PlayerViewTestHelper randomly assigns countries.
   srand(time(NULL));
-  char FILENAME[100] = "World.map";
-  Map::Instance().Load(FILENAME);
-  sf::Thread test_thread(&Game::PlayGame);
-  test_thread.launch();
 
   // Load the .map file, load the font, get the relevant image from there
-  char filename[100] = "World.map";
-  Map::Instance().Load(filename);
   sf::Texture map_texture;
   sf::Font pt_sans;
+  char filename[100] = "World.map";
+  Map::Instance().Load(filename);
 
   if (!pt_sans.loadFromFile("PTSans.ttf")) {
-      std::cout << "Font not found, fool!" << std::endl;
+    std::cout << "Font not found, fool!" << std::endl;
   }
   if (!map_texture.loadFromFile(Map::Instance().get_image())) {
     std::cout << "Image not found, fool!" << std::endl;
@@ -48,7 +45,7 @@ int main() {
   // Get the window size to open from the texture size
   // Vector2u is a typedef for Vector2<unsigned int>
   sf::Vector2u window_size = map_texture.getSize();
-  sf::RenderWindow window(sf::VideoMode(window_size.x, window_size.y), "Risky Business");
+  std::thread logic_thread(&Game::PlayGame);
 
   // Creates the map_info textbox
   std::string map_info_text = "Author: " + Map::Instance().get_author() + "\n"
@@ -61,14 +58,39 @@ int main() {
   map_info.setColor(sf::Color::Black); 
   map_info.setString(map_info_text);
 
+  // Some Drawables (& data members) stay constant thru the game so we can get them ready before the window opens
+  // Really anything that can save cycles during the loop can be declared outside
+  // This prevents it from being called every cycle
+  std::vector<Territory*>      *territories = Map::Instance().get_territories();
+  std::vector<Player*>         *players = Game::Instance().get_players();
+  std::vector<sf::Sprite>      sprites;
+  std::vector<sf::CircleShape> shapes;
+  std::vector<sf::Text>        labels;
+  labels.push_back(map_info);
+  for (auto &territory : *territories) {
+    labels.push_back(sf::Text(
+      territory->get_name(),
+      pt_sans,
+      12
+    ));
+    labels.back().setColor(sf::Color::Black);
+    labels.back().setPosition(
+      sf::Vector2f(
+        (float)(territory->get_x() - 15),
+        (float)(territory->get_y())
+      )
+    );
+  }
+  
+  // Create the window
+  sf::RenderWindow window(sf::VideoMode(window_size.x, window_size.y), "Risky Business");
+  window.setFramerateLimit(15);
+
   // Main event loop, see SFML official tutorials
   while (window.isOpen()) {
     sf::Event event;
     while (window.pollEvent(event)) {
       // Create a vector to store all the sprites that will be drawn this loop
-      std::vector<sf::Sprite>       sprites;
-      std::vector<sf::Text>         texts;
-      std::vector<sf::CircleShape>  shapes;
 
       // EVENTS //
       // If window is closed, close the window (!)
@@ -86,77 +108,63 @@ int main() {
         std::cout << "[x: " << event.mouseButton.x << ", y: " << event.mouseButton.y << "]" << std::endl;
       }
 
-      // Add all the objects to be drawn this cycle
-      std::vector<Territory*> territories = Map::Instance().get_copy_territories();
-      std::vector<Player*> players = Game::Instance().get_copy_players();
-      sprites.push_back(map_sprite);
-
-      for (auto &player : players) {
-        sf::Color player_color;
-        switch (player->get_id()) {
-          case 0:  player_color = sf::Color::Magenta;
-                   break;
-          case 1:  player_color = sf::Color::Red;
-                   break;
-          case 2:  player_color = sf::Color::Blue;
-                   break;
-          case 3:  player_color = sf::Color::Green;
-                   break;
-          case 4:  player_color = sf::Color::Yellow;
-                   break;
-          case 5:  player_color = sf::Color::Cyan;
-                   break;
-          default: player_color = sf::Color::Black;
-        }
-
-        std::vector<Territory*> adjacency_list = player->get_owned_territories();
-
-        for (auto territory : adjacency_list) {
-          float unit_x = (float)territory->get_x();
-          float unit_y = (float)territory->get_y();
-          for (int i = 0; i < territory->get_num_units(); i++) {
-            shapes.push_back(sf::CircleShape(5));
-            shapes.back().setFillColor(player_color);
-            shapes.back().setPosition(unit_x - 5, unit_y - 5);
-            unit_x += 5;
-          }
-        }
-      }
-
-      /* Prints a sprite on each territory    
-      for (auto &territory : territories) {
-        sprites.push_back(sf::Sprite(sprite_sheet, subrect));
-        sprites.back().setPosition(
-          sf::Vector2f(
-            (float)(territory->get_x() - 15),
-            (float)(territory->get_y() - 15)
-          )
-        );
-      }*/
-
-      texts.push_back(map_info);
-      for (auto &territory : territories) {
-        texts.push_back(sf::Text(
-          territory->get_name(),
-          pt_sans,
-          12
-        ));
-        texts.back().setColor(sf::Color::Black);
-        texts.back().setPosition(
-          sf::Vector2f(
-            (float)(territory->get_x() - 15),
-            (float)(territory->get_y())
-          )
-        );
-      }
-
-      // Clear, draw, display
-      window.clear(sf::Color::Black);
-      for (auto sprite : sprites) { window.draw(sprite); }
-      for (auto shape : shapes)   { window.draw(shape); } 
-      for (auto text : texts)     { window.draw(text); }
-      window.display();
     }
+    // Clear the current vectors
+    shapes.clear();
+    sprites.clear();
+
+    // Add all the objects to be drawn this cycle
+
+    for (auto &player : *players) {
+      sf::Color player_color;
+      switch (player->get_id()) {
+        case 1:  player_color = sf::Color::Red;
+                 break;
+        case 2:  player_color = sf::Color::Blue;
+                 break;
+        case 3:  player_color = sf::Color::Magenta;
+                 break;
+        case 4:  player_color = sf::Color::Green;
+                 break;
+        case 5:  player_color = sf::Color::Yellow;
+                 break;
+        case 6:  player_color = sf::Color::Cyan;
+                 break;
+        default: player_color = sf::Color::Black;
+      }
+
+      std::vector<Territory*> adjacency_list = player->get_owned_territories();
+
+      for (auto territory : adjacency_list) {
+        float unit_x = (float)territory->get_x();
+        float unit_y = (float)territory->get_y();
+        for (int i = 0; i < territory->get_num_units(); i++) {
+          shapes.push_back(sf::CircleShape(5));
+          shapes.back().setFillColor(player_color);
+          shapes.back().setPosition(unit_x - 5, unit_y - 5);
+          unit_x += 5;
+        }
+      }
+    }
+
+    /* Prints a sprite on each territory    
+    for (auto &territory : territories) {
+      sprites.push_back(sf::Sprite(sprite_sheet, subrect));
+      sprites.back().setPosition(
+        sf::Vector2f(
+          (float)(territory->get_x() - 15),
+          (float)(territory->get_y() - 15)
+        )
+      );
+    }*/
+
+    // Clear, draw, display
+    window.clear(sf::Color::Black);
+    // for (auto sprite : sprites) { window.draw(sprite); }
+    window.draw(map_sprite);
+    for (auto shape : shapes)   { window.draw(shape); } 
+    for (auto label : labels)   { window.draw(label); }
+    window.display();
   }
   return 0;
 }

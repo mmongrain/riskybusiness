@@ -16,6 +16,7 @@
 #include "territory.h"
 
 void Game::PlayGame() {
+  Instance().PrintLogo();
 	Instance().Startup();
 	Instance().MainPhase();
 
@@ -32,17 +33,17 @@ void Game::PlayerViewTestHelper(int num_players) {
 
 void Game::Startup()
 {
-	std::cout << "===== STARTUP PHASE =====\n\n";
+	std::cout << "\n===== STARTUP PHASE =====\n\n";
 
 	// creating HumanPlayer objects
 	std::cout << "Please enter a number of human players between 0 and 6:\n";
-  std::cin.clear();
-  std::cin.ignore(1000, '\n');
-	while (!(std::cin >> num_human_players) || num_human_players < 0 || num_human_players > 6)
+  std::cin >> num_human_players;
+	while (num_human_players < 0 || num_human_players > 6)
 	{
 		std::cout << "Wrong input! Please enter a number of players between 0 and 6:\n";
 		std::cin.clear();
 		std::cin.ignore(1000, '\n');
+    std::cin >> num_human_players;
 	}
 
 	Game::players = *(new std::vector<Player*>);
@@ -61,7 +62,7 @@ void Game::Startup()
 			std::cin.clear();
 			std::cin.ignore(1000, '\n');
 		}
-		if (!num_comp_players == 0){
+		if (num_comp_players != 0) {
 			std::cout << num_comp_players << " Computer Players are being created..." << std::endl;
 			CustomCompPlayers();
 		}
@@ -73,15 +74,14 @@ void Game::Startup()
 
 		std::cout << "Please enter a number of computer players between " << min_comp_players << " and " << max_comp_players
 			<< "\nor press " << max_comp_players + 1 << " and I will create one Computer player of each kind: "
-			<< "\nAggressive, Defensive and Random." << std::endl;	
+			<< "Aggressive, Defensive and Random." << std::endl;	
 
 		// get and check input
 		while (!(std::cin >> num_comp_players) || num_comp_players < min_comp_players || num_comp_players > max_comp_players + 1)
 		{
 			std::cout << "Wrong input! Please enter a number of computer players between " << min_comp_players << " and "
 				<< max_comp_players << "\nor press " << max_comp_players + 1
-				<< " and I will create one Computer player of each kind: " << "\nAggressive, Defensive and Random."
-				<< ":\n" << std::endl;
+				<< " and I will create one Computer player of each kind: " << "Aggressive, Defensive and Random." << std::endl;
 			std::cin.clear();
 			std::cin.ignore(1000, '\n');
 		}
@@ -94,7 +94,7 @@ void Game::Startup()
 			
 		// making custom CompPlayers
 		else {
-			if (!num_comp_players == 0){
+			if (num_comp_players != 0){
 				std::cout << num_comp_players << " custom Computer Players are being created..." << std::endl;
 				CustomCompPlayers();
 			}
@@ -217,3 +217,7 @@ void Game::MainPhase()
 	}
 }
 
+void Game::PrintLogo() { 
+  std::cout << " ____  _     _\n|  _ \\(_)___| | ___   _\n| |_) | / __| |/ / | | |\n|  _ <| \\__ \\   <| |_| |\n|_|_\\_\\_|___/_|\\_\\\\__, |\n| __ ) _   _ ___(_)___/   ___  ___ ___\n|  _ \\| | | / __| | '_ \\ / _ \\/ __/ __|\n| |_) | |_| \\__ \\ | | | |  __/\\__ \\__ \\\n|____/ \\__,_|___/_|_| |_|\\___||___/___/" << std::endl;
+}
+                                                     
