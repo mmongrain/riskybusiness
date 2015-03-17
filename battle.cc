@@ -12,7 +12,7 @@
 
 void battle::Battle(Territory* attacking, Territory* defending){
 	int result = AttackHandler(attacking, defending);
-	if (result = 1)
+	if (result = 1) // if attacking territory wins
 		Capture(attacking, defending);
 	else
 		Retreat(attacking, result);
@@ -25,10 +25,7 @@ void battle::Battle(Territory* attacking, Territory* defending){
 // A CompPlayer will always choose to AutoAttack
 
 int battle::AttackHandler(Territory *attacking, Territory *defending){
-	bool will_attack = true;
 	bool auto_attack;
-	// if a Player has AutoAttacked, then no more attacks are possible for this pair of Territories 
-	bool autoattacked = false;
 
 	while (true){
 		auto_attack = attacking->get_owner()->WantsToAutoAttack(); // check if the Player wants to AutoAttack
