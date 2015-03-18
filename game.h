@@ -20,8 +20,12 @@ class Game {
     ~Game() {}
 
     static void PlayGame();
+	void EndGame();
+	void set_game_over(bool value);
+	bool get_game_over();
     std::vector<Player*> *get_players()     { return &players; }
     std::vector<Player*> get_copy_players() { return players; }
+	void killPlayer(Player* deadPlayer);
 
     void PlayerViewTestHelper(int num_players);
 

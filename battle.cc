@@ -12,11 +12,15 @@
 
 void battle::Battle(Territory* attacking, Territory* defending) {
 	int result = AttackHandler(attacking, defending);
+	bool continueGame = true;
 	if (result == 1) {
 		Capture(attacking, defending);
-  } else {
+		if (Game::Instance().get_game_over() == true)
+			return;
+	}
+	else {
 		Retreat(attacking, result);
-}
+	}
 }
 
 // for HumanPlayer: will ask if he wants to AutoAttack or to attack only once,
@@ -33,15 +37,18 @@ int battle::AttackHandler(Territory *attacking, Territory *defending) {
 		auto_attack = attacking->get_owner()->WantsToAutoAttack(); // check if the Player wants to AutoAttack
 		if (auto_attack) {
 			return AutoAttack(attacking, defending);
-		} else { // If the player doesn't AutoAttack, perform a SingleAttack and determine if he will attack again
+		}
+		else { // If the player doesn't AutoAttack, perform a SingleAttack and determine if he will attack again
 			SingleAttack(attacking, defending);
 
 			if (defending->get_num_units() <= 0)
 				return 1; // attacking territory wins			
 			else if (attacking->get_num_units() <= 1)
 				return 2; // attacking territory loses	
-			else if (!(dynamic_cast<HumanPlayer*>(attacking->get_owner()))->WantsToAttack())
+			else {
+				if (!(dynamic_cast<HumanPlayer*>(attacking->get_owner()))->WantsToAttack())
 					return 3; // player chose to retreat			
+			}
 		}
 	}
 }
@@ -77,9 +84,12 @@ void battle::Capture(Territory* attacking, Territory* defending){
 	if (attacking->get_num_units() < 2) {
 		std::cout << "The winner did not have enough armies left to capture the conquered territory, "
 			<< "so " << defending->get_name() << " is left empty!" << std::endl;
+		defending->get_owner()->remove_territory(defending); // swapped this line with next one
+		// if you set_owner to NULL and then try to get_owner, it will return null
 		defending->set_owner(NULL);
-    defending->get_owner()->remove_territory(defending);
-	} else {
+		
+	}
+	else {
 		int min = DetermineAtkDice(attacking);
 		int max = attacking->get_num_units() - 1;
 		attacking->get_owner()->CaptureTerritory(attacking, defending, min, max);

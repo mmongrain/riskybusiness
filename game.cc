@@ -19,8 +19,7 @@ void Game::PlayGame() {
   Instance().PrintLogo();
 	Instance().Startup();
 	Instance().MainPhase();
-
-	std::cout << "\nGame over. GGWP!\n" << std::endl;
+	Instance().EndGame();
 }
 
 void Game::PlayerViewTestHelper(int num_players) {
@@ -103,6 +102,11 @@ void Game::Startup()
 	std::cin.clear();
 	std::cin.ignore(10000, '\n');
 	AssignCountries();
+}
+
+void Game::EndGame(){
+	Player* winner = players[0];
+	std::cout << "\nPLAYER " << winner->get_id() << " WINS!\nGGWP!" << std::endl;
 }
 
 // Makes one CompPlayer of each kind (aggressive, defensive, random)
@@ -191,11 +195,15 @@ void Game::AssignCountries() {
 
 void Game::MainPhase()
 {
-	std::cout << "\n===== MAIN PLAY PHASE =====";
+	int turn = 1;
+	std::cout << "\n===== MAIN PLAY PHASE =====" << std::endl;
 	while (game_over == false) {
+		std::cout << "--------- TURN #" << turn << ":---------";
 		for (int i = 0; i < players.size(); i++) // round-robin loop over the players 
-		{
+		{				
 			players[i]->PlayTurn();
+			if (game_over)
+				return;
 		}
 
 		// END OF GAME
@@ -214,7 +222,22 @@ void Game::MainPhase()
 		}
 		if (answer == 0)
 			game_over = true;
+		++turn;
 	}
+}
+
+void Game::killPlayer(Player* deadPlayer){
+	std::cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nPLAYER " << deadPlayer->get_id() 
+		<< " IS DEAD!\nRIP\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" << std::endl;
+	players.erase(std::remove(players.begin(), players.end(), deadPlayer), players.end());
+}
+
+void Game::set_game_over(bool value){
+	game_over = value;
+}
+
+bool Game::get_game_over(){
+	return game_over;
 }
 
 void Game::PrintLogo() { 

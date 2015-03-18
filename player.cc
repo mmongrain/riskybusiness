@@ -26,6 +26,8 @@ void Player::PlayTurn() {
 
 	Reinforce();
 	Attack();
+	if (Game::Instance().get_game_over() == true)
+		return;
 	Fortify();
 }
 
@@ -138,17 +140,25 @@ Territory* Player::StringToOwnedTerritory(std::string s) {
 
 // used for battles
 void Player::CaptureTerritory(Territory* attacking, Territory* defending, int min, int max){
-	// something in this ownership-updating logic doesn't work properly (when I test it)
-	defending->get_owner()->remove_territory(defending);
-	defending->set_owner(this);
-	add_territory(defending);
-	
+
 	int answer = NumConqueringArmiesToMove(min, max);
-	
+
 	defending->set_num_units(answer);
 	attacking->set_num_units(attacking->get_num_units() - answer);
 	NotifyObservers();
 	defending->get_owner()->NotifyObservers();
 	std::cout << answer << " armies have moved to " << defending->get_name()
 		<< ", and " << attacking->get_name() << " has " << attacking->get_num_units() << " remaining" << std::endl;
+
+	defending->get_owner()->remove_territory(defending);
+
+	if (defending->get_owner()->get_owned_territories().size() == 0){
+		Game::Instance().killPlayer(defending->get_owner());
+	}
+	defending->set_owner(this);
+	add_territory(defending);	
+
+	if (this->owned_territories.size() == Map::Instance().get_territories()->size()){
+		Game::Instance().set_game_over(true);
+	}
 }
