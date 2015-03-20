@@ -146,7 +146,7 @@ int main() {
       for (auto territory : adjacency_list) {
         float unit_x = (float)territory->get_x();
         float unit_y = (float)territory->get_y();
-        for (int i = 0; i < territory->get_num_units(); i++) {
+        for (int i = 0; i < territory->get_num_units() && unit_x < window_size.x; i++) {
           shapes.push_back(sf::CircleShape(5));
           shapes.back().setFillColor(player_color);
           shapes.back().setPosition(unit_x - 5, unit_y - 5);
