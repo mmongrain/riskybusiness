@@ -52,7 +52,7 @@ void Game::Startup()
 	Game::players = *(new std::vector<Player*>);
 	for (int i = 0; i < num_human_players; i++) {
 		players.push_back(new HumanPlayer());
-    player_views.push_back(new PlayerView::PlayerView(players.back()));
+    player_views.push_back(new PlayerView(players.back()));
 	}
 
 	// creating ComputerPlayer objects, to be re-done using exceptions
@@ -113,7 +113,7 @@ void Game::Startup()
 void Game::DefaultCompPlayers(){
 	for (int i = 0; i < 3; i++){
 		players.push_back(new CompPlayer());
-    player_views.push_back(new PlayerView::PlayerView(players.back()));
+    player_views.push_back(new PlayerView(players.back()));
 	}
 	for (int i = num_human_players; i < players.size(); i++){
 		ApplyStrategyChoice(i % 3 + 1, (CompPlayer*)players[i]);
@@ -124,7 +124,7 @@ void Game::DefaultCompPlayers(){
 void Game::CustomCompPlayers(){
 	for (int i = 0; i < num_comp_players; i++){
 		players.push_back(new CompPlayer());
-    player_views.push_back(new PlayerView::PlayerView(players.back()));
+    player_views.push_back(new PlayerView(players.back()));
 	}
 	for (int i = num_human_players; i < players.size(); i++){
 		int choice = 1;
