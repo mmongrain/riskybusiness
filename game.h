@@ -20,7 +20,7 @@ class Game {
     ~Game() {}
 
     static void PlayGame();
-	void EndGame();
+	bool EndGame();
 	void set_game_over(bool value);
 	bool get_game_over();
     std::vector<Player*> *get_players()     { return &players; }

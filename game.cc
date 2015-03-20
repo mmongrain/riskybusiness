@@ -16,10 +16,13 @@
 #include "territory.h"
 
 void Game::PlayGame() {
-  Instance().PrintLogo();
-	Instance().Startup();
-	Instance().MainPhase();
-	Instance().EndGame();
+	bool wantsToPlay = true;
+	while (wantsToPlay){
+		Instance().PrintLogo();
+		Instance().Startup();
+		Instance().MainPhase();
+		wantsToPlay = Instance().EndGame();
+	}
 }
 
 void Game::PlayerViewTestHelper(int num_players) {
@@ -36,13 +39,13 @@ void Game::Startup()
 
 	// creating HumanPlayer objects
 	std::cout << "Please enter a number of human players between 0 and 6:\n";
-  std::cin >> num_human_players;
+	std::cin >> num_human_players;
 	while (num_human_players < 0 || num_human_players > 6)
 	{
 		std::cout << "Wrong input! Please enter a number of players between 0 and 6:\n";
 		std::cin.clear();
 		std::cin.ignore(1000, '\n');
-    std::cin >> num_human_players;
+		std::cin >> num_human_players;
 	}
 
 	Game::players = *(new std::vector<Player*>);
@@ -73,7 +76,7 @@ void Game::Startup()
 
 		std::cout << "Please enter a number of computer players between " << min_comp_players << " and " << max_comp_players
 			<< "\nor press " << max_comp_players + 1 << " and I will create one Computer player of each kind: "
-			<< "Aggressive, Defensive and Random." << std::endl;	
+			<< "Aggressive, Defensive and Random." << std::endl;
 
 		// get and check input
 		while (!(std::cin >> num_comp_players) || num_comp_players < min_comp_players || num_comp_players > max_comp_players + 1)
@@ -90,23 +93,18 @@ void Game::Startup()
 			std::cout << "Three default Computer Players are being created... " << std::endl;
 			DefaultCompPlayers();
 		}
-			
+
 		// making custom CompPlayers
 		else {
 			if (num_comp_players != 0){
 				std::cout << num_comp_players << " custom Computer Players are being created..." << std::endl;
 				CustomCompPlayers();
 			}
-		}		
+		}
 	}
 	std::cin.clear();
 	std::cin.ignore(10000, '\n');
 	AssignCountries();
-}
-
-void Game::EndGame(){
-	Player* winner = players[0];
-	std::cout << "\nPLAYER " << winner->get_id() << " WINS!\nGGWP!" << std::endl;
 }
 
 // Makes one CompPlayer of each kind (aggressive, defensive, random)
@@ -200,7 +198,7 @@ void Game::MainPhase()
 	while (game_over == false) {
 		std::cout << "--------- TURN #" << turn << ":---------";
 		for (int i = 0; i < players.size(); i++) // round-robin loop over the players 
-		{				
+		{
 			players[i]->PlayTurn();
 			if (game_over)
 				return;
@@ -227,9 +225,27 @@ void Game::MainPhase()
 }
 
 void Game::killPlayer(Player* deadPlayer){
-	std::cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nPLAYER " << deadPlayer->get_id() 
+	std::cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nPLAYER " << deadPlayer->get_id()
 		<< " IS DEAD!\nRIP\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" << std::endl;
 	players.erase(std::remove(players.begin(), players.end(), deadPlayer), players.end());
+}
+
+bool Game::EndGame(){
+	Player* winner = players[0];
+	std::cout << "\nPLAYER " << winner->get_id() << " WINS!"
+		<< "\nThank you for playing.\nTo play again, press 1,\nTo savor your victory and rub it in people's faces, press 0" << std::endl;
+	int answer;
+	std::cin >> answer;
+	while (answer != 0 && answer != 1)
+	{
+		std::cout << "Wrong input! Press 1 to start another game or 0 to stop playing" << std::endl;
+		std::cin.clear();
+		std::cin.ignore(1000, '\n');
+		std::cin >> answer;		
+	}
+	if (answer == 1)
+		return true;
+	return false;
 }
 
 void Game::set_game_over(bool value){
@@ -240,7 +256,7 @@ bool Game::get_game_over(){
 	return game_over;
 }
 
-void Game::PrintLogo() { 
-  std::cout << " ____  _     _\n|  _ \\(_)___| | ___   _\n| |_) | / __| |/ / | | |\n|  _ <| \\__ \\   <| |_| |\n|_|_\\_\\_|___/_|\\_\\\\__, |\n| __ ) _   _ ___(_)___/   ___  ___ ___\n|  _ \\| | | / __| | '_ \\ / _ \\/ __/ __|\n| |_) | |_| \\__ \\ | | | |  __/\\__ \\__ \\\n|____/ \\__,_|___/_|_| |_|\\___||___/___/" << std::endl;
+void Game::PrintLogo() {
+	std::cout << " ____  _     _\n|  _ \\(_)___| | ___   _\n| |_) | / __| |/ / | | |\n|  _ <| \\__ \\   <| |_| |\n|_|_\\_\\_|___/_|\\_\\\\__, |\n| __ ) _   _ ___(_)___/   ___  ___ ___\n|  _ \\| | | / __| | '_ \\ / _ \\/ __/ __|\n| |_) | |_| \\__ \\ | | | |  __/\\__ \\__ \\\n|____/ \\__,_|___/_|_| |_|\\___||___/___/" << std::endl;
 }
-                                                     
+
