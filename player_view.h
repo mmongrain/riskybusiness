@@ -16,10 +16,12 @@ class PlayerView : Observer {
     ~PlayerView();
     void Update();
     std::string to_string();
+    std::string get_view_str() { return view_str; }
   private:
     Player *player; 
     std::vector<Territory*> territories;
     std::vector<Continent*> continents;
+    std::string view_str;
     int reinforcements;
     int units;
     int victories;

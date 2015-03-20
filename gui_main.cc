@@ -18,10 +18,14 @@ int main() {
   // Load the .map file, load the font, get the relevant image from there
   sf::Texture map_texture;
   sf::Font pt_sans;
+  sf::Font profont;
   char filename[100] = "Metro.map";
   Map::Instance().Load(filename);
 
   if (!pt_sans.loadFromFile("PTSans.ttf")) {
+    std::cout << "Font not found, fool!" << std::endl;
+  }
+  if (!pt_sans.loadFromFile("ProFontWindows.ttf")) {
     std::cout << "Font not found, fool!" << std::endl;
   }
   if (!map_texture.loadFromFile(Map::Instance().get_image())) {
@@ -63,8 +67,11 @@ int main() {
   // This prevents it from being called every cycle
   std::vector<Territory*>      *territories = Map::Instance().get_territories();
   std::vector<Player*>         *players = Game::Instance().get_players();
+  std::vector<PlayerView*>     *player_views = Game::Instance().get_player_views();
   std::vector<sf::Sprite>      sprites;
   std::vector<sf::CircleShape> shapes;
+  std::vector<sf::CircleShape> player_circles;
+  std::vector<sf::Text>        player_view_text;
   std::vector<sf::Text>        labels;
   labels.push_back(map_info);
   for (auto &territory : *territories) {
@@ -83,7 +90,7 @@ int main() {
   }
   
   // Create the window
-  sf::RenderWindow window(sf::VideoMode(window_size.x, window_size.y), "Risky Business");
+  sf::RenderWindow window(sf::VideoMode(window_size.x + 300, window_size.y), "Risky Business");
   window.setFramerateLimit(15);
 
   // Main event loop, see SFML official tutorials
@@ -112,11 +119,27 @@ int main() {
     // Clear the current vectors
     shapes.clear();
     sprites.clear();
+    player_circles.clear();
+    player_view_text.clear();
 
     // Add all the objects to be drawn this cycle
 
+    sf::Vector2u draw_position(window_size.x + 10, 10);
     for (auto &player : *players) {
+
       sf::Color player_color = player->get_color();
+      player_circles.push_back(sf::CircleShape(5));
+      player_circles.back().setFillColor(player_color);
+      player_circles.back().setPosition((float)draw_position.x, (float)draw_position.y);
+      player_view_text.push_back(sf::Text());
+      player_view_text.back().setFont(pt_sans);
+      player_view_text.back().setColor(sf::Color::White);
+      player_view_text.back().setCharacterSize(11);
+      player_view_text.back().setPosition((float)(draw_position.x + 15), (float)(draw_position.y));
+      player_view_text.back().setString(player->get_name());
+      draw_position.y += 10;
+      
+      
 
       std::vector<Territory*> adjacency_list = player->get_owned_territories();
 
@@ -131,6 +154,18 @@ int main() {
         }
       }
     }
+    player_view_text.push_back(sf::Text());
+    player_view_text.back().setFont(pt_sans);
+    player_view_text.back().setColor(sf::Color::White);
+    player_view_text.back().setCharacterSize(11);
+    player_view_text.back().setPosition((float)(draw_position.x + 10), (float)(draw_position.y) + 10);
+    std::string player_view_content = "";
+    for (auto player_view : *player_views) {
+      player_view_content += player_view->get_view_str() + "\n";
+    }
+    player_view_text.back().setString(player_view_content);
+
+
 
     /* Prints a sprite on each territory    
     for (auto &territory : territories) {
@@ -146,6 +181,8 @@ int main() {
     // Clear, draw, display
     window.clear(sf::Color::Black);
     // for (auto sprite : sprites) { window.draw(sprite); }
+    for (auto player_circle : player_circles) { window.draw(player_circle); }
+    for (auto player_view : player_view_text) { window.draw(player_view); }
     window.draw(map_sprite);
     for (auto shape : shapes)   { window.draw(shape); } 
     //for (auto label : labels)   { window.draw(label); }

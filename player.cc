@@ -26,6 +26,7 @@ Player::Player(): total_units(0), reinforcements(0), victories(0), id(player_id+
                  break;
         default: color = sf::Color::Black;
   }
+  name = "Player " + std::to_string(id);
 }
 
 void Player::PlayTurn() {

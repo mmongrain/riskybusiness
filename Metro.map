@@ -29,10 +29,10 @@ Snowdon Jx=1
 Montmorency, 64, 88, Ligne orange nord, De la Condorde
 De la Condorde, 120, 88, Ligne orange nord, Montmorency, Cartier
 Cartier, 184, 99, Ligne orange nord, De la Condorde, Henri-Bourassa
-Henri-Bourassa, 220, 147, Ligne orange nord, Cartier, Sauvé
-Sauvé, 237, 168, Ligne orange nord, Henri-Bourassa, Crémazie
-Crémazie, 252, 188, Ligne orange nord, Sauvé, Jarry
-Jarry, 267, 209, Ligne orange nord, Crémazie, Jean-Talon
+Henri-Bourassa, 220, 147, Ligne orange nord, Cartier, Sauve
+Sauve, 237, 168, Ligne orange nord, Henri-Bourassa, Cremazie
+Cremazie, 252, 188, Ligne orange nord, Sauve, Jarry
+Jarry, 267, 209, Ligne orange nord, Cremazie, Jean-Talon
 
 Jean-Talon, 285, 233, Jean-Talon Jx, Jarry, Beaubien, Fabre, De Castelnau
 
@@ -57,14 +57,14 @@ Place-Saint-Henri, 214, 505, Ligne orange sud ouest, Lionel-Groulx, Vendome
 Vendome, 195, 480, Ligne orange sud ouest, Place-Saint-Henri, Villa-Maria
 Villa-Maria, 175, 454, Ligne orange sud ouest, Vendome, Snowdon
 
-Snowdon, 156, 428, Snowdon Jx, Villa-Maria, Côte-des-Neiges, Cote-Sainte-Catherine
+Snowdon, 156, 428, Snowdon Jx, Villa-Maria, Cote-des-Neiges, Cote-Sainte-Catherine
 
 Cote-Sainte-Catherine, 142, 410, Ligne orange nord ouest, Snowdon, Plamondon
 Plamondon, 129, 394, Ligne orange nord ouest, Cote-Sainte-Catherine, Namur
 Namur, 115, 375, Ligne orange nord ouest, Plamondon, De la Savane
-De la Savane, 102, 358, Ligne orange nord ouest, Namur, Du Collège
-Du Collège, 89, 341, Ligne orange nord ouest, De la Savane, Côte-Vertu
-Côte-Vertu, 75, 323, Ligne orange nord ouest, Du Collège
+De la Savane, 102, 358, Ligne orange nord ouest, Namur, Du College
+Du College, 89, 341, Ligne orange nord ouest, De la Savane, Cote-Vertu
+Cote-Vertu, 75, 323, Ligne orange nord ouest, Du College
 
 Saint-Michel, 352, 183, Ligne bleue est, D'Iberville
 D'Iberville, 330, 198, Ligne bleue est, Saint-Michel, Fabre
@@ -73,22 +73,22 @@ Fabre, 310, 214, Ligne bleue est, D'Iberville, Jean-Talon
 De Castelnau, 261, 250, Ligne bleue ouest, Jean-Talon, Parc
 Parc, 238, 267, Ligne bleue ouest, De Castelnau, Acadie
 Acadie, 234, 294, Ligne bleue ouest, Parc, Outremont
-Outremont, 260, 327, Ligne bleue ouest, Acadie, Édouard-Montpetit
-Édouard-Montpetit, 249, 358, Ligne bleue ouest, Outremont, Université-de-Montréal
-Université-de-Montréal, 219, 380, Ligne bleue ouest, Édouard-Montpetit, Côte-des-Neiges
-Côte-des-Neiges, 189, 402, Ligne bleue ouest, Université-de-Montréal, Snowdon
+Outremont, 260, 327, Ligne bleue ouest, Acadie, Edouard-Montpetit
+Edouard-Montpetit, 249, 358, Ligne bleue ouest, Outremont, Universite-de-Montreal
+Universite-de-Montreal, 219, 380, Ligne bleue ouest, Edouard-Montpetit, Cote-des-Neiges
+Cote-des-Neiges, 189, 402, Ligne bleue ouest, Universite-de-Montreal, Snowdon
 
 
-Honoré-Beaugrand, 548, 161, Ligne verte est, Radisson
-Radisson, 529, 177, Ligne verte est, Honoré-Beaugrand, Langelier
+Honore-Beaugrand, 548, 161, Ligne verte est, Radisson
+Radisson, 529, 177, Ligne verte est, Honore-Beaugrand, Langelier
 Langelier, 512, 191, Ligne verte est, Radisson, Cadillac
 Cadillac, 494, 204, Ligne verte est, Langelier, Assomption
 Assomption, 487, 227, Ligne verte est, Cadillac, Viau
 Viau, 490, 250, Ligne verte est, Assomption, Pie-IX
 Pie-IX, 473, 263, Ligne verte est, Viau, Joliette
-Joliette, 455, 276, Ligne verte est, Pie-IX, Préfontaine
-Préfontaine, 438, 289, Ligne verte est, Joliette, Frontenac
-Frontenac, 429, 309, Ligne verte est, Préfontaine, Papineau
+Joliette, 455, 276, Ligne verte est, Pie-IX, Prefontaine
+Prefontaine, 438, 289, Ligne verte est, Joliette, Frontenac
+Frontenac, 429, 309, Ligne verte est, Prefontaine, Papineau
 Papineau, 433, 330, Ligne verte est, Frontenac, Beaudry
 Beaudry, 414, 345, Ligne verte est, Papineau, Berri-UQAM
 
@@ -100,9 +100,9 @@ Guy-Concordia, 269, 455, Ligne verte centre-ville, Peel, Atwater
 Atwater, 244, 474, Ligne verte centre-ville, Guy-Concordia, Lionel-Groulx
 
 Charlevoix, 266, 545, Ligne verte ouest, Lionel-Groulx, LaSalle
-LaSalle, 268, 574, Ligne verte ouest, Charlevoix, De l'Église
-De l'Église, 250, 589, Ligne verte ouest, LaSalle, Verdun
-Verdun, 228, 603, Ligne verte ouest, De l'Église, Jolicoeur
+LaSalle, 268, 574, Ligne verte ouest, Charlevoix, De l'Eglise
+De l'Eglise, 250, 589, Ligne verte ouest, LaSalle, Verdun
+Verdun, 228, 603, Ligne verte ouest, De l'Eglise, Jolicoeur
 Jolicoeur, 205, 593, Ligne verte ouest, Verdun, Monk
 Monk, 183, 608, Ligne verte ouest, Jolicoeur, Angrignon
 Angrignon, 161, 623, Ligne verte ouest, Monk

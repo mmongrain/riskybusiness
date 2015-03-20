@@ -20,23 +20,26 @@ void PlayerView::Update() {
   reinforcements = player->get_reinforcements();
   units = player->get_total_units();
   victories = player->get_victories();
-  std::cout << this->to_string();
+  view_str = to_string();
+  //std::cout << to_string();
 }
 
 std::string PlayerView::to_string() {
-  std::string out = "[" + player->get_name() + ", ID: " + std::to_string(player->get_id()) 
-                    + "]\nTerritories controlled: ";
+  std::string out = "[" + player->get_name() + "]\nTerritories controlled: ";
   for (int i = 0; i < territories.size(); i++) {
     out += territories[i]->get_name();
     (i < territories.size() - 1) ? out += ", " : out += ".";
+    if (i%3==0){ out += "\n";}
   }
   out += "\nContinents controlled: ";
   for (int i = 0; i < continents.size(); i++) {
     out += continents[i]->get_name();
     (i < continents.size() - 1) ? out += ", " : out += ".";
+    out += "\n";
   }
-  out += "\nArmies: " + std::to_string(units) + "\nBattles won: " +
-         std::to_string(victories) + "\nCurrent no. of reinforcements: " +
+  out += //"\nArmies: " + std::to_string(units) + "\nBattles won: " +
+         //std::to_string(victories) + 
+         "\nCurrent no. of reinforcements: " +
          std::to_string(reinforcements) + "\n";
   return out;
 }
