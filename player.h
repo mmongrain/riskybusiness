@@ -1,6 +1,7 @@
 #ifndef PLAYER_H_
 #define PLAYER_H_
 
+#include <SFML/Graphics.hpp>
 #include <vector>
 #include <string>
 
@@ -14,7 +15,7 @@ class Player : public Observable {
 
   public:
 
-    Player(): total_units(0), reinforcements(0), victories(0), id(player_id++) {}
+    Player();
     virtual ~Player() {}
     virtual void PlayTurn();
     void PrintOwnedTerritories();
@@ -32,11 +33,12 @@ class Player : public Observable {
     /**
      * TODO: We have getters and setters for these members... should we make these
      * public members protected?   --Matthew 
-	 * I think so -- Alika 
+     * I think so -- Alika 
      **/
     std::vector<Territory*> owned_territories;
     std::vector<Continent*> owned_continents; 
 
+    sf::Color get_color()    { return color; }
     int get_id()             { return id; }
     int get_victories()      { return victories; }
     int get_reinforcements() { return reinforcements; }
@@ -57,6 +59,7 @@ class Player : public Observable {
     int victories;
     int reinforcements;
     int total_units;
+    sf::Color color;
     virtual void Reinforce() = 0;
     virtual void Attack() = 0;
     virtual void Fortify() = 0;

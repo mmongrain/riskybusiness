@@ -10,24 +10,31 @@
 #include "player.h"
 #include "territory.h"
 
+Player::Player(): total_units(0), reinforcements(0), victories(0), id(player_id++) {
+  switch (id) {
+        case 1:  color = sf::Color::Red;
+                 break;
+        case 2:  color = sf::Color::Blue;
+                 break;
+        case 3:  color = sf::Color::Magenta;
+                 break;
+        case 4:  color = sf::Color::Green;
+                 break;
+        case 5:  color = sf::Color::Yellow;
+                 break;
+        case 6:  color = sf::Color::Cyan;
+                 break;
+        default: color = sf::Color::Black;
+  }
+}
+
 void Player::PlayTurn() {
 	std::cout << "\n\n=== PLAYER " << id << "'S TURN ===" << std::endl;
-
-	/** check to see length of vector of players
-	if(Game::Instance().get_players()->size() == 1 && std::find(Game::Instance().get_players()->begin(), Game::Instance().get_players()->end(), id))
-		victory();
-
-	if(id.owned_territories.size() == 0)
-	{
-		Game::Instance().get_players()->erase(Game::Instance().get_players()->begin()+(id-1));
-		std::cout << "You lose, sorry." << std::endl;
-
-	}*/
-
 	Reinforce();
 	Attack();
-	if (Game::Instance().get_game_over() == true)
+	if (Game::Instance().get_game_over() == true) {
 		return;
+  }
 	Fortify();
 }
 

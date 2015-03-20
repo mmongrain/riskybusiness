@@ -18,7 +18,7 @@ int main() {
   // Load the .map file, load the font, get the relevant image from there
   sf::Texture map_texture;
   sf::Font pt_sans;
-  char filename[100] = "World.map";
+  char filename[100] = "Metro.map";
   Map::Instance().Load(filename);
 
   if (!pt_sans.loadFromFile("PTSans.ttf")) {
@@ -116,22 +116,7 @@ int main() {
     // Add all the objects to be drawn this cycle
 
     for (auto &player : *players) {
-      sf::Color player_color;
-      switch (player->get_id()) {
-        case 1:  player_color = sf::Color::Red;
-                 break;
-        case 2:  player_color = sf::Color::Blue;
-                 break;
-        case 3:  player_color = sf::Color::Magenta;
-                 break;
-        case 4:  player_color = sf::Color::Green;
-                 break;
-        case 5:  player_color = sf::Color::Yellow;
-                 break;
-        case 6:  player_color = sf::Color::Cyan;
-                 break;
-        default: player_color = sf::Color::Black;
-      }
+      sf::Color player_color = player->get_color();
 
       std::vector<Territory*> adjacency_list = player->get_owned_territories();
 
@@ -163,7 +148,7 @@ int main() {
     // for (auto sprite : sprites) { window.draw(sprite); }
     window.draw(map_sprite);
     for (auto shape : shapes)   { window.draw(shape); } 
-    for (auto label : labels)   { window.draw(label); }
+    //for (auto label : labels)   { window.draw(label); }
     window.display();
   }
   return 0;
