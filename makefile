@@ -4,6 +4,9 @@ default: battle.cc comp_player.cc game.cc game_driver.cc human_player.cc map.cc 
 gui: territory.cc continent.cc battle.cc comp_player.cc game.cc gui_main.cc human_player.cc map.cc observer.cc player.cc
 	g++ player_view.cc territory.cc continent.cc strategy_defensive.cc strategy_aggressive.cc strategy_random.cc battle.cc comp_player.cc game.cc gui_main.cc human_player.cc map.cc observer.cc player.cc -std=c++11 -o g.o -lsfml-graphics -lsfml-window -lsfml-system
 
+win_gui: territory.cc continent.cc battle.cc comp_player.cc game.cc gui_main.cc human_player.cc map.cc observer.cc player.cc
+	/usr/local/gcc-4.8.0-qt-4.8.4-for-mingw32/win32-gcc/bin/i586-mingw32-gcc player_view.cc territory.cc continent.cc strategy_defensive.cc strategy_aggressive.cc strategy_random.cc battle.cc comp_player.cc game.cc gui_main.cc human_player.cc map.cc observer.cc player.cc -std=c++11 -o gui.exe -lsfml-graphics -lsfml-window -lsfml-system
+
 player_view: comp_player.cc player.cc player_view_main.cc player_view.cc map.cc observer.cc human_player.cc battle.cc game.cc
 	g++ comp_player.cc battle.cc game.cc human_player.cc player.cc player_view.cc player_view_main.cc map.cc observer.cc -std=c++11 -o player_view.o
 

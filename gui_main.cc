@@ -11,7 +11,7 @@
 #include "player.h"
 #include "territory.h"
 
-int main() {
+int main(int argc, char *argv[]) {
   // Load the map, start the game. PlayerViewTestHelper randomly assigns countries.
   srand(time(NULL));
 
@@ -64,7 +64,6 @@ int main() {
 
   // Some Drawables (& data members) stay constant thru the game so we can get them ready before the window opens
   // Really anything that can save cycles during the loop can be declared outside
-  // This prevents it from being called every cycle
   std::vector<Territory*>      *territories = Map::Instance().get_territories();
   std::vector<Player*>         *players = Game::Instance().get_players();
   std::vector<PlayerView*>     *player_views = Game::Instance().get_player_views();
