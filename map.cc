@@ -84,6 +84,8 @@ void Map::Clear() {
     continents.clear();
 }
 
+     
+
 void Map::ParseMapInfo(const std::vector<std::string> &section_map) {
   for (unsigned int i = 0; i < section_map.size(); i++) {
     std::size_t delim = section_map[i].find("=");
