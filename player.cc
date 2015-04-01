@@ -10,7 +10,7 @@
 #include "player.h"
 #include "territory.h"
 
-Player::Player(): total_units(0), reinforcements(0), victories(0), id(player_id++) {
+Player::Player(): total_units(0), reinforcements(0), battles_won(0), battles_lost(0), id(player_id++) {
   switch (id) {
         case 1:  color = sf::Color::Red;
                  break;
@@ -112,11 +112,6 @@ void Player::remove_continent(Continent *old_continent) {
 	NotifyObservers();
 }
 
-void Player::set_victories(int victories) {
-	this->victories = victories;
-	NotifyObservers();
-}
-
 void Player::set_reinforcements(int reinforcements) {
 	this->reinforcements = reinforcements;
 	NotifyObservers();
@@ -129,6 +124,16 @@ void Player::set_total_units(int units) {
 
 void Player::set_name(std::string name) {
 	this->name = name;
+	NotifyObservers();
+}
+
+void Player::set_battles_won(int battles_won) {
+	this->battles_won = battles_won;
+	NotifyObservers();
+}
+
+void Player::set_battles_lost(int battles_lost) {
+	this->battles_lost = battles_lost;
 	NotifyObservers();
 }
 

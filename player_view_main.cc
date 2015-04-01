@@ -38,7 +38,7 @@ int main () {
       case 3: players[i]->set_name("Ringo");
               break;
     }
-    players[i]->set_victories(i + 1);
+    players[i]->set_battles_won(i + 1);
     players[i]->set_reinforcements((i + 1) * 2);
     players[i]->set_total_units((i + 1) * 4);
     players[i]->remove_territory(players[i]->get_owned_territories()[0]);

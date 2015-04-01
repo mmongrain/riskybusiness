@@ -23,8 +23,9 @@ class PlayerView : Observer {
     std::vector<Continent*> continents;
     std::string view_str;
     int reinforcements;
-    int units;
-    int victories;
+    int total_units;
+    int battles_won;
+    int battles_lost;
 };
 
 #endif

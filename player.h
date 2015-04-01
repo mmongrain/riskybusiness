@@ -5,11 +5,11 @@
 #include <vector>
 #include <string>
 
-#include "continent.h"
-#include "map.h"
 #include "observer.h"
-#include "territory.h"
 
+class Card;
+class Territory;
+class Continent;
 
 class Player : public Observable {
 
@@ -38,17 +38,22 @@ class Player : public Observable {
     std::vector<Territory*> owned_territories;
     std::vector<Continent*> owned_continents; 
 
-    sf::Color get_color()    { return color; }
-    int get_id()             { return id; }
-    int get_victories()      { return victories; }
-    int get_reinforcements() { return reinforcements; }
-    int get_total_units()    { return total_units; }
-    std::string get_name()   { return name; }
+
+    int get_battles_won()     { return battles_won; }
+    int get_battles_lost()    { return battles_lost; }
+    sf::Color get_color()     { return color; }
+    int get_id()              { return id; }
+    int get_reinforcements()  { return reinforcements; }
+    int get_num_cards()       { return hand.size(); }
+    int get_total_units()     { return total_units; }
+    int get_num_territories() { return owned_territories.size(); }
+    std::string get_name()    { return name; }
 
     std::vector<Territory*> &get_owned_territories() { return owned_territories; }
     std::vector<Continent*> &get_owned_continents()  { return owned_continents; } 
 
-    void set_victories(int victories);
+    void set_battles_won(int battles_won);
+    void set_battles_lost(int battles_lost);
     void set_reinforcements(int reinforcements);
     void set_total_units(int units);
     void set_name(std::string name);
@@ -56,9 +61,11 @@ class Player : public Observable {
   protected:
 
     int id;
-    int victories;
     int reinforcements;
     int total_units;
+    int battles_won;
+    int battles_lost;
+    std::vector<Card*> hand;
     sf::Color color;
     virtual void Reinforce() = 0;
     virtual void Attack() = 0;
