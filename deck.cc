@@ -8,6 +8,7 @@ class Territory;
 
 void Deck::Clear() {
   cards.clear();
+  NotifyObservers();
 }
 
 void Deck::Generate() {
@@ -29,19 +30,23 @@ void Deck::Generate() {
   }
   Clear();
   Replace(cards);
+  NotifyObservers();
 }
 
 void Deck::Replace(Card* new_card) {
   cards.push_back(new_card);
+  NotifyObservers();
 }
 
 void Deck::Replace(std::vector<Card*> new_cards) {
   for (Card* card : new_cards) { 
     cards.push_back(card);
   }
+  NotifyObservers();
 }
 
 void Deck::Shuffle() {
   std::random_shuffle(cards.begin(), cards.end());
+  NotifyObservers();
 }
  

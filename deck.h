@@ -4,7 +4,7 @@
 #include <vector>
 
 class Card;
-class Deck { 
+class Deck : Observable { 
   public:
     // SINGLETON
     static Deck &Instance() {
