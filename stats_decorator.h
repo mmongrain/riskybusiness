@@ -1,6 +1,8 @@
 #ifndef STATS_DECORATOR_H_
 #define STATS_DECORATOR_H_
 
+#include "stats.h"
+
 class StatsDecorator : public Stats {
   public:
     StatsDecorator(Stats *decoratedStats) {

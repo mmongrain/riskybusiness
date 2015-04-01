@@ -11,12 +11,12 @@ class Player;
 
 class Stats : public Observer {
   public:
-    virtual ~Stats();
-    virtual void Update();
-    virtual std::string get_stats_string() = 0; 
+    virtual ~Stats() {}
+    virtual void Update() {} 
+    std::string get_stats_string() { return stats_string; } 
+    virtual void UpdateStatsString() = 0;
 
   protected:
-    virtual void UpdateStatsString() = 0;
     std::string stats_string;
 };
 

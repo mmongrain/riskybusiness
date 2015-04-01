@@ -19,6 +19,6 @@ class StatsControl : public StatsDecorator {
   private:
     int num_territories;
     std::vector< std::pair<Player*, double> > player_control; 
-}
+};
 
 #endif

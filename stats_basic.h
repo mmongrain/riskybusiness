@@ -1,5 +1,5 @@
-#ifndef BASIC_STATS_H_
-#define BASIC_STATS_H_
+#ifndef STATS_BASIC_H_
+#define STATS_BASIC_H_
 
 #include <string>
 #include <vector>
@@ -9,10 +9,10 @@
 
 class Player;
 
-class BasicStats : public Stats {
+class StatsBasic : public Stats {
   public:
-    BasicStats();
-    ~BasicStats();
+    StatsBasic();
+    ~StatsBasic();
     typedef std::pair<Player*, int> PlayerInt;
     void Update();
     std::string get_stats_string() { return stats_string; } 
