@@ -112,6 +112,19 @@ void Player::remove_continent(Continent *old_continent) {
 	NotifyObservers();
 }
 
+void Player::add_card(Card *new_card) {
+	for (auto &card : hand) {
+		if (card == new_card) { return; }
+	}
+	hand.push_back(new_card);
+	NotifyObservers();
+}
+
+void Player::remove_card(Card *old_card) {
+	hand.erase(std::remove(hand.begin(), hand.end(), old_card), hand.end());
+	NotifyObservers();
+}
+
 void Player::set_reinforcements(int reinforcements) {
 	this->reinforcements = reinforcements;
 	NotifyObservers();

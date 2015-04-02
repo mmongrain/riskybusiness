@@ -2,28 +2,32 @@
 #include "game.h"
 #include "stats_control.h"
 
-StatsControl::StatsControl(Stats *decoratedStats) : StatsDecorator(decoratedStats) {
+StatsControl::StatsControl(Stats *decorated_stats) : StatsDecorator(decorated_stats) {
   std::vector<Player*> players = *(Game::Instance().get_players()); 
   num_territories = Map::Instance().get_territories()->size();
-  for (Player* player : players) {
-    double control = ((double)player->get_num_territories())/((double)num_territories);
-    player_control.push_back(PlayerDouble(player, control));
+  if (num_territories) {
+    for (Player* player : players) {
+      double control = (double)player->get_num_territories() / (double)num_territories;
+      control *= 100;
+      player_control.push_back(PlayerDouble(player, control));
+    }
   }
   UpdateStatsString();
 }
 
 void StatsControl::UpdateStatsString() {
-  decoratedStats->UpdateStatsString();
-  std::string decoration = "\nTerritory control\n";
+  decorated_stats->UpdateStatsString();
+  this->stats_string = decorated_stats->get_stats_string();
+  std::string decoration = "\nMap control\n";
   for (PlayerDouble player_double : player_control) {
-    decoration += player_double.first->get_name() + ": " + std::to_string(player_double.second) + "\n";
+    decoration += player_double.first->get_name() + ": " + std::to_string(player_double.second) + "\%\n";
   }
   this->stats_string += decoration;
 }
 
 void StatsControl::Update() {
-  decoratedStats->Update();
-  for (PlayerDouble player_double : player_control) {
+  decorated_stats->Update();
+  for (PlayerDouble &player_double : player_control) {
     double control = ((double)player_double.first->get_num_territories()/(double)num_territories);
     player_double.second = control;
   }

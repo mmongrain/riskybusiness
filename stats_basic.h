@@ -15,7 +15,6 @@ class StatsBasic : public Stats {
     ~StatsBasic();
     typedef std::pair<Player*, int> PlayerInt;
     void Update();
-    std::string get_stats_string() { return stats_string; } 
 
   protected:
     void UpdateStatsString();

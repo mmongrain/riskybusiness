@@ -17,7 +17,7 @@ int main () {
   // Initialize the objects
   char FILENAME[100] = "World.map";
   Map::Instance().Load(FILENAME);
-  Game::Instance().PlayerViewTestHelper(NUM_PLAYERS);
+  Game::Instance().TestHelper(NUM_PLAYERS);
 
   // Create views for each player 
   std::vector<Player*> players = *(Game::Instance().get_players());

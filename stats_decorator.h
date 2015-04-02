@@ -5,20 +5,20 @@
 
 class StatsDecorator : public Stats {
   public:
-    StatsDecorator(Stats *decoratedStats) {
-      this->decoratedStats = decoratedStats;
+    StatsDecorator(Stats *decorated_stats) {
+      this->decorated_stats = decorated_stats;
     }
     void Update() {
-      decoratedStats->Update();
+      decorated_stats->Update();
     }
     std::string get_stats_string() {
-      return decoratedStats->get_stats_string();
+      return decorated_stats->get_stats_string();
     }
     void UpdateStatsString() {
-      decoratedStats->UpdateStatsString();
+      decorated_stats->UpdateStatsString();
     }
   protected:
-    Stats *decoratedStats;
+    Stats *decorated_stats;
 
 };
 

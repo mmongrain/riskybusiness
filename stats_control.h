@@ -2,6 +2,7 @@
 #define STATS_CONTROL_H_
 
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "stats_decorator.h"
@@ -12,13 +13,12 @@ class Stats;
 class StatsControl : public StatsDecorator {
   public:
     typedef std::pair<Player*, double> PlayerDouble;
-    StatsControl(Stats *decoratedStats);
-    std::string get_stats_string();
+    StatsControl(Stats *decorated_stats);
     void UpdateStatsString();
     void Update();
   private:
     int num_territories;
-    std::vector< std::pair<Player*, double> > player_control; 
+    std::vector<PlayerDouble> player_control; 
 };
 
 #endif

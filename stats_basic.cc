@@ -24,13 +24,13 @@ StatsBasic::~StatsBasic() {
 }
 
 void StatsBasic::Update() {
-  for (PlayerInt player_int : player_total_territories) {
+  for (PlayerInt &player_int : player_total_territories) {
     player_int.second = player_int.first->get_num_territories();
   }
-  for (PlayerInt player_int : player_total_units) {
+  for (PlayerInt &player_int : player_total_units) {
     player_int.second = player_int.first->get_total_units();
   }
-  for (PlayerInt player_int : player_total_cards) {
+  for (PlayerInt &player_int : player_total_cards) {
     player_int.second = player_int.first->get_num_cards();
   }
   UpdateStatsString();

@@ -25,8 +25,10 @@ class Player : public Observable {
     virtual bool WantsToAutoAttack() = 0;
     void add_territory(Territory *new_territory);
     void add_continent(Continent *new_continent);
+    void add_card(Card *new_card);
     void remove_territory(Territory *old_territory);
     void remove_continent(Continent *old_continent);
+    void remove_card(Card *old_card);
     void CaptureTerritory(Territory* attacking, Territory* defending, int min, int max);
     virtual int NumConqueringArmiesToMove(int min, int max) = 0;
 
@@ -37,7 +39,6 @@ class Player : public Observable {
      **/
     std::vector<Territory*> owned_territories;
     std::vector<Continent*> owned_continents; 
-
 
     int get_battles_won()     { return battles_won; }
     int get_battles_lost()    { return battles_lost; }

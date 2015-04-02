@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 
+#include "card.h"
 #include "comp_player.h"
 #include "game.h"
 #include "human_player.h"
@@ -18,7 +19,7 @@
 
 void Game::PlayGame() {
 	bool wantsToPlay = true;
-	while (wantsToPlay){
+	while (wantsToPlay) {
 		Instance().PrintLogo();
 		Instance().Startup();
 		Instance().MainPhase();
@@ -26,10 +27,25 @@ void Game::PlayGame() {
 	}
 }
 
-void Game::PlayerViewTestHelper(int num_players) {
+void Game::TestHelper() {
+	for (auto player : players) {
+    player->set_battles_won(rand() % 100);
+    player->set_battles_lost(rand() % 100);
+    player->set_total_units(rand() % 256);
+  }
+}
+
+void Game::TestHelper(int num_players) {
 	Game::players = *(new std::vector<Player*>);
 	for (int i = 0; i < num_players; i++){
 		players.push_back(new HumanPlayer());
+    players.back()->set_battles_won(rand() % 100);
+    players.back()->set_battles_lost(rand() % 100);
+    players.back()->set_total_units(rand() % 256);
+    int num_cards = rand() % 6;
+    for (int i = 0; i < num_cards; i++) {
+      players.back()->add_card(new Card(Card::SOLDIER));
+    }
 	}
 	AssignCountries();
 }
