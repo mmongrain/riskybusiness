@@ -48,7 +48,11 @@ void Map::Load(char* filename) {
   ParseContinentInfo(section_continents);
   ParseTerritoryInfo(section_territories);
   ReconcileTerritories();
-  VerifyConnectivity();
+  if (VerifyConnectivity()) {
+    std::cout << "Map is connected!" << std::endl;
+  } else {
+    std:: cout << "Map is not connected!" << std::endl;
+  }
 } 
 
 void Map::Save(char *filename) {
@@ -243,6 +247,7 @@ bool Map::VerifyConnectivity() {
       }
     }
   }
+  // If any of the vertices were not visited, return false
   for (auto key : traversal) {
     if (!(key.second)) {
       return false;
