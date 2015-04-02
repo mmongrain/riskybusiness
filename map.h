@@ -61,6 +61,8 @@ class Map: public Observable {
     void ParseContinentInfo(const std::vector<std::string> &section_continents);
     void ParseTerritoryInfo(const std::vector<std::string> &section_continents);
     void ReconcileTerritories();
+    bool VerifyAdjacency(Territory* first, Territory* second);
+    bool VerifyConnectivity();
 
 };
 

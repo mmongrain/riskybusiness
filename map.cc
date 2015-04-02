@@ -5,6 +5,7 @@
 #include <vector>
 #include <sstream>
 #include <algorithm> //std::find()
+#include <set>
 
 #include "continent.h"
 #include "map.h"
@@ -47,6 +48,7 @@ void Map::Load(char* filename) {
   ParseContinentInfo(section_continents);
   ParseTerritoryInfo(section_territories);
   ReconcileTerritories();
+  VerifyConnectivity();
 } 
 
 void Map::Save(char *filename) {
@@ -200,3 +202,69 @@ Territory* Map::StringToTerritory(std::string s) {
   }
 	return 0;
 }
+
+bool Map::VerifyAdjacency(Territory *first, Territory *second) {
+  bool left = false;
+  bool right = false;
+  for (auto territory : second->adjacency_list) {
+    if (territory == first) { 
+      left = true;
+    }
+  }
+  for (auto territory : first->adjacency_list) {
+    if (territory == second) {
+      right = true;
+    }
+  }
+  return left && right;
+}
+
+bool Map::VerifyConnectivity() {
+  // First verify every node is reflexively connected to every node in it
+  // adjacency_list
+  std::map<Territory*, bool> traversal;
+  for (auto territory : territories) { 
+    traversal.emplace(territory, false);
+    for (auto adjacent : territory->adjacency_list) {
+      if (!VerifyAdjacency(territory, adjacent)) { return false; }
+    }
+  }
+  // Then do a DFS to verify weak connectivity
+  std::vector<Territory*> to_search;
+  to_search.push_back(territories[0]);
+  Territory* terr;
+  while (!(to_search.empty())) {
+    terr = to_search.back();
+    to_search.pop_back();
+    if (!traversal[terr]) {
+      traversal[terr] = true;
+      for (auto adjacent : terr->adjacency_list) {
+        to_search.push_back(adjacent);
+      }
+    }
+  }
+  for (auto key : traversal) {
+    if (!(key.second)) {
+      return false;
+    }
+  }
+  return true;
+}
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
