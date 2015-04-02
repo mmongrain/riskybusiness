@@ -14,8 +14,8 @@ class StatsBattle : public StatsDecorator {
   public:
     typedef std::pair<Player*, double> PlayerDouble;
     StatsBattle(Stats *decorated_stats);
-    void UpdateStatsString();
-    void Update();
+    virtual void UpdateStatsString();
+    virtual void Update();
   private:
     std::vector<PlayerDouble> player_win_ratio; 
 };

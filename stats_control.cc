@@ -10,6 +10,7 @@ StatsControl::StatsControl(Stats *decorated_stats) : StatsDecorator(decorated_st
       double control = (double)player->get_num_territories() / (double)num_territories;
       control *= 100;
       player_control.push_back(PlayerDouble(player, control));
+      player->AddObserver(this);
     }
   }
   UpdateStatsString();
@@ -26,9 +27,9 @@ void StatsControl::UpdateStatsString() {
 }
 
 void StatsControl::Update() {
-  decorated_stats->Update();
   for (PlayerDouble &player_double : player_control) {
     double control = ((double)player_double.first->get_num_territories()/(double)num_territories);
+    control *= 100;
     player_double.second = control;
   }
   UpdateStatsString();

@@ -18,12 +18,12 @@ StatsBattle::StatsBattle(Stats *decorated_stats) : StatsDecorator(decorated_stat
       ratio = 0.0;
     }
     player_win_ratio.push_back(PlayerDouble(player, ratio));
+    player->AddObserver(this);
   }
   UpdateStatsString();
 }
 
 void StatsBattle::UpdateStatsString() {
-  decorated_stats->UpdateStatsString();
   this->stats_string = decorated_stats->get_stats_string();
   std::string decoration = "\n\% Battles won:\n";
   for (PlayerDouble player_double : player_win_ratio) {
@@ -40,7 +40,7 @@ void StatsBattle::Update() {
     int battles = wins + losses;
     double ratio;
     if (battles) {
-      double ratio = (double)wins / (double)battles;
+      ratio = (double)wins / (double)battles;
       ratio *= 100;
     } else {
       ratio = 0.0;

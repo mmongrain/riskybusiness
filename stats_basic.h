@@ -14,10 +14,10 @@ class StatsBasic : public Stats {
     StatsBasic();
     ~StatsBasic();
     typedef std::pair<Player*, int> PlayerInt;
-    void Update();
+    virtual void Update();
 
   protected:
-    void UpdateStatsString();
+    virtual void UpdateStatsString();
     std::vector<PlayerInt> player_total_territories;
     std::vector<PlayerInt> player_total_units;
     std::vector<PlayerInt> player_total_cards;
