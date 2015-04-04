@@ -11,6 +11,15 @@ void Deck::Clear() {
   NotifyObservers();
 }
 
+Card* Deck::Draw() {
+  if (!cards.empty()) {
+    Card* card = cards.back();
+    cards.pop_back();
+    return card;
+  }
+  else return NULL;
+}
+
 void Deck::Generate() {
   std::vector<Territory*> territories = *(Map::Instance().get_territories());
   std::vector<Card*> cards;
@@ -33,6 +42,9 @@ void Deck::Generate() {
   NotifyObservers();
 }
 
+bool Deck::IsEmpty() {
+  return (cards.size() == 0);
+}
 void Deck::Replace(Card* new_card) {
   cards.push_back(new_card);
   NotifyObservers();
@@ -40,7 +52,7 @@ void Deck::Replace(Card* new_card) {
 
 void Deck::Replace(std::vector<Card*> new_cards) {
   for (Card* card : new_cards) { 
-    cards.push_back(card);
+    cards.push_front(card);
   }
   NotifyObservers();
 }

@@ -1,7 +1,9 @@
 #ifndef DECK_H_
 #define DECK_H_
 
+#include <deque>
 #include <vector>
+#include "observer.h"
 
 class Card;
 class Deck : Observable { 
@@ -20,12 +22,13 @@ class Deck : Observable {
     Card* Draw();
     std::vector<Card*> Draw(int num_cards);
     void Generate();
+    bool IsEmpty();
     void Replace(Card* card);
     void Replace(std::vector<Card*> cards);
     void Shuffle();
 
   private:
-    std::vector<Card*> cards;
+    std::deque<Card*> cards;
 };
 
 #endif
