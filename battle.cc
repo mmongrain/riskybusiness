@@ -66,29 +66,27 @@ void battle::SingleAttack(Territory *attacking, Territory *defending){
 	int num_def_dice = DetermineDefDice(defending);
 	std::cout << "Player " << attacking->get_owner()->get_id() << " rolls: ";
 	std::vector<int> atk_dice = Dice(num_atk_dice);
+  // Once the dice are thrown, the size is decremented no matter what
+  // Logically, the troops have "left" their territory to attack the defenders
+  // Either they are all killed, or some remain, which will transfer to the defending country
+  // See updated logic in battle::Capture() for the capture half of this logic
+  attacking->set_num_units(attacking->get_num_units() - atk_dice.size());
+  attacking->get_owner()->set_last_roll(atk_dice);
 	std::cout << "Player " << defending->get_owner()->get_id() << " rolls: ";
 	std::vector<int> def_dice = Dice(num_def_dice);
+  defending->get_owner()->set_last_roll(def_dice);
 
 	for (unsigned int i = 0; i < def_dice.size() && i < atk_dice.size(); i++) {
 		if (atk_dice[i] > def_dice[i] && defending->get_num_units() != 0)
 			DecrementUnits(defending);
-		else
-			DecrementUnits(attacking);
 	}
 }
 
 void battle::Capture(Territory* attacking, Territory* defending){
 	std::cout << attacking->get_name() << " (Player " << attacking->get_owner()->get_id() << ") has prevailed!" << std::endl;
-	if (attacking->get_num_units() < 2) {
-		std::cout << "The winner did not have enough armies left to capture the conquered territory, "
-			<< "so " << defending->get_name() << " is left empty!" << std::endl;
-		defending->get_owner()->remove_territory(defending); 
-		defending->set_owner(NULL);
-	} else {
-		int min = DetermineAtkDice(attacking);
-		int max = attacking->get_num_units() - 1;
-		attacking->get_owner()->CaptureTerritory(attacking, defending, min, max);
-	}
+  int min = attacking->get_owner()->get_last_roll().size();
+  int max = min + attacking->get_num_units() - 1;
+  attacking->get_owner()->CaptureTerritory(attacking, defending, min, max);
 }
 
 void battle::Retreat(Territory* attacking, int result){

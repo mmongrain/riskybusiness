@@ -206,6 +206,11 @@ void Player::set_card_this_turn(bool card_this_turn) {
 	NotifyObservers();
 }
 
+void Player::set_last_roll(std::vector<int> last_roll) {
+	this->last_roll = last_roll;
+	NotifyObservers();
+}
+
 // converts a string to one of the Territory objects owned by Player
 // or outputs an error message and returns a null pointer
 Territory* Player::StringToOwnedTerritory(std::string s) {
@@ -226,7 +231,7 @@ void Player::CaptureTerritory(Territory* attacking, Territory* defending, int mi
 	int answer = NumConqueringArmiesToMove(min, max);
 
 	defending->set_num_units(answer);
-	attacking->set_num_units(attacking->get_num_units() - answer);
+	attacking->set_num_units(attacking->get_num_units() + attacking->get_owner()->get_last_roll().size() - answer);
 	NotifyObservers();
 	defending->get_owner()->NotifyObservers();
 	std::cout << answer << " armies have moved to " << defending->get_name()

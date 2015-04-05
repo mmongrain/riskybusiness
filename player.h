@@ -51,6 +51,7 @@ class Player : public Observable {
     std::vector<Territory*> &get_owned_territories() { return owned_territories; }
     std::vector<Continent*> &get_owned_continents()  { return owned_continents; } 
     std::deque<Card*>       &get_hand()              { return hand; }
+    std::vector<int>        &get_last_roll()         { return last_roll; }
 
     void set_battles_won(int battles_won);
     void set_battles_lost(int battles_lost);
@@ -58,6 +59,7 @@ class Player : public Observable {
     void set_total_units(int units);
     void set_name(std::string name);
     void set_card_this_turn(bool card_this_turn);
+    void set_last_roll(std::vector<int> last_roll);
 
   protected:
 
@@ -69,6 +71,7 @@ class Player : public Observable {
     int bonus_reinforcements;
     bool card_this_turn;
     int times_redeemed;
+    std::vector<int> last_roll;
     std::deque<Card*> hand;
     sf::Color color;
     virtual void Reinforce() = 0;
