@@ -32,7 +32,7 @@ void Deck::Generate() {
               break;
       case 1: type_ = Card::CAVALRY;
               break;
-      case 3: type_ = Card::CANNON;
+      case 2: type_ = Card::CANNON;
               break;
     }
     cards.push_back(new Card(type_));
@@ -45,6 +45,14 @@ void Deck::Generate() {
 bool Deck::IsEmpty() {
   return (cards.size() == 0);
 }
+
+void Deck::PrintCards() {
+  for (auto card : cards) {
+    std::cout << card->get_card_string() << " ";
+  }
+  std::cout << std::endl;
+}
+
 void Deck::Replace(Card* new_card) {
   cards.push_back(new_card);
   NotifyObservers();

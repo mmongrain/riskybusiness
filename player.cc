@@ -94,6 +94,13 @@ void Player::PrintOwnedTerritories() {
 	}
 }
 
+void Player::PrintHand() {
+  for (auto card : hand) {
+    std::cout << card->get_card_string() << " ";
+  }
+  std::cout << std::endl;
+}
+
 void Player::CalculateReinforcements() {	
 	DetermineContinentOwnership();
 
@@ -239,11 +246,13 @@ std::string Player::HasMatch() {
   int soldiers;
   int cavalry;
   int cannons;
+  std::cout << "\nXXX\n";
   for (auto card : hand) {
     switch (card->get_type()) {
       case Card::JOKER   : jokers++;
                            break;
       case Card::SOLDIER : soldiers++;
+                           std::cout << card->get_card_string() << "\n\n" << std::endl;
                            break;
       case Card::CAVALRY : cavalry++;
                            break;
@@ -256,7 +265,7 @@ std::string Player::HasMatch() {
   if (soldiers >= 3) {
     return "three soldiers";
   } else if (cavalry >= 3) {
-    return "three cavalry";
+    return std::to_string(cavalry) + "three cavalry";
   } else if (cannons >= 3) {
     return "three cannons";
   } else if (soldiers > 0 && cavalry > 0 && cannons > 0) {

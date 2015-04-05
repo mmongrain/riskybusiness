@@ -19,6 +19,7 @@ class Player : public Observable {
     Player();
     virtual ~Player() {}
     virtual void PlayTurn();
+    void PrintHand();
     void PrintOwnedTerritories();
     void victory();
     Territory *StringToOwnedTerritory(std::string s);
@@ -49,7 +50,7 @@ class Player : public Observable {
 
     std::vector<Territory*> &get_owned_territories() { return owned_territories; }
     std::vector<Continent*> &get_owned_continents()  { return owned_continents; } 
-    std::deque<Card*>      &get_hand()              { return hand; }
+    std::deque<Card*>       &get_hand()              { return hand; }
 
     void set_battles_won(int battles_won);
     void set_battles_lost(int battles_lost);

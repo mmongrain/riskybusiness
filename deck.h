@@ -23,6 +23,7 @@ class Deck : Observable {
     std::vector<Card*> Draw(int num_cards);
     void Generate();
     bool IsEmpty();
+    void PrintCards();
     void Replace(Card* card);
     void Replace(std::vector<Card*> cards);
     void Shuffle();
