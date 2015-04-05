@@ -12,7 +12,6 @@
 
 void battle::Battle(Territory* attacking, Territory* defending) {
 	int result = AttackHandler(attacking, defending);
-	bool continueGame = true;
 	if (result == 1) {
 		Capture(attacking, defending);
 		if (Game::Instance().get_game_over() == true)
@@ -30,7 +29,6 @@ void battle::Battle(Territory* attacking, Territory* defending) {
 // A CompPlayer will always choose to AutoAttack
 
 int battle::AttackHandler(Territory *attacking, Territory *defending) {
-	bool will_attack = true;
 	bool auto_attack;
 
 	while (true) {
@@ -71,7 +69,7 @@ void battle::SingleAttack(Territory *attacking, Territory *defending){
 	std::cout << "Player " << defending->get_owner()->get_id() << " rolls: ";
 	std::vector<int> def_dice = Dice(num_def_dice);
 
-	for (int i = 0; i < def_dice.size() && i < atk_dice.size(); i++) {
+	for (unsigned int i = 0; i < def_dice.size() && i < atk_dice.size(); i++) {
 		if (atk_dice[i] > def_dice[i] && defending->get_num_units() != 0)
 			DecrementUnits(defending);
 		else
@@ -86,9 +84,7 @@ void battle::Capture(Territory* attacking, Territory* defending){
 			<< "so " << defending->get_name() << " is left empty!" << std::endl;
 		defending->get_owner()->remove_territory(defending); 
 		defending->set_owner(NULL);
-    attacking->get_owner()->set_card_this_turn(true);
-	}
-	else {
+	} else {
 		int min = DetermineAtkDice(attacking);
 		int max = attacking->get_num_units() - 1;
 		attacking->get_owner()->CaptureTerritory(attacking, defending, min, max);
@@ -139,8 +135,8 @@ std::vector<int> battle::Dice(int num_dice) {
 		std::sort(out.begin(), out.end(), std::greater<int>());
 		// Displays the vector 
 		std::cout << "(";
-		int i;
-		for (i = 0; i < out.size() - 1; ++i){
+		unsigned int i = 0;
+		for (; i < out.size() - 1; ++i){
 			std::cout << out[i] << ", ";
 		}
 		std::cout << out[i] << ")" << std::endl;

@@ -10,6 +10,8 @@
 
 void HumanPlayer::Reinforce() {
   // Check to see if the player can march cards and match 'em
+  std::cout << "Your hand contains "; 
+  PrintHand(); 
   std::string match = HasMatch();
   if (match.length() > 0) {
     Match();

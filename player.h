@@ -17,7 +17,7 @@ class Player : public Observable {
   public:
 
     Player();
-    virtual ~Player() {}
+    virtual ~Player();
     virtual void PlayTurn();
     void PrintHand();
     void PrintOwnedTerritories();

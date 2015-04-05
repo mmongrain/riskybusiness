@@ -11,14 +11,16 @@
 #include "player.h"
 #include "territory.h"
 
-Player::Player() : total_units(0), 
+class Card;
+
+Player::Player() : id(player_id++),
                    reinforcements(0),
+                   total_units(0), 
                    battles_won(0), 
                    battles_lost(0), 
-                   id(player_id++),
+                   bonus_reinforcements(0), 
                    card_this_turn(false),
-                   times_redeemed(0),
-                   bonus_reinforcements(0) {
+                   times_redeemed(0) {
   switch (id) {
         case 1:  color = sf::Color::Red;
                  break;
@@ -35,6 +37,11 @@ Player::Player() : total_units(0),
         default: color = sf::Color::Black;
   }
   name = "Player " + std::to_string(id);
+  hand = *(new std::deque<Card*>);
+}
+
+Player::~Player() {
+  delete &hand;
 }
 
 void Player::PlayTurn() {
@@ -57,7 +64,7 @@ void Player::Draw() {
     std::cout << "You would have drawn a card, but the deck is empty!" << std::endl;
   } else {
     hand.push_back(Deck::Instance().Draw());
-    std::cout << "You drew a " << hand.back()->get_type() << "!" << std::endl;
+    std::cout << "You drew a " << hand.back()->get_card_string() << "!" << std::endl;
   }
   set_card_this_turn(false);
   return;
@@ -66,8 +73,8 @@ void Player::Draw() {
 int Player::player_id = 1;
 
 void Player::DetermineContinentOwnership() {
-	std::map<Continent*, int> ownership;
-	for (int i = 0; i < owned_territories.size(); i++) {
+	std::map<Continent*, unsigned int> ownership;
+	for (unsigned int i = 0; i < owned_territories.size(); i++) {
 		Continent *temp = owned_territories[i]->get_continent();
 		if (ownership[temp]) {
 			ownership[temp] = ownership[temp] + 1;
@@ -87,7 +94,7 @@ void Player::DetermineContinentOwnership() {
 }
 
 void Player::PrintOwnedTerritories() {
-	for (int i = 0; i < owned_territories.size(); i++) {
+	for (unsigned int i = 0; i < owned_territories.size(); i++) {
 		std::cout << owned_territories[i]->get_name() << " (" 
 			<< owned_territories[i]->get_num_units() << ")";
 		(i < owned_territories.size() - 1) ? std::cout << ", " : std::cout << ".\n";
@@ -96,7 +103,7 @@ void Player::PrintOwnedTerritories() {
 
 void Player::PrintHand() {
   for (auto card : hand) {
-    std::cout << card->get_card_string() << " ";
+    std::cout << card->get_card_string();
   }
   std::cout << std::endl;
 }
@@ -237,22 +244,21 @@ void Player::CaptureTerritory(Territory* attacking, Territory* defending, int mi
 	if (this->owned_territories.size() == Map::Instance().get_territories()->size()){
 		Game::Instance().set_game_over(true);
 	}
+  set_card_this_turn(true);
 }
 
 // Returns a string describing the match, if one exists.
 // Returns null if no match so can be used wherever a bool is used.
 std::string Player::HasMatch() {
-  int jokers;
-  int soldiers;
-  int cavalry;
-  int cannons;
-  std::cout << "\nXXX\n";
+  int jokers = 0;
+  int soldiers = 0;
+  int cavalry = 0;
+  int cannons = 0;
   for (auto card : hand) {
     switch (card->get_type()) {
       case Card::JOKER   : jokers++;
                            break;
       case Card::SOLDIER : soldiers++;
-                           std::cout << card->get_card_string() << "\n\n" << std::endl;
                            break;
       case Card::CAVALRY : cavalry++;
                            break;

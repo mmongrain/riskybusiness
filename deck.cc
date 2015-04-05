@@ -25,7 +25,7 @@ void Deck::Generate() {
   std::vector<Card*> cards;
   cards.push_back(new Card(Card::JOKER));
   cards.push_back(new Card(Card::JOKER));
-  for (int i = 0; i < territories.size(); i++) {
+  for (unsigned int i = 0; i < territories.size(); i++) {
     Card::Type type_;
     switch (i % 3) { 
       case 0: type_ = Card::SOLDIER;
@@ -36,6 +36,7 @@ void Deck::Generate() {
               break;
     }
     cards.push_back(new Card(type_));
+    cards.back()->set_territory(territories[i]);
   }
   Clear();
   Replace(cards);
