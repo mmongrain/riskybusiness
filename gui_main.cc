@@ -19,7 +19,7 @@ int main(int argc, char *argv[]) {
   sf::Texture map_texture;
   sf::Font pt_sans;
   sf::Font profont;
-  char filename[100] = "Metro.map";
+  char filename[100] = "World.map";
   Map::Instance().Load(filename);
 
   if (!pt_sans.loadFromFile("PTSans.ttf")) {

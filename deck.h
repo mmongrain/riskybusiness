@@ -2,6 +2,7 @@
 #define DECK_H_
 
 #include <vector>
+#include "observer.h"
 
 class Card;
 class Deck : Observable { 
