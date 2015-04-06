@@ -158,7 +158,7 @@ void Map::ParseTerritoryInfo(const std::vector<std::string> &section_territories
     temp->y = std::stoi(territory[2]);
 
     // Find the continent it belongs to
-    for (int j = 0; j < continents.size(); j++) {
+    for (unsigned int j = 0; j < continents.size(); j++) {
       //  boost::iequals returns true if two strings are equal ignoring case
       if (boost::iequals(continents[j]->get_name(), territory[3])) {
         temp->continent = continents[j];
@@ -198,7 +198,7 @@ void Map::ReconcileTerritories() {
 
 Territory* Map::StringToTerritory(std::string s) {
 	Territory *territory;
-	for (int i = 0; i < territories.size(); i++) {
+	for (unsigned int i = 0; i < territories.size(); i++) {
 		if (territories[i]->get_name().compare(s) == 0) {
 			territory = territories[i];
 		  return territory;	

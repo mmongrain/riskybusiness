@@ -6,6 +6,7 @@
 
 #include "card.h"
 #include "comp_player.h"
+#include "deck.h"
 #include "game.h"
 #include "human_player.h"
 #include "map.h"
@@ -54,6 +55,8 @@ void Game::Startup()
 {
 	std::cout << "\n===== STARTUP PHASE =====\n\n";
 
+  // Initialize the Deck. Must be done after the map is loaded.
+  Deck::Instance().Generate();
 	// creating HumanPlayer objects
 	std::cout << "Please enter a number of human players between 0 and 6:\n";
 	std::cin >> num_human_players;
@@ -127,11 +130,11 @@ void Game::Startup()
 
 // Makes one CompPlayer of each kind (aggressive, defensive, random)
 void Game::DefaultCompPlayers(){
-	for (int i = 0; i < 3; i++){
+	for (unsigned int i = 0; i < 3; i++){
 		players.push_back(new CompPlayer());
     player_views.push_back(new PlayerView(players.back()));
 	}
-	for (int i = num_human_players; i < players.size(); i++){
+	for (unsigned int i = num_human_players; i < players.size(); i++){
 		ApplyStrategyChoice(i % 3 + 1, (CompPlayer*)players[i]);
 	}
 }
@@ -142,7 +145,7 @@ void Game::CustomCompPlayers(){
 		players.push_back(new CompPlayer());
     player_views.push_back(new PlayerView(players.back()));
 	}
-	for (int i = num_human_players; i < players.size(); i++){
+	for (unsigned int i = num_human_players; i < players.size(); i++){
 		int choice = 1;
 		std::cout << "Choose desired strategy for Computer Player " << players[i]->get_id()
 			<< ": \nAggressive(1)\nDefensive(2)\nRandom(3)" << std::endl;
@@ -181,7 +184,7 @@ void Game::AssignCountries() {
 	// Get a copy of the territories
 	std::vector<Territory*> territories = Map::Instance().get_copy_territories();
 	// For each territory
-	for (int i = 0; territories.size() > 0; i++) {
+	for (unsigned int i = 0; territories.size() > 0; i++) {
 		// Random number between 0 and the size of territories
 		int rando = rand() % territories.size();
 		// Iterates thru the players using the index
@@ -200,11 +203,11 @@ void Game::AssignCountries() {
 	// used for testing
 	/*
 	std::vector<Territory*> terr = *(Map::Instance().get_territories());
-	for (int i = 0; i < terr.size(); i++){
+	for (unsigned int i = 0; i < terr.size(); i++){
 	std::cout << terr[i]->get_name() << ": Player " << terr[i]->get_owner()->get_id() << std::endl;
 	}
 
-	for (int i = 0; i < players.size(); ++i){
+	for (unsigned int i = 0; i < players.size(); ++i){
 	std::cout << "Player " << players[i]->get_id() << ": " << std::endl;
 	players[i]->PrintOwnedTerritories();
 	}
@@ -217,7 +220,7 @@ void Game::MainPhase()
 	std::cout << "\n===== MAIN PLAY PHASE =====" << std::endl;
 	while (game_over == false) {
 		std::cout << "--------- TURN #" << turn << ":---------";
-		for (int i = 0; i < players.size(); i++) // round-robin loop over the players 
+		for (unsigned int i = 0; i < players.size(); i++) // round-robin loop over the players 
 		{
 			players[i]->PlayTurn();
 			if (game_over)

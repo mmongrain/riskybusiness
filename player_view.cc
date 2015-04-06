@@ -27,13 +27,13 @@ void PlayerView::Update() {
 
 std::string PlayerView::to_string() {
   std::string out = "[" + player->get_name() + "]\nTerritories controlled: ";
-  for (int i = 0; i < territories.size(); i++) {
+  for (unsigned int i = 0; i < territories.size(); i++) {
     out += territories[i]->get_name();
     (i < territories.size() - 1) ? out += ", " : out += ".";
     if (i%3==0){ out += "\n";}
   }
   out += "\nContinents controlled: ";
-  for (int i = 0; i < continents.size(); i++) {
+  for (unsigned int i = 0; i < continents.size(); i++) {
     out += continents[i]->get_name();
     (i < continents.size() - 1) ? out += ", " : out += ".";
     out += "\n";

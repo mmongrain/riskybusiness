@@ -2,12 +2,13 @@
 #define PLAYER_H_
 
 #include <SFML/Graphics.hpp>
+#include <deque>
 #include <vector>
 #include <string>
 
 #include "observer.h"
+#include "card.h"
 
-class Card;
 class Territory;
 class Continent;
 
@@ -16,8 +17,9 @@ class Player : public Observable {
   public:
 
     Player();
-    virtual ~Player() {}
+    virtual ~Player();
     virtual void PlayTurn();
+    void PrintHand();
     void PrintOwnedTerritories();
     void victory();
     Territory *StringToOwnedTerritory(std::string s);
@@ -32,14 +34,6 @@ class Player : public Observable {
     void CaptureTerritory(Territory* attacking, Territory* defending, int min, int max);
     virtual int NumConqueringArmiesToMove(int min, int max) = 0;
 
-    /**
-     * TODO: We have getters and setters for these members... should we make these
-     * public members protected?   --Matthew 
-     * I think so -- Alika 
-     **/
-    std::vector<Territory*> owned_territories;
-    std::vector<Continent*> owned_continents; 
-
     int get_battles_won()     { return battles_won; }
     int get_battles_lost()    { return battles_lost; }
     sf::Color get_color()     { return color; }
@@ -48,16 +42,24 @@ class Player : public Observable {
     int get_num_cards()       { return hand.size(); }
     int get_total_units()     { return total_units; }
     int get_num_territories() { return owned_territories.size(); }
+    bool get_card_this_turn() { return card_this_turn; }
     std::string get_name()    { return name; }
+
+    std::vector<Territory*> owned_territories;
+    std::vector<Continent*> owned_continents; 
 
     std::vector<Territory*> &get_owned_territories() { return owned_territories; }
     std::vector<Continent*> &get_owned_continents()  { return owned_continents; } 
+    std::deque<Card*>       &get_hand()              { return hand; }
+    std::vector<int>        &get_last_roll()         { return last_roll; }
 
     void set_battles_won(int battles_won);
     void set_battles_lost(int battles_lost);
     void set_reinforcements(int reinforcements);
     void set_total_units(int units);
     void set_name(std::string name);
+    void set_card_this_turn(bool card_this_turn);
+    void set_last_roll(std::vector<int> last_roll);
 
   protected:
 
@@ -66,12 +68,20 @@ class Player : public Observable {
     int total_units;
     int battles_won;
     int battles_lost;
-    std::vector<Card*> hand;
+    int bonus_reinforcements;
+    bool card_this_turn;
+    int times_redeemed;
+    std::vector<int> last_roll;
+    std::deque<Card*> hand;
     sf::Color color;
     virtual void Reinforce() = 0;
     virtual void Attack() = 0;
     virtual void Fortify() = 0;
     void CalculateReinforcements();
+    void Draw();
+    std::string HasMatch();
+    void Match();
+    void TransferHand(Player* winner);
 
   private:
 

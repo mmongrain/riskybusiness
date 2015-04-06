@@ -9,9 +9,16 @@
 // reinforcements, does the necessary checks and performs the reinforcement
 
 void HumanPlayer::Reinforce() {
+  // Check to see if the player can march cards and match 'em
+  std::cout << "Your hand contains "; 
+  PrintHand(); 
+  std::string match = HasMatch();
+  if (match.length() > 0) {
+    Match();
+    std::cout << "You matched a set of cards (" << match << ") for additional reinforcements!" << std::endl;
+  }
 	CalculateReinforcements(); // calculates the number of reinforcements
 	while (reinforcements > 0){
-
 		// ask for a territory to reinforce
 		std::cout << "You have " << reinforcements << " reinforcements."
 			<< "\nWhich territory would you like to reinforce? " << std::endl;
