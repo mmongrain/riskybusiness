@@ -294,10 +294,10 @@ std::string Player::HasMatch() {
 }
 
 void Player::Match() {
-  int jokers;
-  int soldiers;
-  int cavalry;
-  int cannons;
+  int jokers = 0;
+  int soldiers = 0;
+  int cavalry = 0;
+  int cannons = 0;
   for (auto card : hand) {
     switch (card->get_type()) {
       case Card::JOKER   : jokers++;
