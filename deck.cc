@@ -55,7 +55,7 @@ void Deck::PrintCards() {
 }
 
 void Deck::Replace(Card* new_card) {
-  cards.push_back(new_card);
+  cards.push_front(new_card);
   NotifyObservers();
 }
 

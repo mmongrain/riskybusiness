@@ -55,8 +55,9 @@ void Game::Startup()
 {
 	std::cout << "\n===== STARTUP PHASE =====\n\n";
 
-  // Initialize the Deck. Must be done after the map is loaded.
+  // Initialize the Deck. Must be done after the map is loaded. Don't forget to shuffle!
   Deck::Instance().Generate();
+  Deck::Instance().Shuffle();
 	// creating HumanPlayer objects
 	std::cout << "Please enter a number of human players between 0 and 6:\n";
 	std::cin >> num_human_players;

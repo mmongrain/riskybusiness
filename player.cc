@@ -41,11 +41,15 @@ Player::Player() : id(player_id++),
 }
 
 Player::~Player() {
+  // hand is guaranteed to be empty of cards, since TransferHand is called when players
+  // are eliminated
   delete &hand;
 }
 
+// Plays through a single turn for a player. Used in the round-robin main game loop.
 void Player::PlayTurn() {
 	std::cout << "\n\n=== PLAYER " << id << "'S TURN ===" << std::endl;
+  CardsHandler();
 	Reinforce();
 	Attack();
 	if (Game::Instance().get_game_over() == true) {
@@ -57,7 +61,25 @@ void Player::PlayTurn() {
   }
 }
 
+// Deals with cards at the beginning of each turn.
+// Same behaviour for all player descendent classes.
+void Player::CardsHandler() { 
+  // Check to see if the player can march cards and match 'em
+  if (hand.size() > 0) {
+    std::cout << "Your hand contains "; 
+    PrintHand(); 
+    std::string match = HasMatch();
+    if (match.length() > 0) {
+      Match();
+      std::cout << "You matched a set of cards (" << match << ") for additional reinforcements!" << std::endl;
+    }
+  }
+}
+
+// Draws a single card from the Deck and prints that fact.
 void Player::Draw() {
+  // Because of auto-matching, this logic will never trigger, but no harm in leaving it in in case we decide
+  // to allow player matching.
   if (hand.size() == 5) {
     std::cout << "You could have drawn a card, but your hand is already full!" << std::endl;
   } else if (Deck::Instance().IsEmpty()) {
@@ -102,10 +124,15 @@ void Player::PrintOwnedTerritories() {
 }
 
 void Player::PrintHand() {
-  for (auto card : hand) {
-    std::cout << card->get_card_string();
+  for (unsigned int i = 0; i < hand.size(); i++) {
+    std::cout << hand[i]->get_card_string();
+    if (hand.size() > 1 && i < hand.size() - 2) {
+      std::cout << ", ";
+    } else if (i == hand.size() - 2) {
+      std::cout << " and ";
+    }
   }
-  std::cout << std::endl;
+  std::cout << "." << std::endl;
 }
 
 void Player::CalculateReinforcements() {	
