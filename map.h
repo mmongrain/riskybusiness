@@ -32,6 +32,7 @@ class Map: public Observable {
     void Save(char* filename);
 
     Territory* StringToTerritory(std::string s);
+    Continent* StringToContinent(std::string s);
 
     std::string get_author() { return map_info.author; }
     std::string get_image()  { return map_info.image;  }
