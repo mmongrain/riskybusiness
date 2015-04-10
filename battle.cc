@@ -38,7 +38,7 @@ int battle::AttackHandler(Territory *attacking, Territory *defending) {
     else if (attacking->get_num_units() <= 1)
       return 2; // attacking territory loses  
     else {
-      if (!(dynamic_cast<HumanPlayer*>(attacking->get_owner()))->WantsToAttack())
+      if (!UI::AutoAttack())
         return 3; // player chose to retreat      
     }
   } 
