@@ -22,10 +22,12 @@ class Player : public Observable {
     virtual void PlayTurn();
     void PrintHand();
     void PrintOwnedTerritories();
+    void RemoveDie();
     void victory();
     Territory *StringToOwnedTerritory(std::string s);
+    std::vector<Territory*> AttackingTerritories();
+    std::vector<Territory*> AttackableTerritories(Territory* attacking);
 
-    virtual bool WantsToAutoAttack() = 0;
     void add_territory(Territory *new_territory);
     void add_continent(Continent *new_continent);
     void add_card(Card *new_card);
