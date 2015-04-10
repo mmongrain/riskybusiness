@@ -446,3 +446,31 @@ void Player::Match() {
   }
   times_redeemed++;
 }
+
+std::vector<Territory*> Player::AttackingTerritories() {
+  std::vector<Territory*> attacking_territories;
+  for (auto territory : owned_territories) {
+    if (territory->get_num_units() > 1) {
+      std::vector<Territory*> adjacents = *(territory->get_adjacency_list());
+      for (auto adjacent : adjacents) {
+        if (adjacent->get_owner() != this) {
+          std::vector<Territory*>::iterator it;
+          it = find(attacking_territories.begin(), attacking_territories.end(), territory);
+          if (it == attacking_territories.end()) { attacking_territories.push_back(territory); }
+        }
+      }
+    }
+  }
+  return attacking_territories;
+}
+
+std::vector<Territory*> Player::AttackableTerritories(Territory* attacking) {
+  std::vector<Territory*> attackables;
+  std::vector<Territory*> adjacents = *(attacking->get_adjacency_list());
+  for (auto adjacent : adjacents) {
+    if (adjacent->get_owner() != this) {
+      attackables.push_back(adjacent);
+    }
+  }
+  return attackables;
+}

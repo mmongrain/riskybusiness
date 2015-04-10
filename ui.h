@@ -9,10 +9,12 @@ class UI {
     static Territory* GetReinforceableTerritory(Player* player);
     static int GetNumReinforcements(Player* player, Territory* to_reinforce);
     static char HelpMenu();
-    static void StartAttackPhase();
+    static void StartAttackPhase(Player* player);
     static bool AttackPhase(Player * player);
     static Territory* GetAttackingTerritory(Player* player);
-    static Territory* GetDefendingTerritory(Territory* attacking_territory);
+    static Territory* GetDefendingTerritory(Player* player, Territory* attacking_territory);
+    static bool AutoAttack();
+    static bool Attack(Territory* attacking, Territory* defending);
 };
 
 #endif

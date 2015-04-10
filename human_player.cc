@@ -25,8 +25,9 @@ void HumanPlayer::Attack() {
   while (UI::AttackPhase(this)) {
     Territory *attacking = UI::GetAttackingTerritory(this);
     if (attacking == NULL) { continue; }
-    Territory *defending = UI::GetDefendingTerritory(attacking);
-    Battle::Battle(attacking, defending);
+    Territory *defending = UI::GetDefendingTerritory(this, attacking);
+    if (defending == NULL) { continue; }
+    battle::Battle(attacking, defending);
   }
 }
 
@@ -129,34 +130,8 @@ void HumanPlayer::Fortify() {
   }
 }
 
-// used for battles
-bool HumanPlayer::WantsToAutoAttack(){
-  std::string answer;
-  std::cout << "Do you want to auto-attack? (y/n)" << std::endl;
-  std::cin >> answer;
-  while (answer != "y" && answer != "n"){
-    std::cout << "Wrong input! Do you want to auto-attack? (y/n)" << std::endl;
-    std::cin.clear();
-    std::cin.ignore(1000, '\n');
-  }
-  if (answer == "y")
-    return true;
-  else return false;
-}
 
-bool HumanPlayer::WantsToAttack(){
-  char answer;
-  std::cout << "Continue attacking? (y/n)" << std::endl;
-  std::cin >> answer;
-  while (answer != 'y' && answer != 'n'){
-    std::cout << "Wrong input! Continue attacking? (y/n)" << std::endl;
-    std::cin.clear();
-    std::cin.ignore(1000, '\n');
-  }
-  if (answer == 'y')
-    return true;
-  else return false;
-}
+
 
 int HumanPlayer::NumConqueringArmiesToMove(int min, int max){
   int answer;
