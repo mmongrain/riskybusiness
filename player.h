@@ -22,6 +22,7 @@ class Player : public Observable {
     virtual void PlayTurn();
     void PrintHand();
     void PrintOwnedTerritories();
+    void RemoveDie();
     void victory();
     Territory *StringToOwnedTerritory(std::string s);
     std::vector<Territory*> AttackingTerritories();

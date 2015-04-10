@@ -474,3 +474,7 @@ std::vector<Territory*> Player::AttackableTerritories(Territory* attacking) {
   }
   return attackables;
 }
+
+void Player::RemoveDie() {
+  last_roll.pop_back();
+}

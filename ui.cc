@@ -105,26 +105,14 @@ Territory* UI::GetDefendingTerritory(Player* player, Territory* attacking) {
   return territories[which_territory];
 }
 
-bool UI::AutoAttack(){
-  char answer;
-  std::cout << "Do you want to auto-attack (y/n)?" << std::endl;
-  std::cin >> answer;
-  while (input != 'y' && input != 'n') {
-    std::cin >> input;
-    if (input == '?') {
-    char help = HelpMenu();
-    }
-    return (answer == 'y');
-}
-
 char UI::HelpMenu() { 
   std::cout << "You asked for help! But none was available." << std::endl;
   return '*'; 
 }
 
 void UI::Attack(Territory* attacking, Territory* defending) {
-  std::vector<int> atk_dice = attacking->get_last_roll();
-  std::vector<int> def_dice = defending->get_last_roll();
+  std::vector<int> atk_dice = attacking->get_owner()->get_last_roll();
+  std::vector<int> def_dice = defending->get_owner()->get_last_roll();
   std::cout << "Player " << attacking->get_owner()->get_id() << " (" << attacking->get_owner()->get_name() << ") rolls ";
   for (auto die : atk_dice) {
     std::cout << die << " ";
@@ -134,4 +122,8 @@ void UI::Attack(Territory* attacking, Territory* defending) {
     std::cout << die << " ";
   }
   std::cout << std::endl;
+}
+
+void UI::DecrementUnits(Territory* victim) {
+  std::cout << "Player " << victim->get_owner()->get_id()<< " loses a unit!" << std::endl;
 }

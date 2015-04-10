@@ -13,8 +13,8 @@ class UI {
     static bool AttackPhase(Player * player);
     static Territory* GetAttackingTerritory(Player* player);
     static Territory* GetDefendingTerritory(Player* player, Territory* attacking_territory);
-    static bool AutoAttack();
-    static bool Attack(Territory* attacking, Territory* defending);
+    static void Attack(Territory* attacking, Territory* defending);
+    static void DecrementUnits(Territory* victim);
 };
 
 #endif
