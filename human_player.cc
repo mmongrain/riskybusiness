@@ -22,12 +22,12 @@ void HumanPlayer::Reinforce() {
 void HumanPlayer::Attack() {
   bool skip_flag = false;
   UI::StartAttackPhase(this);
-  while (UI::AttackPhase(this)) {
+  while (UI::AttackChoice()) {
     Territory *attacking = UI::GetAttackingTerritory(this);
     if (attacking == NULL) { continue; }
     Territory *defending = UI::GetDefendingTerritory(this, attacking);
     if (defending == NULL) { continue; }
-    battle::Battle(attacking, defending);
+    Battle::SingleBattle(attacking, defending);
   }
 }
 
@@ -129,8 +129,6 @@ void HumanPlayer::Fortify() {
     std::cout << "Player " << id << " chose not to fortify" << std::endl;
   }
 }
-
-
 
 
 int HumanPlayer::NumConqueringArmiesToMove(int min, int max){

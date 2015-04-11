@@ -22,7 +22,6 @@ class Player : public Observable {
     virtual void PlayTurn();
     void PrintHand();
     void PrintOwnedTerritories();
-    void RemoveDie();
     void victory();
     Territory *StringToOwnedTerritory(std::string s);
     std::vector<Territory*> AttackingTerritories();
@@ -35,6 +34,7 @@ class Player : public Observable {
     void remove_continent(Continent *old_continent);
     void remove_card(Card *old_card);
     void CaptureTerritory(Territory* attacking, Territory* defending, int min, int max);
+    void TransferHand(Player* winner);
     virtual int NumConqueringArmiesToMove(int min, int max) = 0;
 
     int get_battles_won()     { return battles_won; }
@@ -84,7 +84,6 @@ class Player : public Observable {
     void Draw();
     std::string HasMatch();
     void Match();
-    void TransferHand(Player* winner);
 
   private:
 

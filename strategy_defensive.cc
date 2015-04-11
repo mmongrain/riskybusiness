@@ -31,7 +31,7 @@ void Defensive::execute(CompPlayer *c_player){
 			std::cout << "\n" << c_player->owned_territories[i]->get_name() << " attacks "
 				<< attackable[0]->get_name() << " (Player " << attackable[0]->get_owner()->get_id()
 				<< ")!" << std::endl;
-			battle::Battle(c_player->owned_territories[i], attackable[0]);
+			Battle::SingleBattle(c_player->owned_territories[i], attackable[0]);
 			has_attacked = true;
 		}
 	}

@@ -26,7 +26,7 @@ void Random::execute(CompPlayer *c_player){
 	std::cout << "\n" << attacking->get_name() << " attacks " << defending->get_name()
 		<< " (Player " << defending->get_owner()->get_id()
 		<< ")!" << std::endl;
-	battle::Battle(attacking, defending);
+	Battle::SingleBattle(attacking, defending);
 
 }
 
