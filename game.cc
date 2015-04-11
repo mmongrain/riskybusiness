@@ -17,6 +17,7 @@
 #include "strategy_defensive.h"
 #include "strategy_random.h"
 #include "territory.h"
+#include "game_saver.h"
 
 void Game::PlayGame() {
 	bool wantsToPlay = true;
@@ -218,23 +219,38 @@ void Game::MainPhase()
 {
 	int turn = 1;
 	std::cout << "\n===== MAIN PLAY PHASE =====" << std::endl;
+	unsigned int index;
+
+	if (newly_loaded_game = true){
+		// determine index of current player in the vector of players (may not be same as player id!)		
+		for (unsigned int index = 0; index < players.size(); ++index){
+			if (players[index] == current_player){ // index found
+				break;
+			}
+			std::cout << "No index of current player found, main game loop cannot start!" << std::endl;
+		}
+	}
+	else index = 0;
+
+	
 	while (game_over == false) {
 		std::cout << "--------- TURN #" << turn << ":---------";
-		for (unsigned int i = 0; i < players.size(); i++) // round-robin loop over the players 
+		for (; index < players.size(); index++) // round-robin loop over the players 
 		{
-			players[i]->PlayTurn();
+			current_player = players[index]; // needed for saving of game in progress
+			current_player->PlayTurn();
 			if (game_over)
 				return;
 		}
 
 		// END OF GAME
 		// temporary way to end the game (to be replaced by actual conditions for ending the game)
-		std::cout << "\n\nPress 1 to continue playing or 0 to stop" << std::endl;
+		std::cout << "\n\nPress 0 to stop playing, 1 to continue and 2 to save game" << std::endl;
 		int answer;
 		std::cin >> answer;
 		std::cin.clear();
 		std::cin.ignore(1000, '\n');
-		while (answer != 0 && answer != 1)
+		while (answer != 0 && answer != 1 && answer !=2)
 		{
 			std::cout << "Wrong input! Press 1 to continue playing or 0 to stop" << std::endl;
 			std::cin >> answer;
@@ -243,7 +259,11 @@ void Game::MainPhase()
 		}
 		if (answer == 0)
 			game_over = true;
+		else if (answer == 2)
+			GameSaver::Save("gamesave.txt"); // save game in progress
 		++turn;
+		index = 0; // reset the player loop index to 0
+		newly_loaded_game = false; // do not recalculate the player loop index
 	}
 }
 

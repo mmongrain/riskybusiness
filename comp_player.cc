@@ -15,11 +15,12 @@ CompPlayer::CompPlayer() : Player() {
 
 void CompPlayer::Reinforce() {
 	std::cout << "\nReinforcement phase:" << std::endl;
-  std::string match = HasMatch();
-  if (match.length() > 0) {
-    Match();
-    std::cout << "You matched a set of cards (" << match << ") for additional reinforcements!" << std::endl;
-  }
+	phase = 1; // for save/load of game in progress
+	std::string match = HasMatch();
+	if (match.length() > 0) {
+		Match();
+		std::cout << "You matched a set of cards (" << match << ") for additional reinforcements!" << std::endl;
+	}
 	CalculateReinforcements();
 
 	// pick a territory
@@ -32,11 +33,13 @@ void CompPlayer::Reinforce() {
 
 void CompPlayer::Attack() {
 	std::cout << "\nAttack phase:" << std::endl;
+	phase = 2; // for save/load of game in progress
 	this->strategy->execute(this);
 }
 
 void CompPlayer::Fortify() {
 	std::cout << "\nFortification phase:" << std::endl;
+	phase = 3; // for save/load of game in progress
 	// decide between fortifying or not
 	if (!WillFortify()) {
 		std::cout << "CompPlayer " << this->get_id() << " chose not to fortify" << std::endl;
@@ -106,4 +109,4 @@ int CompPlayer::NumConqueringArmiesToMove(int min, int max){
 	return max;
 }
 
-
+std::string CompPlayer::type() { return "CompPlayer"; }

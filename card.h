@@ -15,7 +15,7 @@ class Card {
       CAVALRY,
       CANNON
     };
-    
+	Card() {}
     Card(Type _type) : type(_type) {}
     Type get_type() { return type; }
     std::string get_type_string();
@@ -23,6 +23,7 @@ class Card {
     Player* get_owner() { return owner; }
     void set_owner(Player* new_owner);
     void set_territory(Territory* territory);
+	void set_type(std::string type);
 
   private:
     Player* owner;

@@ -11,6 +11,7 @@
 #include "map.h"
 #include "player.h"
 #include "territory.h"
+#include <fstream>
 
 void Map::Load(char* filename) {
   std::ifstream file(filename);
@@ -79,6 +80,7 @@ void Map::Save(char *filename) {
     out << territories[j]->ToString() << std::endl;
   }
 }
+
 
 void Map::Clear() {
     map_info.author = "";

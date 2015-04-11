@@ -6,11 +6,11 @@
 #include <fstream>
 #include <vector>
 #include <sstream>
-
 #include "continent.h"
 #include "player.h"
 #include "observer.h"
 #include "territory.h"
+#include <fstream>
 
 
 class Map: public Observable { 
@@ -42,6 +42,9 @@ class Map: public Observable {
     std::vector<Continent*> *get_continents()      { return &continents;  }
     std::vector<Territory*> *get_territories()     { return &territories; }
     std::vector<Territory*> get_copy_territories() { return territories;  }
+	void ParseMapInfo(const std::vector<std::string> &section_map);
+	void ParseContinentInfo(const std::vector<std::string> &section_continents);
+	void ParseTerritoryInfo(const std::vector<std::string> &section_continents);
 
   private:
 
@@ -57,9 +60,8 @@ class Map: public Observable {
     std::vector<Territory*> territories;
     
     void Clear();
-    void ParseMapInfo(const std::vector<std::string> &section_map);
-    void ParseContinentInfo(const std::vector<std::string> &section_continents);
-    void ParseTerritoryInfo(const std::vector<std::string> &section_continents);
+    
+
     void ReconcileTerritories();
     bool VerifyAdjacency(Territory* first, Territory* second);
     bool VerifyConnectivity();

@@ -10,6 +10,7 @@
 #include "map.h"
 #include "player.h"
 #include "territory.h"
+#include <fstream>
 
 class Card;
 
@@ -20,6 +21,7 @@ Player::Player() : id(player_id++),
                    battles_lost(0), 
                    bonus_reinforcements(0), 
                    card_this_turn(false),
+				   phase(0),
                    times_redeemed(0) {
   switch (id) {
         case 1:  color = sf::Color::Red;
@@ -136,6 +138,7 @@ void Player::TransferHand(Player* winner) {
     }
   }
 }
+
 
 void Player::add_continent(Continent *new_continent) {
 	for (auto &continent : owned_continents) {
@@ -418,4 +421,11 @@ void Player::Match() {
    else             { bonus_reinforcements += 5; } 
   }
   times_redeemed++;
+}
+
+void Player::set_phase(int p) {
+	if (p >= 1 && p <= 3)
+		phase = p;
+	else
+		std::cout << "No such game phase! Phase no assigned" << std::endl;
 }

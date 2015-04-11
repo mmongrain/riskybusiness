@@ -8,6 +8,7 @@
 
 #include "observer.h"
 #include "card.h"
+#include <fstream>
 
 class Territory;
 class Continent;
@@ -22,6 +23,7 @@ class Player : public Observable {
     void PrintHand();
     void PrintOwnedTerritories();
     void victory();
+	virtual std::string type() = 0;
     Territory *StringToOwnedTerritory(std::string s);
 
     virtual bool WantsToAutoAttack() = 0;
@@ -43,7 +45,7 @@ class Player : public Observable {
     int get_total_units()     { return total_units; }
     int get_num_territories() { return owned_territories.size(); }
     bool get_card_this_turn() { return card_this_turn; }
-    std::string get_name()    { return name; }
+	std::string get_name()				{ return name; }
 
     std::vector<Territory*> owned_territories;
     std::vector<Continent*> owned_continents; 
@@ -53,13 +55,18 @@ class Player : public Observable {
     std::deque<Card*>       &get_hand()              { return hand; }
     std::vector<int>        &get_last_roll()         { return last_roll; }
 
+	void set_id(int i) { id = i; }
     void set_battles_won(int battles_won);
     void set_battles_lost(int battles_lost);
     void set_reinforcements(int reinforcements);
     void set_total_units(int units);
     void set_name(std::string name);
     void set_card_this_turn(bool card_this_turn);
-    void set_last_roll(std::vector<int> last_roll);
+    void set_last_roll(std::vector<int> last_roll); 
+	int get_phase()	{ return phase; }
+	void set_phase(int p);
+
+
 
   protected:
 
@@ -82,9 +89,9 @@ class Player : public Observable {
     std::string HasMatch();
     void Match();
     void TransferHand(Player* winner);
+	int phase; // 1: Reinforce, 2: Attack, 3: Fortify.
 
   private:
-
     static int player_id;
     std::string name;
     void DetermineContinentOwnership();

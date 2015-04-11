@@ -18,6 +18,7 @@ class Continent : public Observable {
     std::string get_name()  { return name; }
     Player *get_owner()     { return owner; }
 
+	void set_bonus(int b)	{ bonus = b; }
     std::string set_name(std::string name);
     Player *set_owner(Player *new_owner);
     std::vector<Territory*> &get_territories() { return territories; }

@@ -12,6 +12,7 @@ public:
 	~CompPlayer(){ delete strategy; strategy = 0; }
 	bool WantsToAutoAttack();
 	int NumConqueringArmiesToMove(int min, int max);
+	std::string type();
 
 protected:
 	void Attack();

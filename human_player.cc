@@ -1,22 +1,24 @@
 #include <iostream>
-
+#include <string>
 #include "battle.h"
 #include "human_player.h"
 #include "player.h"
 #include "territory.h"
 
+
 // Asks the user to input the name of a territory and a number of 
 // reinforcements, does the necessary checks and performs the reinforcement
 
 void HumanPlayer::Reinforce() {
-  // Check to see if the player can march cards and match 'em
-  std::cout << "Your hand contains "; 
-  PrintHand(); 
-  std::string match = HasMatch();
-  if (match.length() > 0) {
-    Match();
-    std::cout << "You matched a set of cards (" << match << ") for additional reinforcements!" << std::endl;
-  }
+	phase = 1; // for save/load of game in progress
+	// Check to see if the player can march cards and match 'em
+	std::cout << "Your hand contains ";
+	PrintHand();
+	std::string match = HasMatch();
+	if (match.length() > 0) {
+		Match();
+		std::cout << "You matched a set of cards (" << match << ") for additional reinforcements!" << std::endl;
+	}
 	CalculateReinforcements(); // calculates the number of reinforcements
 	while (reinforcements > 0){
 		// ask for a territory to reinforce
@@ -61,6 +63,7 @@ void HumanPlayer::Reinforce() {
 }
 
 void HumanPlayer::Attack() {
+	phase = 2; // for save/load of game in progress
 	bool skip_flag = false;
 	int answer;
 	std::cin.clear();
@@ -131,7 +134,7 @@ void HumanPlayer::Attack() {
 }
 
 void HumanPlayer::Fortify() {
-
+	phase = 3; // for save/load of game in progress
 	Territory *move_from = 0;
 	Territory *move_to = 0;
 	int armies = 0;
@@ -260,15 +263,16 @@ bool HumanPlayer::WantsToAttack(){
 
 int HumanPlayer::NumConqueringArmiesToMove(int min, int max){
 	int answer;
-  max = (min > max) ? min : max;
+	max = (min > max) ? min : max;
 	std::cout << "How many armies do you want to install in the conquered territory (" << min << "-" << max << ")?" << std::endl;
 	std::cin >> answer;
 	while (answer < min || answer > max){
 		std::cout << "Wrong input! How many armies do you want to install in the conquered territory (" << min << "-" << max << ")?" << std::endl;
 		std::cin.clear();
 		std::cin.ignore(1000, '\n');
-    std::cin >> answer;
+		std::cin >> answer;
 	}
 	return answer;
 }
 
+std::string HumanPlayer::type() { return "HumanPlayer"; }

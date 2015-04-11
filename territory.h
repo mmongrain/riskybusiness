@@ -22,9 +22,12 @@ class Territory : public Observable {
      int get_num_units()        { return num_units; }
      Continent *get_continent() { return continent; }
 
+	 void set_x(int a)	{ x = a; }
+	 void set_y(int a)	{ y = a; }
      std::string set_name(std::string name);
      int set_num_units(int num_units);
      Player* set_owner(Player *owner);
+	 void set_continent(Continent *c)	{ continent = c; }
 
      std::vector<Territory*> *get_adjacency_list() { return &adjacency_list; }
      std::string ToString();

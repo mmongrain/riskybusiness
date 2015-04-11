@@ -13,7 +13,7 @@ class Game {
       static Game instance;
       return instance;
     }
-
+	void MainPhase();
     Game() {};
     Game(Map const&);
     void operator=(Game const&);
@@ -25,12 +25,16 @@ class Game {
     void set_game_over(bool value);
     bool get_game_over();
     std::vector<Player*> *get_players()     { return &players; }
+	void set_players(std::vector<Player*> *p)	{ players = *p; }
     std::vector<PlayerView*> *get_player_views()     { return &player_views; }
     std::vector<Player*> get_copy_players() { return players; }
   	void killPlayer(Player* deadPlayer);
     
     void TestHelper();
     void TestHelper(int num_players);
+	Player* get_current_player()	{ return current_player; }
+	void set_current_player(Player *player)	{ current_player = player; }
+	bool newly_loaded_game; 
 
   private:
     std::vector<Player*> players;
@@ -38,9 +42,9 @@ class Game {
     bool game_over;
     int num_human_players;
     int num_comp_players;
+	Player* current_player;
     void Startup();
     void PrintLogo();
-    void MainPhase();
     void AssignCountries();
     void DefaultCompPlayers();
     void CustomCompPlayers();

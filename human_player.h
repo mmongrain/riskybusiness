@@ -13,6 +13,7 @@ public:
 	bool WantsToAttack();
 	void CaptureTerritory(Territory* attacking, Territory* defending, int min, int max);
 	int NumConqueringArmiesToMove(int min, int max);
+	std::string type();
 
 protected:
 	void Reinforce();
