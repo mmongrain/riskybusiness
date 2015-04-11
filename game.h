@@ -13,7 +13,6 @@ class Game {
       static Game instance;
       return instance;
     }
-
     Game() {};
     Game(Map const&);
     void operator=(Game const&);
@@ -22,15 +21,15 @@ class Game {
 
     static void PlayGame();
     bool EndGame();
+	void KillPlayer(Player* deadPlayer);
+	void TestHelper();
+	void TestHelper(int num_players);
+
     void set_game_over(bool value);
     bool get_game_over();
     std::vector<Player*> *get_players()     { return &players; }
     std::vector<Player*> get_copy_players() { return players; }
-	std::vector<PlayerView*> *get_player_views()     { return &player_views; }
-  	void KillPlayer(Player* deadPlayer);
-    
-    void TestHelper();
-    void TestHelper(int num_players);
+	std::vector<PlayerView*> *get_player_views()     { return &player_views; }  
 
     bool gui_mode;
     bool verbose_mode;
@@ -41,14 +40,21 @@ class Game {
     bool game_over;
     int num_human_players;
     int num_comp_players;
+
     void Startup();
+	void LoadMap();
+	void CreatePlayers();
+	void AssignCountries();
+	void MainPhase();
+	void MainMenu();
+	void EndOfTurn();
+	void PrintOwnershipInfo(); // for testing
     void Options();
     void PrintLogo();
-    void MainPhase();
-    void AssignCountries();
-    void DefaultCompPlayers();
-    void CustomCompPlayers();
-    void ApplyStrategyChoice(int choice, CompPlayer* player);
+
+	//void DefaultCompPlayers();
+    //void CustomCompPlayers();
+    //void ApplyStrategyChoice(int choice, CompPlayer* player);
 };
 
 #endif
