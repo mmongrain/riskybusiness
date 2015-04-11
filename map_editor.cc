@@ -71,7 +71,7 @@ void  MapEditor::CountryCreator() {
         std::cin >> countryName;
     }
     
-    Map::Territory* newTerritory = new Map::Territory();
+    Territory* newTerritory = new Territory();
     newTerritory->set_name(countryName);
     Map::Instance().get_territories()->push_back(newTerritory);
     
@@ -95,8 +95,8 @@ void  MapEditor::AdjacencyDefiner() {
         std::cin >> secondCountry;
     }
     
-    Map::Territory* aTerritory = Map::Instance().StringToTerritory(firstCountry);
-    Map::Territory* anotherTerritory = Map::Instance().StringToTerritory(secondCountry);
+    Territory* aTerritory = Map::Instance().StringToTerritory(firstCountry);
+    Territory* anotherTerritory = Map::Instance().StringToTerritory(secondCountry);
     
     if (aTerritory->AreAdjacent(anotherTerritory)) {
         std::cout << "These 2 territories are adjacent." << std::endl;
@@ -135,7 +135,7 @@ void  MapEditor::ContinentCreator() {
         std::cin >> continentName;
     }
         
-    Map::Continent* newContinent = new Map::Continent();
+    Continent* newContinent = new Continent();
     newContinent->set_name(continentName);
     Map::Instance().get_continents()->push_back(newContinent);
     

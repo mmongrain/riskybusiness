@@ -66,7 +66,7 @@ int main(int argc, char *argv[]) {
   // Really anything that can save cycles during the loop can be declared outside
   std::vector<Territory*>      *territories = Map::Instance().get_territories();
   std::vector<Player*>         *players = Game::Instance().get_players();
-  std::vector<PlayerView*>     *player_views = Game::Instance().get_player_views();
+  std::vector<PlayerView*>     *player_views = Game::Instance().get_player_views(); 
   std::vector<sf::Sprite>      sprites;
   std::vector<sf::CircleShape> shapes;
   std::vector<sf::CircleShape> player_circles;
