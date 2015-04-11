@@ -4,6 +4,8 @@
 
 #include "observer.h"
 #include "player_view.h"
+#include "game.h"
+#include "ui.h"
 
 PlayerView::PlayerView(Player *player) { 
   this->player = player;
@@ -22,7 +24,9 @@ void PlayerView::Update() {
   battles_won = player->get_battles_won();
   battles_lost = player->get_battles_lost();
   view_str = to_string();
-  //std::cout << to_string();
+  if (Game::Instance().verbose_mode) {
+    UI::StatusMessage(to_string());
+  }
 }
 
 std::string PlayerView::to_string() {

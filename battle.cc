@@ -24,7 +24,7 @@ void Battle::SingleBattle(Territory* attacking, Territory* defending) {
 // A CompPlayer will always choose to AutoAttack
 
 int Battle::AttackHandler(Territory *attacking, Territory *defending) {
-  // If user wants to autoattack, keep attackin'
+  // If user wants to autoattack, keep attackin' till someone wins
   if (UI::AutoAttackChoice()) {
     while (attacking->get_num_units() > 1 && defending->get_num_units() > 0) { 
       SingleAttack(attacking, defending);
