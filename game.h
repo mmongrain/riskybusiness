@@ -25,20 +25,22 @@ class Game {
     void set_game_over(bool value);
     bool get_game_over();
     std::vector<Player*> *get_players()     { return &players; }
-    std::vector<PlayerView*> *get_player_views()     { return &player_views; }
     std::vector<Player*> get_copy_players() { return players; }
   	void KillPlayer(Player* deadPlayer);
     
     void TestHelper();
     void TestHelper(int num_players);
 
+    bool gui_mode;
+    bool verbose_mode;
+
   private:
     std::vector<Player*> players;
-    std::vector<PlayerView*> player_views;
     bool game_over;
     int num_human_players;
     int num_comp_players;
     void Startup();
+    void Options();
     void PrintLogo();
     void MainPhase();
     void AssignCountries();

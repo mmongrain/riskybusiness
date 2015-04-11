@@ -16,6 +16,10 @@ Territory* UI::GetReinforceableTerritory (Player* player) {
   return UI::TerritoryMenu(territories);
 }
 
+void UI::StatusMessage(std::string message) {
+  std::cout << message << std::endl;
+}
+
 Territory* UI::TerritoryMenu(std::vector<Territory*> territories) {
   char menu_option = 'a';
   char input = '*';
@@ -33,6 +37,25 @@ Territory* UI::TerritoryMenu(std::vector<Territory*> territories) {
   }
   int choice = MenuChoice(menu_option, input);
   return territories[choice];
+}
+
+int UI::StringMenu(std::string title, std::vector<std::string> options) {
+  std::cout << "-==" << title << "==-" << std::endl;
+  char menu_option = 'a';
+  char input = '*';
+  for (unsigned int i = 0; i < options.size(); i++) {
+    std::cout << menu_option << ") " << options[i] << std::endl;
+    if (menu_option == 'z') { menu_option = 'A'; }
+    else { ++menu_option; }
+  }
+  // "while input is invalid"
+  while (MenuChoice(menu_option, input) == -1) {
+    std::cin >> input;
+    if (input == '?') {
+      char help = HelpMenu();
+    }
+  }
+  return MenuChoice(menu_option, input);
 }
 
 // menu_option is the character after the highest acceptable value
@@ -87,6 +110,14 @@ int UI::IntChoice(int min, int max) {
     } catch (std::exception& e) { choice = min - 1; }
   }
   return choice;
+}
+
+std::string UI::StringChoice() {
+  char ch;
+  while (std::cin.get(ch) && ch != '\n');
+  std::string input = "";
+  std::getline(std::cin, input);
+  return input;
 }
 
 int UI::GetNumReinforcements (Player* player, Territory* to_reinforce) {
@@ -170,3 +201,21 @@ void UI::CaptureAnnouncement(int conquerors, Territory* attacking, Territory* de
             << defending->get_name() << "! " << attacking->get_num_units() << " units remain in "
             << attacking->get_name() << "." << std::endl; 
 }
+
+void UI::PrintLogo() {
+  std::cout << " ____  _     _\n|  _ \\(_)___| | ___   _\n| |_) | / __| |/ / | | |\n|  _ <| \\__ \\   <| |_| |\n|_|_\\_\\_|___/_|\\_\\\\__, |\n| __ ) _   _ ___(_)___/   ___  ___ ___\n|  _ \\| | | / __| | '_ \\ / _ \\/ __/ __|\n| |_) | |_| \\__ \\ | | | |  __/\\__ \\__ \\\n|____/ \\__,_|___/_|_| |_|\\___||___/___/" << std::endl;
+}
+
+void UI::GetMapfile(char* filename) {
+  std::cout << "Please enter the file name of the .map file to load:" << std::endl;
+  strcpy(filename, StringChoice().c_str());
+}
+
+int UI::GetNumPlayers(int min, int max) {
+  std::cout << "How many players (" << min << "-" << max  << ") are there?" << std::endl;
+  return IntChoice(min, max);
+}
+
+// These declarations have to be here to keep the compiler happy
+std::vector<PlayerView*> UI::player_views;
+Stats* UI::stats = 0;
