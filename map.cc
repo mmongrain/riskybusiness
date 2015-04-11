@@ -209,6 +209,17 @@ Territory* Map::StringToTerritory(std::string s) {
 	return 0;
 }
 
+Continent* Map::StringToContinent(std::string s) {
+    Continent *continent;
+    for (unsigned int i = 0; i < continents.size(); i++) {
+        if (continents[i]->get_name().compare(s) == 0) {
+            continent = continents[i];
+            return continent;
+        }
+    }
+    return 0;
+}
+
 bool Map::VerifyAdjacency(Territory *first, Territory *second) {
   bool left = false;
   bool right = false;

@@ -3,28 +3,21 @@
 
 #include <string>
 #include <vector>
-#include "map.h"
-#include "territory.h"
 
-namespace battle {
-  bool AttackIsValid(Territory* attacking, Territory* defending, std::vector<int> atk_dice, std::vector<int> def_dice, std::string &out);
-  std::vector<int> Dice(int num_dice);
+class Territory;
 
- 
-  int UpdateOwnership(Territory* attacking, Territory* defending, int dice, int num_units, std::string &out);
-
-
-  void Battle(Territory *attacking, Territory *defending);
-  int AttackHandler(Territory *attacking, Territory *defending);
-  int AutoAttack(Territory* attacking, Territory* defending);
-  void SingleAttack(Territory *attacking, Territory *defending);  
-  void Capture(Territory* attacking, Territory* defending);
-  void Retreat(Territory* attacking, int result);
-  int DetermineAtkDice(Territory *attacking);
-  int DetermineDefDice(Territory *defending);
-
-  // move this to Territory, it belongs there
-  void DecrementUnits(Territory* territory);
-}
+class Battle {
+  public:
+    static bool AttackIsValid(Territory* attacking, Territory* defending, std::vector<int> atk_dice, std::vector<int> def_dice, std::string &out);
+    static std::vector<int> Dice(int num_dice);
+    static int UpdateOwnership(Territory* attacking, Territory* defending, int dice, int num_units, std::string &out);
+    static void SingleBattle(Territory *attacking, Territory *defending);
+    static int AttackHandler(Territory *attacking, Territory *defending);
+    static void SingleAttack(Territory *attacking, Territory *defending);  
+    static void Capture(Territory* attacking, Territory* defending);
+    static int DetermineAtkDice(Territory *attacking);
+    static int DetermineDefDice(Territory *defending);
+    static void DecrementUnits(Territory* territory);
+};
 
 #endif

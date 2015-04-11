@@ -28,7 +28,7 @@ class Game {
 	void set_players(std::vector<Player*> *p)	{ players = *p; }
     std::vector<PlayerView*> *get_player_views()     { return &player_views; }
     std::vector<Player*> get_copy_players() { return players; }
-  	void killPlayer(Player* deadPlayer);
+  	void KillPlayer(Player* deadPlayer);
     
     void TestHelper();
     void TestHelper(int num_players);
@@ -36,15 +36,19 @@ class Game {
 	void set_current_player(Player *player)	{ current_player = player; }
 	bool newly_loaded_game; 
 
+    bool gui_mode;
+    bool verbose_mode;
+
   private:
     std::vector<Player*> players;
-    std::vector<PlayerView*> player_views;
     bool game_over;
     int num_human_players;
     int num_comp_players;
 	Player* current_player;
     void Startup();
+    void Options();
     void PrintLogo();
+    void MainPhase();
     void AssignCountries();
     void DefaultCompPlayers();
     void CustomCompPlayers();

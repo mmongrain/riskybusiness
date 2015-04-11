@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <stdlib.h> // rand()
 #include <string>
 #include <vector>
@@ -12,17 +13,22 @@
 #include "map.h"
 #include "player.h"
 #include "player_view.h"
-#include "strategy.h"
-#include "strategy_aggressive.h"
-#include "strategy_defensive.h"
-#include "strategy_random.h"
+#include "stats.h"
+#include "stats_basic.h"
+#include "stats_control.h"
+#include "stats_battle.h"
+//#include "strategy.h"
+//#include "strategy_aggressive.h"
+//#include "strategy_defensive.h"
+//#include "strategy_random.h"
 #include "territory.h"
 #include "game_saver.h"
+#include "ui.h"
 
 void Game::PlayGame() {
 	bool wantsToPlay = true;
 	while (wantsToPlay) {
-		Instance().PrintLogo();
+    UI::PrintLogo();
 		Instance().Startup();
 		Instance().MainPhase();
 		wantsToPlay = Instance().EndGame();
@@ -52,84 +58,76 @@ void Game::TestHelper(int num_players) {
 	AssignCountries();
 }
 
-void Game::Startup()
-{
-	std::cout << "\n===== STARTUP PHASE =====\n\n";
+void Game::Options() {
+  for (;;) {
+    std::string gui_on = gui_mode ? "[ON]" : "[OFF]";
+    std::string verbose_on = verbose_mode ? "[ON]" : "[OFF]";
+    std::vector<std::string> options {
+      "Return to main menu",
+      "\"GUI\" mode " + gui_on,
+      "Verbose mode " + verbose_on,
+    };
+    int option = UI::StringMenu("OPTIONS MENU", options);
+    switch (option) {
+      case 0: return;
+      case 1: gui_mode = !gui_mode;
+              break;
+      case 2: verbose_mode = !verbose_mode;
+              break;
+	}
+  }
+}
+
+void Game::Startup() {
+  gui_mode = false;
+  verbose_mode = false;
+
+  // Main Menu loop
+  for (;;) {
+    std::vector<std::string> options {
+      "Play Game",      // 0
+      "Map Editor",     // 1
+      "Game Options"    // 2
+    };
+    int option = UI::StringMenu("MAIN MENU", options);
+    if (option == 0) break; 
+    if (option == 1) {} // MapEditor goes here
+    if (option == 2) { Options(); }
+	}
+
+  // Load a mapfile
+  for (;;) {
+    char filename[100];
+    UI::GetMapfile(filename);
+    std::ifstream file(filename);
+    if (file.good()) {
+      file.close();
+      Map::Instance().Load(filename);
+      break;
+		}
+    UI::StatusMessage("Mapfile not found! Check to make sure the .map file is in the current directory.");
+    file.close();
+	}
 
   // Initialize the Deck. Must be done after the map is loaded.
   Deck::Instance().Generate();
-	// creating HumanPlayer objects
-	std::cout << "Please enter a number of human players between 0 and 6:\n";
-	std::cin >> num_human_players;
-	while (num_human_players < 0 || num_human_players > 6)
-	{
-		std::cout << "Wrong input! Please enter a number of players between 0 and 6:\n";
-		std::cin.clear();
-		std::cin.ignore(1000, '\n');
-		std::cin >> num_human_players;
-	}
 
-	Game::players = *(new std::vector<Player*>);
-	for (int i = 0; i < num_human_players; i++) {
-		players.push_back(new HumanPlayer());
-    player_views.push_back(new PlayerView(players.back()));
-	}
-
-	// creating ComputerPlayer objects, to be re-done using exceptions
-	if (num_human_players > 3) {
-		std::cout << "Please enter a number of computer players between 0 and " << 6 - num_human_players << std::endl;
-		// verify input
-		while (!(std::cin >> num_comp_players) || num_comp_players < 0 || num_comp_players > 6 - num_human_players)
-		{
-			std::cout << "Wrong input! Please enter a number of computer players between 0 and "
-				<< 6 - num_human_players << ":\n" << std::endl;
-			std::cin.clear();
-			std::cin.ignore(1000, '\n');
+  // creating Player objects
+  int num_players = UI::GetNumPlayers(2, 6);
+  UI::player_views = *(new std::vector<PlayerView*>);
+  Game::players = *(new std::vector<Player*>);
+  for (int i = 0; i < num_players; i++) {
+    players.push_back(new HumanPlayer());
+    UI::player_views.push_back(new PlayerView(players.back()));
 		}
-		if (num_comp_players != 0) {
-			std::cout << num_comp_players << " Computer Players are being created..." << std::endl;
-			CustomCompPlayers();
-		}
-	}
-	else {
-		// if more than 1 human player, can have 0 CompPlayers, otherwise make CompPlayer(s) to make sure we have 2 players total
-		int min_comp_players = (num_human_players > 1) ? 0 : 2 - num_human_players;
-		int max_comp_players = 6 - num_human_players;
+  UI::stats = new StatsBasic;
+  UI::stats = new StatsControl(UI::stats);
+  UI::stats = new StatsBattle(UI::stats);
 
-		std::cout << "Please enter a number of computer players between " << min_comp_players << " and " << max_comp_players
-			<< "\nor press " << max_comp_players + 1 << " and I will create one Computer player of each kind: "
-			<< "Aggressive, Defensive and Random." << std::endl;
-
-		// get and check input
-		while (!(std::cin >> num_comp_players) || num_comp_players < min_comp_players || num_comp_players > max_comp_players + 1)
-		{
-			std::cout << "Wrong input! Please enter a number of computer players between " << min_comp_players << " and "
-				<< max_comp_players << "\nor press " << max_comp_players + 1
-				<< " and I will create one Computer player of each kind: " << "Aggressive, Defensive and Random." << std::endl;
-			std::cin.clear();
-			std::cin.ignore(1000, '\n');
-		}
-
-		// making default CompPlayers
-		if (num_comp_players == max_comp_players + 1){
-			std::cout << "Three default Computer Players are being created... " << std::endl;
-			DefaultCompPlayers();
-		}
-
-		// making custom CompPlayers
-		else {
-			if (num_comp_players != 0){
-				std::cout << num_comp_players << " custom Computer Players are being created..." << std::endl;
-				CustomCompPlayers();
-			}
-		}
-	}
-	std::cin.clear();
-	std::cin.ignore(10000, '\n');
 	AssignCountries();
 }
 
-// Makes one CompPlayer of each kind (aggressive, defensive, random)
+/* Makes one CompPlayer of each kind (aggressive, defensive, random)
 void Game::DefaultCompPlayers(){
 	for (unsigned int i = 0; i < 3; i++){
 		players.push_back(new CompPlayer());
@@ -179,7 +177,7 @@ void Game::ApplyStrategyChoice(int choice, CompPlayer* player){
 	default:
 		std::cout << "Invalid strategy choice!" << std::endl;
 	}
-}
+}*/
 
 void Game::AssignCountries() {
 	// Get a copy of the territories
@@ -267,7 +265,7 @@ void Game::MainPhase()
 	}
 }
 
-void Game::killPlayer(Player* deadPlayer){
+void Game::KillPlayer(Player* deadPlayer){
 	std::cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nPLAYER " << deadPlayer->get_id()
 		<< " IS DEAD!\nRIP\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" << std::endl;
 	players.erase(std::remove(players.begin(), players.end(), deadPlayer), players.end());
@@ -298,8 +296,3 @@ void Game::set_game_over(bool value){
 bool Game::get_game_over(){
 	return game_over;
 }
-
-void Game::PrintLogo() {
-	std::cout << " ____  _     _\n|  _ \\(_)___| | ___   _\n| |_) | / __| |/ / | | |\n|  _ <| \\__ \\   <| |_| |\n|_|_\\_\\_|___/_|\\_\\\\__, |\n| __ ) _   _ ___(_)___/   ___  ___ ___\n|  _ \\| | | / __| | '_ \\ / _ \\/ __/ __|\n| |_) | |_| \\__ \\ | | | |  __/\\__ \\__ \\\n|____/ \\__,_|___/_|_| |_|\\___||___/___/" << std::endl;
-}
-

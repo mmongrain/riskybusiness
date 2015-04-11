@@ -4,6 +4,7 @@
 #include "stats_basic.h"
 #include "player.h"
 #include "game.h"
+#include "ui.h"
 
 StatsBasic::StatsBasic() {
   std::vector<Player*> players = *(Game::Instance().get_players());
@@ -34,6 +35,9 @@ void StatsBasic::Update() {
     player_int.second = player_int.first->get_num_cards();
   }
   UpdateStatsString();
+  if (Game::Instance().verbose_mode) {
+    UI::StatusMessage(stats_string + "\n");
+  }
 }
 
 void StatsBasic::UpdateStatsString() {

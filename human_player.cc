@@ -4,134 +4,34 @@
 #include "human_player.h"
 #include "player.h"
 #include "territory.h"
+#include "ui.h"
 
 
 // Asks the user to input the name of a territory and a number of 
 // reinforcements, does the necessary checks and performs the reinforcement
 
 void HumanPlayer::Reinforce() {
-	phase = 1; // for save/load of game in progress
-	// Check to see if the player can march cards and match 'em
-	std::cout << "Your hand contains ";
-	PrintHand();
-	std::string match = HasMatch();
-	if (match.length() > 0) {
-		Match();
-		std::cout << "You matched a set of cards (" << match << ") for additional reinforcements!" << std::endl;
-	}
-	CalculateReinforcements(); // calculates the number of reinforcements
+  CalculateReinforcements();
 	while (reinforcements > 0){
-		// ask for a territory to reinforce
-		std::cout << "You have " << reinforcements << " reinforcements."
-			<< "\nWhich territory would you like to reinforce? " << std::endl;
-		PrintOwnedTerritories();
-		Territory *to_reinforce;
-		std::string name;
-		getline(std::cin, name);
-		to_reinforce = StringToOwnedTerritory(name);
-		if (to_reinforce == NULL) {
-			std::cout << "Territory not found!" << std::endl;
-			continue; // if the no such territory is found, we restart the "while" loop
-		}
-		// ask for number of armies to put in the chosen territory
-		std::cout << "How many armies do you want to place in " << to_reinforce->get_name() << "?" << std::endl;
-		int armies;
-
-		// check if number of armies is valid
-		while (!(std::cin >> armies) || (armies < 1 && armies > reinforcements))
-		{
-			if (armies > reinforcements){
-				std::cout << "You don't have that many reinforcements!" << std::endl;
-			}
-			else if (armies < 1){
-				std::cout << "You have to place at least one reinforcement!" << std::endl;
-			}
-			else {
-				std::cout << "Wrong input!" << std::endl;
-			}
-			std::cin.clear();
-			std::cin.ignore(1000, '\n');
-			std::cout << "How many reinforcements do you want to place in " << to_reinforce->get_name() << "?" << std::endl;
-		}
-
-		// execute the reinforcement 
+    Territory* to_reinforce = UI::GetReinforceableTerritory(this);
+    int armies = UI::GetNumReinforcements(this, to_reinforce);
 		reinforcements -= armies;
 		to_reinforce->set_num_units(to_reinforce->get_num_units() + armies);
-		std::cout << armies << " armies have been added to "
-			<< to_reinforce->get_name() << "." << std::endl;
 	}
 }
 
 void HumanPlayer::Attack() {
 	phase = 2; // for save/load of game in progress
 	bool skip_flag = false;
-	int answer;
-	std::cin.clear();
-	std::cin.ignore(10000, '\n');
-	std::cout << "\nAttack phase:\nPress 1 to attack or 0 to skip." << std::endl;
-	std::cin >> answer;
-	// verify input
-	while (answer != 0 && answer != 1) {
-		std::cout << "Wrong input! Press 1 to attack or 0 to skip." << std::endl;
-		std::cin >> answer;
-		std::cin.clear();
-		std::cin.ignore(10000, '\n');
+  UI::StartAttackPhase(this);
+  while (UI::AttackChoice()) {
+    Territory *attacking = UI::GetAttackingTerritory(this);
+    if (attacking == NULL) { continue; }
+    Territory *defending = UI::GetDefendingTerritory(this, attacking);
+    if (defending == NULL) { continue; }
+    Battle::SingleBattle(attacking, defending);
 	}
-
-	while (answer == 1) {
-		std::cin.clear();
-		std::cin.ignore(10000, '\n');
-		Territory *attacking = 0;
-		Territory *defending = 0;
-		std::string name;
-
-		// Read in & verify attacking country
-		for (;;) {
-			std::cout << "Which territory are you attacking from? (Enter q to skip.)" << std::endl;
-			PrintOwnedTerritories();
-			// Use getline instead of std::cin so it doesn't break on spaces
-			getline(std::cin, name);
-			if (name.compare("q") == 0) {
-				skip_flag = true;
-				break;
 			}
-
-			attacking = Map::Instance().StringToTerritory(name);
-
-			if (attacking) {
-				if (attacking->get_num_units() < 2) {
-					std::cout << "You don't have enough units in " << attacking->get_name() << " to attack!" << std::endl;
-				}
-				else if (attacking->get_owner() != this) {
-					std::cout << "That's not yours to attack with!" << std::endl;
-				}
-				else if (!(attacking->CanAttack())) {
-					std::cout << "No countries attackable from that country!\n";
-				}
-				else break;
-			}
-		}
-
-		if (skip_flag) { break; }
-
-		for (;;) {
-			std::cout << "Which territory do you want to attack? (Enter q to skip.)" << std::endl;
-			attacking->PrintAttackableTerritories(this);
-			getline(std::cin, name);
-			if (name.compare("q") == 0) { break; }
-			if (Map::Instance().StringToTerritory(name)) {
-				defending = Map::Instance().StringToTerritory(name);
-				break;
-			}
-			std::cout << "Nope!!" << std::endl;
-		}
-		if (defending) { battle::Battle(attacking, defending); }
-		std::cout << "Do you wish to attack another country? Enter 1 for yes, or 0 for no." << std::endl;
-		std::cin.clear();
-		std::cin.ignore(10000, '\n');
-		std::cin >> answer;
-	}
-}
 
 void HumanPlayer::Fortify() {
 	phase = 3; // for save/load of game in progress
@@ -232,45 +132,17 @@ void HumanPlayer::Fortify() {
 	}
 }
 
-// used for battles
-bool HumanPlayer::WantsToAutoAttack(){
-	std::string answer;
-	std::cout << "Do you want to auto-attack? (y/n)" << std::endl;
-	std::cin >> answer;
-	while (answer != "y" && answer != "n"){
-		std::cout << "Wrong input! Do you want to auto-attack? (y/n)" << std::endl;
-		std::cin.clear();
-		std::cin.ignore(1000, '\n');
-	}
-	if (answer == "y")
-		return true;
-	else return false;
-}
-
-bool HumanPlayer::WantsToAttack(){
-	char answer;
-	std::cout << "Continue attacking? (y/n)" << std::endl;
-	std::cin >> answer;
-	while (answer != 'y' && answer != 'n'){
-		std::cout << "Wrong input! Continue attacking? (y/n)" << std::endl;
-		std::cin.clear();
-		std::cin.ignore(1000, '\n');
-	}
-	if (answer == 'y')
-		return true;
-	else return false;
-}
 
 int HumanPlayer::NumConqueringArmiesToMove(int min, int max){
 	int answer;
-	max = (min > max) ? min : max;
+  max = (min > max) ? min : max;
 	std::cout << "How many armies do you want to install in the conquered territory (" << min << "-" << max << ")?" << std::endl;
 	std::cin >> answer;
 	while (answer < min || answer > max){
 		std::cout << "Wrong input! How many armies do you want to install in the conquered territory (" << min << "-" << max << ")?" << std::endl;
 		std::cin.clear();
 		std::cin.ignore(1000, '\n');
-		std::cin >> answer;
+    std::cin >> answer;
 	}
 	return answer;
 }
