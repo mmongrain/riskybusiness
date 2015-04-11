@@ -247,7 +247,7 @@ void Game::MainPhase()
 	}
 }
 
-void Game::killPlayer(Player* deadPlayer){
+void Game::KillPlayer(Player* deadPlayer){
 	std::cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nPLAYER " << deadPlayer->get_id()
 		<< " IS DEAD!\nRIP\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" << std::endl;
 	players.erase(std::remove(players.begin(), players.end(), deadPlayer), players.end());

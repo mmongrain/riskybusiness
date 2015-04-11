@@ -27,7 +27,7 @@ class Game {
     std::vector<Player*> *get_players()     { return &players; }
     std::vector<PlayerView*> *get_player_views()     { return &player_views; }
     std::vector<Player*> get_copy_players() { return players; }
-  	void killPlayer(Player* deadPlayer);
+  	void KillPlayer(Player* deadPlayer);
     
     void TestHelper();
     void TestHelper(int num_players);

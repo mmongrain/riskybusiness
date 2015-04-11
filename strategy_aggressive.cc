@@ -26,7 +26,7 @@ void Aggressive::execute(CompPlayer *c_player){
 				std::cout << "\n" << c_player->owned_territories[i]->get_name() << " attacks "
 					<< attackable[j]->get_name() << " (Player " << attackable[j]->get_owner()->get_id()
 					<< ")!" << std::endl;
-				battle::Battle(c_player->owned_territories[i], (attackable)[j]);
+				Battle::SingleBattle(c_player->owned_territories[i], (attackable)[j]);
 			}
 		}
 	}
