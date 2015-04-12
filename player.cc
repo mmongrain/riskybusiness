@@ -331,7 +331,7 @@ void Player::Match() {
 			// Remove two cavalry & a joker
 		}
 		else if (cavalry == 2) {
-			bool joker_found;
+			bool joker_found = false;
 			int tracker = 0;
 			for (auto card : hand) {
 				if (card->get_type() == Card::JOKER && !joker_found) {
@@ -348,7 +348,7 @@ void Player::Match() {
 			// Remove two cannons & a joker
 		}
 		else if (cannons == 2) {
-			bool joker_found;
+			bool joker_found = false;
 			int tracker = 0;
 			for (auto card : hand) {
 				if (card->get_type() == Card::JOKER && !joker_found) {

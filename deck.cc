@@ -37,6 +37,7 @@ void Deck::Generate(std::vector<Territory*> territories) {
     }
     cards.push_back(new Card(type_));
     cards.back()->set_territory(territories[i]);
+		Shuffle();
   }
   Clear();
   Replace(cards);

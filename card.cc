@@ -18,6 +18,6 @@ std::string Card::get_card_string() {
                   break;
    case CANNON  : return "Cannon";
                   break;
-   default      : throw new CardException("Error in get_card_string()");
+   default      : throw new CardException();
  }
 }
