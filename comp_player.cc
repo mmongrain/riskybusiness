@@ -15,11 +15,11 @@ CompPlayer::CompPlayer() : Player() {
 
 void CompPlayer::Reinforce() {
 	std::cout << "\nReinforcement phase:" << std::endl;
-  std::string match = HasMatch();
-  if (match.length() > 0) {
-    Match();
-    std::cout << "You matched a set of cards (" << match << ") for additional reinforcements!" << std::endl;
-  }
+	std::string match = HasMatch();
+	if (match.length() > 0) {
+		Match();
+		std::cout << "You matched a set of cards (" << match << ") for additional reinforcements!" << std::endl;
+	}
 	CalculateReinforcements();
 
 	// pick a territory

@@ -1,5 +1,5 @@
 #include <vector>
-
+#include <iostream>
 #include "battle.h"
 #include "comp_player.h"
 #include "map.h"

@@ -271,6 +271,7 @@ void Player::Match() {
   int soldiers = 0;
   int cavalry = 0;
   int cannons = 0;
+	std::vector<Card*> to_erase;
   for (auto card : hand) {
     switch (card->get_type()) {
     case Card::JOKER: jokers++;
@@ -292,7 +293,7 @@ void Player::Match() {
       if (tracker > 3) continue;
       if (card->get_type() == Card::SOLDIER) {
         Deck::Instance().Replace(card);
-        hand.erase(std::remove(hand.begin(), hand.end(), card), hand.end());
+				to_erase.push_back(card);
         tracker++;
       }
     }
@@ -304,7 +305,7 @@ void Player::Match() {
       if (tracker > 3) continue;
       if (card->get_type() == Card::CAVALRY) {
         Deck::Instance().Replace(card);
-        hand.erase(std::remove(hand.begin(), hand.end(), card), hand.end());
+				to_erase.push_back(card);
         tracker++;
       }
     }
@@ -316,7 +317,7 @@ void Player::Match() {
       if (tracker > 3) continue;
       if (card->get_type() == Card::CANNON) {
         Deck::Instance().Replace(card);
-        hand.erase(std::remove(hand.begin(), hand.end(), card), hand.end());
+				to_erase.push_back(card);
         tracker++;
       }
     }
@@ -324,20 +325,21 @@ void Player::Match() {
   }
   else if (soldiers && cavalry && cannons) {
     bool soldier_found, cavalry_found, cannon_found;
+		soldier_found = cavalry_found = cannon_found = false;		
     for (auto card : hand) {
       if (card->get_type() == Card::SOLDIER && !soldier_found) {
         Deck::Instance().Replace(card);
-        hand.erase(std::remove(hand.begin(), hand.end(), card), hand.end());
+				to_erase.push_back(card);
         soldier_found = true;
       }
       else if (card->get_type() == Card::CAVALRY && !cavalry_found) {
         Deck::Instance().Replace(card);
-        hand.erase(std::remove(hand.begin(), hand.end(), card), hand.end());
+				to_erase.push_back(card);
         cavalry_found = true;
       }
       else if (card->get_type() == Card::CANNON && !cannon_found) {
         Deck::Instance().Replace(card);
-        hand.erase(std::remove(hand.begin(), hand.end(), card), hand.end());
+				to_erase.push_back(card);
         cannon_found = true;
       }
     }
@@ -345,12 +347,12 @@ void Player::Match() {
   else if (jokers) {
     // Remove two soldiers & a joker
     if (soldiers == 2) {
-      bool joker_found;
+      bool joker_found = false;
       int tracker = 0;
       for (auto card : hand) {
         if (card->get_type() == Card::JOKER && !joker_found) {
           Deck::Instance().Replace(card);
-          hand.erase(std::remove(hand.begin(), hand.end(), card), hand.end());
+					to_erase.push_back(card);
           joker_found = true;
         }
         else if (card->get_type() == Card::SOLDIER && tracker < 2) {
@@ -366,12 +368,12 @@ void Player::Match() {
       for (auto card : hand) {
         if (card->get_type() == Card::JOKER && !joker_found) {
           Deck::Instance().Replace(card);
-          hand.erase(std::remove(hand.begin(), hand.end(), card), hand.end());
+					to_erase.push_back(card);
           joker_found = true;
         }
         else if (card->get_type() == Card::CAVALRY && tracker < 2) {
           Deck::Instance().Replace(card);
-          hand.erase(std::remove(hand.begin(), hand.end(), card), hand.end());
+					to_erase.push_back(card);
           tracker++;
         }
       }
@@ -383,24 +385,31 @@ void Player::Match() {
       for (auto card : hand) {
         if (card->get_type() == Card::JOKER && !joker_found) {
           Deck::Instance().Replace(card);
-          hand.erase(std::remove(hand.begin(), hand.end(), card), hand.end());
+					to_erase.push_back(card);
           joker_found = true;
         }
         else if (card->get_type() == Card::CANNON && tracker < 2) {
           Deck::Instance().Replace(card);
-          hand.erase(std::remove(hand.begin(), hand.end(), card), hand.end());
+					to_erase.push_back(card);
           tracker++;
         }
       }
     }
   }
   else return;
+
+	// erasing cards here
+	for (auto card : to_erase){
+		hand.erase(std::remove(hand.begin(), hand.end(), card), hand.end());
+	}
+
   bonus_reinforcements = 4;
   for (int i = 0; i < times_redeemed; i++) {
     if (i <= 4) { bonus_reinforcements += 2; }
     else if (i == 5) { bonus_reinforcements += 3; }
     else             { bonus_reinforcements += 5; }
   }
+	
   times_redeemed++;
 }
 
