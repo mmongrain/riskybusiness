@@ -421,6 +421,27 @@ void Player::Match() {
   times_redeemed++;
 }
 
+std::vector<Territory*> Player::FortifyingTerritories() {
+  std::vector<Territory*> fortifying_territories;
+  for (auto territory : owned_territories) {
+    if (territory->get_num_units() > 1) {
+      fortifying_territories.push_back(territory);
+    }
+  }
+  return fortifying_territories;
+}
+
+std::vector<Territory*> Player::FortifiableTerritories(Territory* source) {
+  std::vector<Territory*> fortifiable_territories;
+  std::vector<Territory*> adjacents = *(source->get_adjacency_list());
+  for (auto territory : adjacents) {
+    if (territory->get_owner() == this) {
+      fortifiable_territories.push_back(territory);
+    }
+  }
+  return fortifiable_territories;
+}
+
 std::vector<Territory*> Player::AttackingTerritories() {
   std::vector<Territory*> attacking_territories;
   for (auto territory : owned_territories) {

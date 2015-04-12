@@ -7,13 +7,11 @@
 #include "ui.h"
 
 Territory* UI::GetReinforceableTerritory (Player* player) {
-  char menu_option = 'a';
-  char input = '*';
   std::vector<Territory*> territories = player->get_owned_territories();
   int reinforcements = player->get_reinforcements();
   std::cout << "You have " << std::to_string(reinforcements) << " reinforcements."
         << "\nWhich territory would you like to reinforce? " << std::endl;
-  return UI::TerritoryMenu(territories);
+  return TerritoryMenu(territories);
 }
 
 void UI::StatusMessage(std::string message) {
@@ -80,7 +78,7 @@ int UI::MenuChoice(char menu_option, char input) {
     if (menu_option == 'A') return -1;
     // Magic number is magic, trust
     else return (input - 39);
-    // JK Actually it's just -'A'+26
+    // jk actually it's just 26-'A'
   }
   // Failsafe
   return false; 
@@ -214,6 +212,32 @@ void UI::GetMapfile(char* filename) {
 int UI::GetNumPlayers(int min, int max) {
   std::cout << "How many players (" << min << "-" << max  << ") are there?" << std::endl;
   return IntChoice(min, max);
+}
+
+bool UI::FortificationChoice() {
+  std::cout << "Do you want to fortify a territory (y/n)?" << std::endl;
+  return BinaryChoice();
+}
+
+Territory* UI::GetFortificationSource(std::vector<Territory*> territories) {
+  std::cout << "From which of your territories do you want to fortify?" << std::endl;
+  return TerritoryMenu(territories);
+}
+
+Territory* UI::GetFortificationDestination(Territory* source, std::vector<Territory*> territories) {
+  std::cout << "To which adjacent territory will you send troops from " << source->get_name() << "?" << std::endl;
+  return TerritoryMenu(territories);
+}
+
+int UI::GetNumEmigrants(int max, Territory* source, Territory* destination) {
+  std::cout << "How many units (1-" << max << ") will you send from "
+            << source->get_name() << " to " << destination->get_name() << "?" << std::endl;
+  return IntChoice(1, max);
+}
+
+void UI::FortificationComplete(int emigrants, Territory* source, Territory* destination) {
+  std::cout << emigrants << " units were sent as fortifications from " << source->get_name()
+            << " to " << destination->get_name() << "!" << std::endl;
 }
 
 // These declarations have to be here to keep the compiler happy
