@@ -21,7 +21,12 @@ class UI {
     static int IntChoice(int min, int max);
     static std::string StringChoice();
 
-    // Battle UI
+    // Game Loop UI
+    static void StartTurn(int turn, Player* player);
+    static void EndGame(Player* winner);
+    static void KillPlayer(Player* dead_player);
+
+    // Attack Phase UI
     static Territory* GetReinforceableTerritory(Player* player);
     static int GetNumReinforcements(Player* player, Territory* to_reinforce);
     static int GetNumConqueringArmies(int min, int max, Territory* attacking, Territory* defending);
@@ -35,6 +40,13 @@ class UI {
     static void DecrementUnits(Territory* victim);
     static void Retreat(Territory* attacking);
     static void CaptureAnnouncement(int conquerors, Territory* attacking, Territory* defending);
+
+    // Fortification Phase UI
+    static bool FortificationChoice();
+    static Territory* GetFortificationSource(std::vector<Territory*> territories);
+    static Territory* GetFortificationDestination(Territory* source, std::vector<Territory*> territories);
+    static int GetNumEmigrants(int max, Territory* source, Territory* destination);
+    static void FortificationComplete(int emigrants, Territory* source, Territory* destination);
 
     // Game controller UI
     static void PrintLogo();

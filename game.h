@@ -47,8 +47,6 @@ class Game {
 	void AssignCountries();
 	void MainPhase();
 	void MainMenu();
-	void EndOfTurn();
-	void PrintOwnershipInfo(); // for testing
     void Options();
     void PrintLogo();
 
