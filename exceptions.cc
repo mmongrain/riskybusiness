@@ -24,6 +24,6 @@ const char * CardMatchException::what() const throw () {
 
 EmptyDeckException::EmptyDeckException(){
 }
-const char * EmptyDeckException::what() const throw() {
+const char * EmpytDeckException::what() const throw() {
 	return typeid(*this).name();
 }
