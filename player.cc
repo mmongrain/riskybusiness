@@ -49,7 +49,6 @@ Player::~Player() {
 
 // Plays through a single turn for a player. Used in the round-robin main game loop.
 void Player::PlayTurn() {
-	std::cout << "\n\n=== PLAYER " << id << "'S TURN ===" << std::endl;
 	CardsHandler();
 	Reinforce();
 	Attack();
@@ -66,14 +65,11 @@ void Player::PlayTurn() {
 // Same behaviour for all player descendent classes.
 void Player::CardsHandler() {
 	// Check to see if the player can march cards and match 'em
-	if (hand.size() > 0) {
-		std::cout << "Your hand contains ";
-		PrintHand();
-		std::string match = HasMatch();
-		if (match.length() > 0) {
-			Match();
-			std::cout << "You matched a set of cards (" << match << ") for additional reinforcements!" << std::endl;
-		}
+	UI::PrintHand(this);
+	std::string match = HasMatch();
+	if (match.length() > 0) {
+		Match();
+		UI::PrintMatch(this, match);
 	}
 }
 
@@ -81,16 +77,17 @@ void Player::CardsHandler() {
 void Player::Draw() {
 	// Because of auto-matching, this logic will never trigger, but no harm in leaving it in in case we decide
 	// to allow player matching.
+	/*
 	if (hand.size() == 5) {
 		std::cout << "You could have drawn a card, but your hand is already full!" << std::endl;
 	}
 	else if (Deck::Instance().IsEmpty()) {
 		std::cout << "You would have drawn a card, but the deck is empty!" << std::endl;
 	}
-	else {
-		hand.push_back(Deck::Instance().Draw());
-		std::cout << "You drew a " << hand.back()->get_card_string() << "!" << std::endl;
-	}
+	else {*/
+	hand.push_back(Deck::Instance().Draw());
+	std::cout << "You drew a " << hand.back()->get_card_string() << "!" << std::endl;
+	//}
 	set_card_this_turn(false);
 	return;
 }
@@ -118,27 +115,6 @@ void Player::DetermineContinentOwnership() {
 			owned_continents.erase(std::remove(owned_continents.begin(), owned_continents.end(), it.first), owned_continents.end());
 		}
 	}
-}
-
-void Player::PrintOwnedTerritories() {
-	for (unsigned int i = 0; i < owned_territories.size(); i++) {
-		std::cout << owned_territories[i]->get_name() << " ("
-			<< owned_territories[i]->get_num_units() << ")";
-		(i < owned_territories.size() - 1) ? std::cout << ", " : std::cout << ".\n";
-	}
-}
-
-void Player::PrintHand() {
-	for (unsigned int i = 0; i < hand.size(); i++) {
-		std::cout << hand[i]->get_card_string();
-		if (hand.size() > 1 && i < hand.size() - 2) {
-			std::cout << ", ";
-		}
-		else if (i == hand.size() - 2) {
-			std::cout << " and ";
-		}
-	}
-	std::cout << "." << std::endl;
 }
 
 void Player::CalculateReinforcements() {
@@ -447,24 +423,24 @@ void Player::Match() {
 }
 
 std::vector<Territory*> Player::FortifyingTerritories() {
-  std::vector<Territory*> fortifying_territories;
-  for (auto territory : owned_territories) {
-    if (territory->get_num_units() > 1) {
-      fortifying_territories.push_back(territory);
-    }
-  }
-  return fortifying_territories;
+	std::vector<Territory*> fortifying_territories;
+	for (auto territory : owned_territories) {
+		if (territory->get_num_units() > 1) {
+			fortifying_territories.push_back(territory);
+		}
+	}
+	return fortifying_territories;
 }
 
 std::vector<Territory*> Player::FortifiableTerritories(Territory* source) {
-  std::vector<Territory*> fortifiable_territories;
-  std::vector<Territory*> adjacents = *(source->get_adjacency_list());
-  for (auto territory : adjacents) {
-    if (territory->get_owner() == this) {
-      fortifiable_territories.push_back(territory);
-    }
-  }
-  return fortifiable_territories;
+	std::vector<Territory*> fortifiable_territories;
+	std::vector<Territory*> adjacents = *(source->get_adjacency_list());
+	for (auto territory : adjacents) {
+		if (territory->get_owner() == this) {
+			fortifiable_territories.push_back(territory);
+		}
+	}
+	return fortifiable_territories;
 }
 
 std::vector<Territory*> Player::AttackingTerritories() {

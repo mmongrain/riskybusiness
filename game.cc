@@ -122,6 +122,7 @@ void Game::MainPhase()
 bool Game::EndGame(){
 	Player* winner = players[0];
   UI::EndGame(winner);
+  return false;
 }
 
 // ===== OTHER GAME METHODS =====

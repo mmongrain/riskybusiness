@@ -27,6 +27,8 @@ class UI {
     static void KillPlayer(Player* dead_player);
 
     // Attack Phase UI
+	static void PrintHand(Player *player);
+	static void PrintMatch(Player *player, std::string match);
     static Territory* GetReinforceableTerritory(Player* player);
     static int GetNumReinforcements(Player* player, Territory* to_reinforce);
     static int GetNumConqueringArmies(int min, int max, Territory* attacking, Territory* defending);

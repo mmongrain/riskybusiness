@@ -19,6 +19,8 @@ void UI::StatusMessage(std::string message) {
   std::cout << message << std::endl;
 }
 
+
+
 Territory* UI::TerritoryMenu(std::vector<Territory*> territories) {
   char menu_option = 'a';
   char input = '*';
@@ -138,6 +140,8 @@ void UI::StartPhase(Player* player, std::string phase_name) {
     std::cout << "\n-== PLAYER " << player->get_id() << " (" << player->get_name() << "): " << phase_name << " ==-\n" << std::endl;
 }
 
+
+
 bool UI::AttackChoice() {
   std::cout << "Do you want to attack (y/n)?" << std::endl;
   return BinaryChoice();
@@ -243,6 +247,27 @@ void UI::FortificationComplete(int emigrants, Territory* source, Territory* dest
 
 void UI::StartTurn(int turn, Player* player) {
   std::cout << "-== TURN " << turn << ": PLAYER " << player->get_id() << " ==-" << std::endl;
+}
+
+void UI::PrintHand(Player *player){
+	std::deque<Card*> hand = player->get_hand();
+	if (hand.size() > 0) {
+		std::cout << "Your hand contains ";
+		for (unsigned int i = 0; i < hand.size(); i++) {
+			std::cout << hand[i]->get_card_string();
+			if (hand.size() > 1 && i < hand.size() - 2) {
+				std::cout << ", ";
+			}
+			else if (i == hand.size() - 2) {
+				std::cout << " and ";
+			}
+		}
+		std::cout << "." << std::endl;
+	}
+}
+
+void UI::PrintMatch(Player *player, std::string match){
+	std::cout << "You matched a set of cards (" << match << ") for additional reinforcements!" << std::endl;
 }
 
 void UI::EndGame(Player* winner) {
