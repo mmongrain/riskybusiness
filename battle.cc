@@ -10,6 +10,7 @@
 #include "map.h"
 #include "territory.h"
 #include "human_player.h" 
+#include "exceptions.h"
 
 void Battle::SingleBattle(Territory* attacking, Territory* defending) {
   int result = AttackHandler(attacking, defending);
@@ -27,6 +28,7 @@ int Battle::AttackHandler(Territory *attacking, Territory *defending) {
         if (attacking->get_num_units() <= 1) return 2; // attacking territory loses
     }
   }
+	// Else do single attacks until someone wins or he chooses to retreat
   SingleAttack(attacking, defending);
   if (defending->get_num_units() <= 0) return 1; // attacking territory wins     
   if (attacking->get_num_units() <= 1) return 2; // attacking territory loses
@@ -35,7 +37,7 @@ int Battle::AttackHandler(Territory *attacking, Territory *defending) {
     if (defending->get_num_units() <= 0) return 1; // attacking territory wins     
     else if (attacking->get_num_units() <= 1) return 2; // attacking territory loses
   }
-  return -1;
+	throw new BattleException("error in SingleAttack");
 }
 
 void Battle::SingleAttack(Territory *attacking, Territory *defending){
@@ -97,8 +99,7 @@ int Battle::DetermineDefDice(Territory* defending){
 std::vector<int> Battle::Dice(int num_dice) {
   std::vector<int> out;
   if (num_dice < 1 || num_dice > 3) {
-    out.push_back(-1);
-    return out;
+		throw new BattleException("Incorrect number of dice");
   }
   else {
     for (int i = 0; i < num_dice; i++)

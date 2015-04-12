@@ -3,6 +3,7 @@
 
 #include "card.h"
 #include "deck.h"
+#include "exceptions.h"
 
 class Territory;
 
@@ -17,7 +18,7 @@ Card* Deck::Draw() {
     cards.pop_back();
     return card;
   }
-  else return NULL;
+	else throw new EmptyDeckException();
 }
 
 void Deck::Generate(std::vector<Territory*> territories) {

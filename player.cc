@@ -11,6 +11,7 @@
 #include "player.h"
 #include "territory.h"
 #include "ui.h"
+#include "exceptions.h"
 
 Player::Player() :  id(player_id++),
                     reinforcements(0),
@@ -59,81 +60,340 @@ void Player::PlayTurn() {
   }
 }
 
+// ===== REINFORCEMENT HELPER METHODS =====
+
+void Player::CalculateReinforcements() {
+	DetermineContinentOwnership();
+	reinforcements = owned_territories.size() / 3;
+	if (reinforcements < 3) {
+		reinforcements = 3;
+	}
+	for (unsigned int i = 0; i < owned_continents.size(); i++) {
+		reinforcements += owned_continents[i]->get_bonus();
+	}
+	reinforcements += bonus_reinforcements;
+	bonus_reinforcements = 0;
+}
+
+void Player::DetermineContinentOwnership() {
+	std::map<Continent*, unsigned int> ownership;
+	for (unsigned int i = 0; i < owned_territories.size(); i++) {
+		Continent *temp = owned_territories[i]->get_continent();
+		if (ownership[temp]) {
+			ownership[temp] = ownership[temp] + 1;
+		}
+		else {
+			ownership[temp] = 1;
+		}
+	}
+	for (auto &it : ownership) {
+		if (it.first->get_territories().size() == it.second) {
+			if (std::find(owned_continents.begin(), owned_continents.end(), it.first) == owned_continents.end()) {
+				owned_continents.push_back(it.first);
+			}
+		}
+		else {
+			owned_continents.erase(std::remove(owned_continents.begin(), owned_continents.end(), it.first), owned_continents.end());
+		}
+	}
+}
+
+// ===== ATTACK HELPER METHODS =====
+
+std::vector<Territory*> Player::AttackingTerritories() {
+	std::vector<Territory*> attacking_territories;
+	for (auto territory : owned_territories) {
+		if (territory->get_num_units() > 1) {
+			std::vector<Territory*> adjacents = *(territory->get_adjacency_list());
+			for (auto adjacent : adjacents) {
+				if (adjacent->get_owner() != this) {
+					std::vector<Territory*>::iterator it;
+					it = find(attacking_territories.begin(), attacking_territories.end(), territory);
+					if (it == attacking_territories.end()) { attacking_territories.push_back(territory); }
+				}
+			}
+		}
+	}
+	return attacking_territories;
+}
+
+std::vector<Territory*> Player::AttackableTerritories(Territory* attacking) {
+	std::vector<Territory*> attackables;
+	std::vector<Territory*> adjacents = *(attacking->get_adjacency_list());
+	for (auto adjacent : adjacents) {
+		if (adjacent->get_owner() != this) {
+			attackables.push_back(adjacent);
+		}
+	}
+	return attackables;
+}
+
+// ===== FORTIFICATION HELPER METHODS =====
+
+std::vector<Territory*> Player::FortifyingTerritories() {
+	std::vector<Territory*> fortifying_territories;
+	for (auto territory : owned_territories) {
+		if (territory->get_num_units() > 1) {
+			if (FortifiableTerritories(territory).size() > 0) {
+				fortifying_territories.push_back(territory);
+			}
+		}
+	}
+	return fortifying_territories;
+}
+
+std::vector<Territory*> Player::FortifiableTerritories(Territory* source) {
+	std::vector<Territory*> fortifiable_territories;
+	std::vector<Territory*> adjacents = *(source->get_adjacency_list());
+	for (auto territory : adjacents) {
+		if (territory->get_owner() == this) {
+			fortifiable_territories.push_back(territory);
+		}
+	}
+	return fortifiable_territories;
+}
+
+// ===== CARDS LOGIC =====
+
 // Deals with cards at the beginning of each turn.
 // Same behaviour for all player descendent classes.
 void Player::CardsHandler() {
-  // Check to see if the player can march cards and match 'em
-  UI::PrintHand(this);
-  std::string match = HasMatch();
-  if (match.length() > 0) {
-    Match();
-    UI::PrintMatch(this, match, bonus_reinforcements);
-  }
+	// Check to see if the player can march cards and match 'em
+	UI::PrintHand(this);
+	std::string match = HasMatch();
+	if (match.length() > 0) {
+		Match();
+		UI::PrintMatch(this, match, bonus_reinforcements);
+	}
 }
 
 // Draws a single card from the Deck and sends a status message to the UI.
 void Player::Draw() {
-  if (hand.size() == 5) {
-    UI::StatusMessage("You could have drawn a card, but your hand is already full!");
-  } else if (Deck::Instance().IsEmpty()) {
-    UI::StatusMessage("You would have drawn a card, but the deck is empty!");
-  } else {
-    hand.push_back(Deck::Instance().Draw());
-    UI::StatusMessage("You drew a " + hand.back()->get_card_string() + "!");
-  }
-  set_card_this_turn(false);
-  return;
+	if (hand.size() >= 5) {
+		UI::StatusMessage("You could have drawn a card, but your hand is already full!");
+	}
+	try {
+		hand.push_back(Deck::Instance().Draw());
+		UI::StatusMessage("You drew a " + hand.back()->get_card_string() + "!");
+	}
+	catch (EmptyDeckException e) {
+		UI::StatusMessage("You would have drawn a card, but the deck is empty!");
+	}
+	set_card_this_turn(false);
+	return;
 }
 
-int Player::player_id = 1;
-
-void Player::DetermineContinentOwnership() {
-  std::map<Continent*, unsigned int> ownership;
-  for (unsigned int i = 0; i < owned_territories.size(); i++) {
-    Continent *temp = owned_territories[i]->get_continent();
-    if (ownership[temp]) {
-      ownership[temp] = ownership[temp] + 1;
-    }
-    else {
-      ownership[temp] = 1;
-    }
-  }
-  for (auto &it : ownership) {
-    if (it.first->get_territories().size() == it.second) {
-      if (std::find(owned_continents.begin(), owned_continents.end(), it.first) == owned_continents.end()) {
-        owned_continents.push_back(it.first);
-      }
-    }
-    else {
-      owned_continents.erase(std::remove(owned_continents.begin(), owned_continents.end(), it.first), owned_continents.end());
-    }
-  }
+// Returns a string describing the match, if one exists.
+// Returns null if no match so can be used wherever a bool is used.
+std::string Player::HasMatch() {
+	int jokers = 0;
+	int soldiers = 0;
+	int cavalry = 0;
+	int cannons = 0;
+	for (auto card : hand) {
+		switch (card->get_type()) {
+		case Card::JOKER:
+			jokers++;
+			break;
+		case Card::SOLDIER:
+			soldiers++;
+			break;
+		case Card::CAVALRY:
+			cavalry++;
+			break;
+		case Card::CANNON:
+			cannons++;
+			break;
+		default:
+			throw new CardMatchException();
+		}
+	}
+	if (soldiers >= 3) {
+		return "three soldiers";
+	}
+	else if (cavalry >= 3) {
+		return std::to_string(cavalry) + "three cavalry";
+	}
+	else if (cannons >= 3) {
+		return "three cannons";
+	}
+	else if (soldiers > 0 && cavalry > 0 && cannons > 0) {
+		return "a soldier, a cavalry, and a cannon";
+	}
+	else if (jokers) {
+		if (soldiers == 2) {
+			return "two soldiers and a joker";
+		}
+		else if (cavalry == 2) {
+			return "two cavalry and a joker";
+		}
+		else if (cannons == 2) {
+			return "two cannons and a joker";
+		}
+	}
+	return "";
 }
 
-void Player::CalculateReinforcements() {
-  DetermineContinentOwnership();
-  reinforcements = owned_territories.size() / 3;
-  if (reinforcements < 3) {
-        reinforcements = 3;
-  }
-  for (unsigned int i = 0; i < owned_continents.size(); i++) {
-    reinforcements += owned_continents[i]->get_bonus();
-  }
-  reinforcements += bonus_reinforcements;
-  bonus_reinforcements = 0;
+void Player::Match() {
+	int jokers = 0;
+	int soldiers = 0;
+	int cavalry = 0;
+	int cannons = 0;
+	std::vector<Card*> to_erase;
+	for (auto card : hand) {
+		switch (card->get_type()) {
+		case Card::JOKER: jokers++;
+			break;
+		case Card::SOLDIER: soldiers++;
+			break;
+		case Card::CAVALRY: cavalry++;
+			break;
+		case Card::CANNON: cannons++;
+			break;
+		}
+	}
+	// Taken from Risk 1959 ruleset.
+	// This set of conditional logic determines which set to use.
+	if (soldiers >= 3) {
+		int tracker = 0;
+		for (auto card : hand) {
+			// Remove 3 (and only 3) soldiers.
+			if (tracker > 3) continue;
+			if (card->get_type() == Card::SOLDIER) {
+				Deck::Instance().Replace(card);
+				to_erase.push_back(card);
+				tracker++;
+			}
+		}
+	}
+	else if (cavalry >= 3) {
+		int tracker = 0;
+		for (auto card : hand) {
+			// Remove 3 (and only 3) cavalry.
+			if (tracker > 3) continue;
+			if (card->get_type() == Card::CAVALRY) {
+				Deck::Instance().Replace(card);
+				to_erase.push_back(card);
+				tracker++;
+			}
+		}
+	}
+	else if (cannons >= 3) {
+		int tracker = 0;
+		for (auto card : hand) {
+			// Remove 3 (and only 3) cannons.
+			if (tracker > 3) continue;
+			if (card->get_type() == Card::CANNON) {
+				Deck::Instance().Replace(card);
+				to_erase.push_back(card);
+				tracker++;
+			}
+		}
+		// Remove one of each.
+	}
+	else if (soldiers && cavalry && cannons) {
+		bool soldier_found, cavalry_found, cannon_found;
+		soldier_found = cavalry_found = cannon_found = false;
+		for (auto card : hand) {
+			if (card->get_type() == Card::SOLDIER && !soldier_found) {
+				Deck::Instance().Replace(card);
+				to_erase.push_back(card);
+				soldier_found = true;
+			}
+			else if (card->get_type() == Card::CAVALRY && !cavalry_found) {
+				Deck::Instance().Replace(card);
+				to_erase.push_back(card);
+				cavalry_found = true;
+			}
+			else if (card->get_type() == Card::CANNON && !cannon_found) {
+				Deck::Instance().Replace(card);
+				to_erase.push_back(card);
+				cannon_found = true;
+			}
+		}
+	}
+	else if (jokers) {
+		// Remove two soldiers & a joker
+		if (soldiers == 2) {
+			bool joker_found = false;
+			int tracker = 0;
+			for (auto card : hand) {
+				if (card->get_type() == Card::JOKER && !joker_found) {
+					Deck::Instance().Replace(card);
+					to_erase.push_back(card);
+					joker_found = true;
+				}
+				else if (card->get_type() == Card::SOLDIER && tracker < 2) {
+					Deck::Instance().Replace(card);
+					tracker++;
+				}
+			}
+			// Remove two cavalry & a joker
+		}
+		else if (cavalry == 2) {
+			bool joker_found;
+			int tracker = 0;
+			for (auto card : hand) {
+				if (card->get_type() == Card::JOKER && !joker_found) {
+					Deck::Instance().Replace(card);
+					to_erase.push_back(card);
+					joker_found = true;
+				}
+				else if (card->get_type() == Card::CAVALRY && tracker < 2) {
+					Deck::Instance().Replace(card);
+					to_erase.push_back(card);
+					tracker++;
+				}
+			}
+			// Remove two cannons & a joker
+		}
+		else if (cannons == 2) {
+			bool joker_found;
+			int tracker = 0;
+			for (auto card : hand) {
+				if (card->get_type() == Card::JOKER && !joker_found) {
+					Deck::Instance().Replace(card);
+					to_erase.push_back(card);
+					joker_found = true;
+				}
+				else if (card->get_type() == Card::CANNON && tracker < 2) {
+					Deck::Instance().Replace(card);
+					to_erase.push_back(card);
+					tracker++;
+				}
+			}
+		}
+	}
+	else return;
+	// removing cards from the player's hand
+	for (auto card : to_erase){
+		hand.erase(std::remove(hand.begin(), hand.end(), card), hand.end());
+	}
+
+	bonus_reinforcements = 4;
+	for (int i = 0; i < times_redeemed; i++) {
+		if (i <= 4) { bonus_reinforcements += 2; }
+		else if (i == 5) { bonus_reinforcements += 3; }
+		else             { bonus_reinforcements += 5; }
+	}
+
+	times_redeemed++;
 }
 
 void Player::TransferHand(Player* winner) {
-  while (!this->hand.empty()) {
-    if (winner->hand.size() < 5) {
-      winner->hand.push_back(this->hand.back());
-      hand.pop_back();
-    } else {
-      Deck::Instance().Replace(this->hand.back());
-      this->hand.pop_back();
-    }
-  }
+	while (!this->hand.empty()) {
+		if (winner->hand.size() < 5) {
+			winner->hand.push_back(this->hand.back());
+			hand.pop_back();
+		}
+		else {
+			Deck::Instance().Replace(this->hand.back());
+			this->hand.pop_back();
+		}
+	}
 }
+
+// ===== OTHER PLAYER METHODS =====
 
 void Player::add_continent(Continent *new_continent) {
   for (auto &continent : owned_continents) {
@@ -215,251 +475,4 @@ void Player::set_last_roll(std::vector<int> last_roll) {
   NotifyObservers();
 }
 
-// Returns a string describing the match, if one exists.
-// Returns null if no match so can be used wherever a bool is used.
-std::string Player::HasMatch() {
-  int jokers = 0;
-  int soldiers = 0;
-  int cavalry = 0;
-  int cannons = 0;
-  for (auto card : hand) {
-    switch (card->get_type()) {
-      case Card::JOKER: 
-        jokers++;
-        break;
-      case Card::SOLDIER: 
-        soldiers++;
-        break;
-      case Card::CAVALRY: 
-        cavalry++;
-        break;
-      case Card::CANNON: 
-        cannons++;
-        break;
-      default: 
-        return "Error in Player::HasMatch()";
-    }
-  }
-  if (soldiers >= 3) {
-    return "three soldiers";
-  }
-  else if (cavalry >= 3) {
-    return std::to_string(cavalry) + "three cavalry";
-  }
-  else if (cannons >= 3) {
-    return "three cannons";
-  }
-  else if (soldiers > 0 && cavalry > 0 && cannons > 0) {
-    return "a soldier, a cavalry, and a cannon";
-  }
-  else if (jokers) {
-    if (soldiers == 2) {
-      return "two soldiers and a joker";
-    }
-    else if (cavalry == 2) {
-      return "two cavalry and a joker";
-    }
-    else if (cannons == 2) {
-      return "two cannons and a joker";
-    }
-  }
-  return "";
-}
-
-void Player::Match() {
-  int jokers = 0;
-  int soldiers = 0;
-  int cavalry = 0;
-  int cannons = 0;
-	std::vector<Card*> to_erase;
-  for (auto card : hand) {
-    switch (card->get_type()) {
-    case Card::JOKER: jokers++;
-      break;
-    case Card::SOLDIER: soldiers++;
-      break;
-    case Card::CAVALRY: cavalry++;
-      break;
-    case Card::CANNON: cannons++;
-      break;
-    }
-  }
-  // Taken from Risk 1959 ruleset.
-  // This set of conditional logic determines which set to use.
-  if (soldiers >= 3) {
-    int tracker = 0;
-    for (auto card : hand) {
-      // Remove 3 (and only 3) soldiers.
-      if (tracker > 3) continue;
-      if (card->get_type() == Card::SOLDIER) {
-        Deck::Instance().Replace(card);
-				to_erase.push_back(card);
-        tracker++;
-      }
-    }
-  }
-  else if (cavalry >= 3) {
-    int tracker = 0;
-    for (auto card : hand) {
-      // Remove 3 (and only 3) cavalry.
-      if (tracker > 3) continue;
-      if (card->get_type() == Card::CAVALRY) {
-        Deck::Instance().Replace(card);
-				to_erase.push_back(card);
-        tracker++;
-      }
-    }
-  }
-  else if (cannons >= 3) {
-    int tracker = 0;
-    for (auto card : hand) {
-      // Remove 3 (and only 3) cannons.
-      if (tracker > 3) continue;
-      if (card->get_type() == Card::CANNON) {
-        Deck::Instance().Replace(card);
-				to_erase.push_back(card);
-        tracker++;
-      }
-    }
-    // Remove one of each.
-  }
-  else if (soldiers && cavalry && cannons) {
-    bool soldier_found, cavalry_found, cannon_found;
-		soldier_found = cavalry_found = cannon_found = false;		
-    for (auto card : hand) {
-      if (card->get_type() == Card::SOLDIER && !soldier_found) {
-        Deck::Instance().Replace(card);
-				to_erase.push_back(card);
-        soldier_found = true;
-      }
-      else if (card->get_type() == Card::CAVALRY && !cavalry_found) {
-        Deck::Instance().Replace(card);
-				to_erase.push_back(card);
-        cavalry_found = true;
-      }
-      else if (card->get_type() == Card::CANNON && !cannon_found) {
-        Deck::Instance().Replace(card);
-				to_erase.push_back(card);
-        cannon_found = true;
-      }
-    }
-  }
-  else if (jokers) {
-    // Remove two soldiers & a joker
-    if (soldiers == 2) {
-      bool joker_found = false;
-      int tracker = 0;
-      for (auto card : hand) {
-        if (card->get_type() == Card::JOKER && !joker_found) {
-          Deck::Instance().Replace(card);
-					to_erase.push_back(card);
-          joker_found = true;
-        }
-        else if (card->get_type() == Card::SOLDIER && tracker < 2) {
-          Deck::Instance().Replace(card);
-          tracker++;
-        }
-      }
-      // Remove two cavalry & a joker
-    }
-    else if (cavalry == 2) {
-      bool joker_found;
-      int tracker = 0;
-      for (auto card : hand) {
-        if (card->get_type() == Card::JOKER && !joker_found) {
-          Deck::Instance().Replace(card);
-					to_erase.push_back(card);
-          joker_found = true;
-        }
-        else if (card->get_type() == Card::CAVALRY && tracker < 2) {
-          Deck::Instance().Replace(card);
-					to_erase.push_back(card);
-          tracker++;
-        }
-      }
-      // Remove two cannons & a joker
-    }
-    else if (cannons == 2) {
-      bool joker_found;
-      int tracker = 0;
-      for (auto card : hand) {
-        if (card->get_type() == Card::JOKER && !joker_found) {
-          Deck::Instance().Replace(card);
-					to_erase.push_back(card);
-          joker_found = true;
-        }
-        else if (card->get_type() == Card::CANNON && tracker < 2) {
-          Deck::Instance().Replace(card);
-					to_erase.push_back(card);
-          tracker++;
-        }
-      }
-    }
-  }
-  else return;
-
-	// erasing cards here
-	for (auto card : to_erase){
-		hand.erase(std::remove(hand.begin(), hand.end(), card), hand.end());
-	}
-
-  bonus_reinforcements = 4;
-  for (int i = 0; i < times_redeemed; i++) {
-    if (i <= 4) { bonus_reinforcements += 2; }
-    else if (i == 5) { bonus_reinforcements += 3; }
-    else             { bonus_reinforcements += 5; }
-  }
-	
-  times_redeemed++;
-}
-
-std::vector<Territory*> Player::FortifyingTerritories() {
-  std::vector<Territory*> fortifying_territories;
-  for (auto territory : owned_territories) {
-    if (territory->get_num_units() > 1) {
-      if (FortifiableTerritories(territory).size() > 0) {
-        fortifying_territories.push_back(territory);
-      }
-    }
-  }
-  return fortifying_territories;
-}
-
-std::vector<Territory*> Player::FortifiableTerritories(Territory* source) {
-  std::vector<Territory*> fortifiable_territories;
-  std::vector<Territory*> adjacents = *(source->get_adjacency_list());
-  for (auto territory : adjacents) {
-    if (territory->get_owner() == this) {
-      fortifiable_territories.push_back(territory);
-    }
-  }
-  return fortifiable_territories;
-}
-
-std::vector<Territory*> Player::AttackingTerritories() {
-  std::vector<Territory*> attacking_territories;
-  for (auto territory : owned_territories) {
-    if (territory->get_num_units() > 1) {
-      std::vector<Territory*> adjacents = *(territory->get_adjacency_list());
-      for (auto adjacent : adjacents) {
-        if (adjacent->get_owner() != this) {
-          std::vector<Territory*>::iterator it;
-          it = find(attacking_territories.begin(), attacking_territories.end(), territory);
-          if (it == attacking_territories.end()) { attacking_territories.push_back(territory); }
-        }
-      }
-    }
-  }
-  return attacking_territories;
-}
-
-std::vector<Territory*> Player::AttackableTerritories(Territory* attacking) {
-  std::vector<Territory*> attackables;
-  std::vector<Territory*> adjacents = *(attacking->get_adjacency_list());
-  for (auto adjacent : adjacents) {
-    if (adjacent->get_owner() != this) {
-      attackables.push_back(adjacent);
-    }
-  }
-  return attackables;
-}
+int Player::player_id = 1;
