@@ -67,7 +67,7 @@ void Player::CardsHandler() {
   std::string match = HasMatch();
   if (match.length() > 0) {
     Match();
-    UI::PrintMatch(this, match);
+    UI::PrintMatch(this, match, bonus_reinforcements);
   }
 }
 

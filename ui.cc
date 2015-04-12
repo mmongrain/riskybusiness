@@ -273,8 +273,8 @@ void UI::PrintHand(Player *player){
 	}
 }
 
-void UI::PrintMatch(Player *player, std::string match){
-	std::cout << "Player " << player->get_id() << " matched a set of cards (" << match << ") for additional reinforcements!" << std::endl;
+void UI::PrintMatch(Player *player, std::string match, int bonus_reinforcements){
+	std::cout << "Player " << player->get_id() << " matched a set of cards (" << match << ") for " << bonus_reinforcements << " additional reinforcements!" << std::endl;
 }
 
 void UI::EndGame(Player* winner) {
