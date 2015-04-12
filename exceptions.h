@@ -5,7 +5,7 @@
 
 class BattleException : public std::exception {
 public:
-	BattleException(std::string error);
+	BattleException();
 	const char * what() const;
 };
 

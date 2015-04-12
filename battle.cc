@@ -37,7 +37,7 @@ int Battle::AttackHandler(Territory *attacking, Territory *defending) {
     if (defending->get_num_units() <= 0) return 1; // attacking territory wins     
     else if (attacking->get_num_units() <= 1) return 2; // attacking territory loses
   }
-	throw new BattleException("error in SingleAttack");
+	throw new BattleException();
 }
 
 void Battle::SingleAttack(Territory *attacking, Territory *defending){
@@ -99,7 +99,7 @@ int Battle::DetermineDefDice(Territory* defending){
 std::vector<int> Battle::Dice(int num_dice) {
   std::vector<int> out;
   if (num_dice < 1 || num_dice > 3) {
-		throw new BattleException("Incorrect number of dice");
+		throw new BattleException();
   }
   else {
     for (int i = 0; i < num_dice; i++)

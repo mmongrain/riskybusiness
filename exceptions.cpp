@@ -4,8 +4,7 @@
 #include "exceptions.h"
 
 
-BattleException::BattleException(std::string error){
-	std::cerr << error << std::endl;
+BattleException::BattleException(){
 }
 const char * BattleException::what() const {
 	return typeid(*this).name();
