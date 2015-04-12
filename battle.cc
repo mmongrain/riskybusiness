@@ -3,11 +3,12 @@
 #include <algorithm> // sort()
 #include <functional> // greater()
 #include <vector>
-#include <time.h> // time()
 
 #include "ui.h"
 #include "battle.h"
 #include "game.h"
+#include "map.h"
+#include "territory.h"
 #include "human_player.h" 
 
 void Battle::SingleBattle(Territory* attacking, Territory* defending) {
@@ -16,12 +17,6 @@ void Battle::SingleBattle(Territory* attacking, Territory* defending) {
     Capture(attacking, defending);
   } else { UI::Retreat(attacking); }
 }
-
-// for HumanPlayer: will ask if he wants to AutoAttack or to attack only once,
-// and then will keep doing SingleAttacks until someone wins or until the Player retreats 
-// or until he chooses to AutoAttack (automatically attack until it is no longer possible)
-// 
-// A CompPlayer will always choose to AutoAttack
 
 int Battle::AttackHandler(Territory *attacking, Territory *defending) {
   // If user wants to autoattack, keep attackin' till someone wins
@@ -40,6 +35,7 @@ int Battle::AttackHandler(Territory *attacking, Territory *defending) {
     if (defending->get_num_units() <= 0) return 1; // attacking territory wins     
     else if (attacking->get_num_units() <= 1) return 2; // attacking territory loses
   }
+  return -1;
 }
 
 void Battle::SingleAttack(Territory *attacking, Territory *defending){
@@ -77,7 +73,7 @@ void Battle::Capture(Territory* attacking, Territory* defending){
   }
   defending->set_owner(winner);
   winner->add_territory(defending); 
-  if (winner->owned_territories.size() == Map::Instance().get_territories()->size()){
+  if (winner->get_owned_territories().size() == Map::Instance().get_territories()->size()){
     Game::Instance().set_game_over(true);
   }
   winner->set_card_this_turn(true);

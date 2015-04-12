@@ -7,10 +7,10 @@
 #include <string>
 
 #include "observer.h"
-#include "card.h"
 
 class Territory;
 class Continent;
+class Card;
 
 class Player : public Observable {
 
@@ -18,12 +18,11 @@ class Player : public Observable {
 
     Player();
     virtual ~Player();
+    
     void CardsHandler();
     virtual void PlayTurn();
-    void PrintHand();
-    void PrintOwnedTerritories();
-    void victory();
-    Territory *StringToOwnedTerritory(std::string s);
+    void TransferHand(Player* winner);
+
     std::vector<Territory*> AttackingTerritories();
     std::vector<Territory*> AttackableTerritories(Territory* attacking);
     std::vector<Territory*> FortifyingTerritories();
@@ -35,8 +34,6 @@ class Player : public Observable {
     void remove_territory(Territory *old_territory);
     void remove_continent(Continent *old_continent);
     void remove_card(Card *old_card);
-    void CaptureTerritory(Territory* attacking, Territory* defending, int min, int max);
-    void TransferHand(Player* winner);
 
     int get_battles_won()     { return battles_won; }
     int get_battles_lost()    { return battles_lost; }
@@ -48,9 +45,6 @@ class Player : public Observable {
     int get_num_territories() { return owned_territories.size(); }
     bool get_card_this_turn() { return card_this_turn; }
     std::string get_name()    { return name; }
-
-    std::vector<Territory*> owned_territories;
-    std::vector<Continent*> owned_continents; 
 
     std::vector<Territory*> &get_owned_territories() { return owned_territories; }
     std::vector<Continent*> &get_owned_continents()  { return owned_continents; } 
@@ -67,6 +61,8 @@ class Player : public Observable {
 
   protected:
 
+    std::vector<Territory*> owned_territories;
+    std::vector<Continent*> owned_continents; 
     int id;
     int reinforcements;
     int total_units;

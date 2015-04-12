@@ -6,8 +6,12 @@
 #include "observer.h"
 
 class Card;
+class Territory;
+
 class Deck : Observable { 
+
   public:
+
     // SINGLETON
     static Deck &Instance() {
       static Deck instance;
@@ -21,14 +25,14 @@ class Deck : Observable {
     void Clear();
     Card* Draw();
     std::vector<Card*> Draw(int num_cards);
-    void Generate();
+    void Generate(std::vector<Territory*> territories);
     bool IsEmpty();
-    void PrintCards();
     void Replace(Card* card);
     void Replace(std::vector<Card*> cards);
     void Shuffle();
 
   private:
+
     std::deque<Card*> cards;
 };
 

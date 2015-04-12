@@ -1,7 +1,6 @@
 #include <string>
 
 #include "continent.h"
-#include "player.h"
 
 std::string Continent::ToString() {
   std::string out = "";

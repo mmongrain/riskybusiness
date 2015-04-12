@@ -1,8 +1,8 @@
-#include "card.h"
-#include "deck.h"
-#include "map.h"
 #include <stdlib.h> // rand;
 #include <algorithm> // random_shuffle;
+
+#include "card.h"
+#include "deck.h"
 
 class Territory;
 
@@ -20,8 +20,7 @@ Card* Deck::Draw() {
   else return NULL;
 }
 
-void Deck::Generate() {
-  std::vector<Territory*> territories = *(Map::Instance().get_territories());
+void Deck::Generate(std::vector<Territory*> territories) {
   std::vector<Card*> cards;
   cards.push_back(new Card(Card::JOKER));
   cards.push_back(new Card(Card::JOKER));
@@ -45,13 +44,6 @@ void Deck::Generate() {
 
 bool Deck::IsEmpty() {
   return (cards.size() == 0);
-}
-
-void Deck::PrintCards() {
-  for (auto card : cards) {
-    std::cout << card->get_card_string() << " ";
-  }
-  std::cout << std::endl;
 }
 
 void Deck::Replace(Card* new_card) {

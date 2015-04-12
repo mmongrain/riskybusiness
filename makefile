@@ -1,5 +1,5 @@
 default: ui.cc battle.cc comp_player.cc game.cc game_driver.cc human_player.cc map.cc observer.cc player.cc
-	g++ game_driver.cc ui.cc card.cc deck.cc stats.cc stats_basic.cc stats_battle.cc stats_control.cc continent.cc territory.cc battle.cc game.cc human_player.cc map.cc observer.cc player.cc player_view.cc -std=c++11 -lsfml-graphics -lsfml-window -lsfml-system -Wall -Wextra -o a.o
+	g++ game_driver.cc ui.cc card.cc deck.cc stats_basic.cc stats_battle.cc stats_control.cc continent.cc territory.cc battle.cc game.cc human_player.cc map.cc observer.cc player.cc player_view.cc -std=c++11 -lsfml-graphics -lsfml-window -lsfml-system -Wall -Wextra -o a.o
 
 stats: battle.cc comp_player.cc game.cc game_driver.cc human_player.cc map.cc observer.cc player.cc
 	g++ card.cc stats.cc stats_basic.cc stats_battle.cc stats_control.cc stats_main.cc continent.cc territory.cc battle.cc comp_player.cc game.cc human_player.cc map.cc observer.cc player.cc strategy_defensive.cc strategy_aggressive.cc strategy_random.cc player_view.cc -std=c++11 -lsfml-graphics -lsfml-window -lsfml-system -o stats.o

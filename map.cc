@@ -1,6 +1,5 @@
 #include <boost/algorithm/string.hpp>
 #include <string>
-#include <iostream>
 #include <fstream>
 #include <vector>
 #include <sstream>
@@ -12,7 +11,7 @@
 #include "player.h"
 #include "territory.h"
 
-void Map::Load(char* filename) {
+bool Map::Load(char* filename) {
   std::ifstream file(filename);
   std::vector<std::string> section_map;
   std::vector<std::string> section_continents;
@@ -43,16 +42,18 @@ void Map::Load(char* filename) {
     }
   }
 
-  Clear();
-  ParseMapInfo(section_map);
-  ParseContinentInfo(section_continents);
-  ParseTerritoryInfo(section_territories);
-  ReconcileTerritories();
-  if (VerifyConnectivity()) {
-    std::cout << "Map is connected!" << std::endl;
-  } else {
-    std:: cout << "Map is not connected!" << std::endl;
+  if (section_map.size() == 0 || section_continents.size() == 0 || section_territories.size() == 0) {
+    return false;
   }
+
+  Clear();
+  if (ParseMapInfo(section_map) &&
+      ParseContinentInfo(section_continents) &&
+      ParseTerritoryInfo(section_territories)) {
+    ReconcileTerritories();
+    return true;
+  }
+  return false;
 } 
 
 void Map::Save(char *filename) {
@@ -92,7 +93,7 @@ void Map::Clear() {
 
      
 
-void Map::ParseMapInfo(const std::vector<std::string> &section_map) {
+bool Map::ParseMapInfo(const std::vector<std::string> &section_map) {
   for (unsigned int i = 0; i < section_map.size(); i++) {
     std::size_t delim = section_map[i].find("=");
     int end_of_string = section_map[i].length() - delim; 
@@ -123,9 +124,10 @@ void Map::ParseMapInfo(const std::vector<std::string> &section_map) {
       map_info.warn = boost::iequals(value, "yes");
     }
   }
+  return true;
 }
 
-void Map::ParseContinentInfo(const std::vector<std::string> &section_continents) {
+bool Map::ParseContinentInfo(const std::vector<std::string> &section_continents) {
   for (unsigned int i = 0; i < section_continents.size(); i++) {
     std::size_t delim = section_continents[i].find("=");
     Continent *continent = new Continent;
@@ -134,15 +136,13 @@ void Map::ParseContinentInfo(const std::vector<std::string> &section_continents)
     // stoi is available in c++11, make sure your compiler supports, it converts int to str
     // compilation flag is -std=c++11
     continent->bonus = std::stoi(section_continents[i].substr(delim + 1));
-    // std::cout << continent << std::endl;
     continents.push_back(continent);
   }
+  return true;
 }
 
-void Map::ParseTerritoryInfo(const std::vector<std::string> &section_territories) {
+bool Map::ParseTerritoryInfo(const std::vector<std::string> &section_territories) {
   for (unsigned int i = 0; i < section_territories.size(); i++) {
-
-    // territories.clear();
     Territory *temp = new Territory;
     std::vector<std::string> territory;
     std::stringstream input(section_territories[i]);
@@ -166,8 +166,8 @@ void Map::ParseTerritoryInfo(const std::vector<std::string> &section_territories
       }
     }
     if (temp->continent == NULL) {
-      std::cout << "Error in ParseTerritoryInfo: Continent not found for "
-                << temp->name << std::endl;
+      // Continent not found for the territory, return false
+      return false;
     }
     for (unsigned int j = 4; j < territory.size(); j++) {
       Territory *land = new Territory();
@@ -177,11 +177,12 @@ void Map::ParseTerritoryInfo(const std::vector<std::string> &section_territories
     }
     territories.push_back(temp);
   }
+  return true;
 }
 
 // This function ensures the adjacency lists of every territory point to the
 // unique copy in the master territories vector
-void Map::ReconcileTerritories() {
+bool Map::ReconcileTerritories() {
   for (unsigned int i = 0; i < territories.size(); i++) {
     for (unsigned int j = 0; j < territories[i]->adjacency_list.size(); j++) {
       for (unsigned int k = 0; k < territories.size(); k++) {
@@ -194,6 +195,7 @@ void Map::ReconcileTerritories() {
       }
     }
   }
+  return true;
 }
 
 Territory* Map::StringToTerritory(std::string s) {

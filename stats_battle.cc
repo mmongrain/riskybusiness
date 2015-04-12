@@ -2,6 +2,7 @@
 #include <string>
 
 #include "game.h"
+#include "player.h"
 #include "stats_battle.h"
 
 StatsBattle::StatsBattle(Stats *decorated_stats) : StatsDecorator(decorated_stats) {

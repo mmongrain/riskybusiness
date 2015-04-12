@@ -1,22 +1,24 @@
 #ifndef STATS_BASIC_H_
 #define STATS_BASIC_H_
 
-#include <string>
 #include <vector>
-#include <utility> // std::pair
+#include <utility>
 
 #include "stats.h"
 
 class Player;
 
 class StatsBasic : public Stats {
+
   public:
+
     StatsBasic();
     ~StatsBasic();
     typedef std::pair<Player*, int> PlayerInt;
     virtual void Update();
 
   protected:
+    
     virtual void UpdateStatsString();
     std::vector<PlayerInt> player_total_territories;
     std::vector<PlayerInt> player_total_units;

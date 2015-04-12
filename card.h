@@ -7,6 +7,7 @@ class Player;
 class Territory;
 
 class Card { 
+
   public:
     
     enum Type { 
@@ -25,6 +26,7 @@ class Card {
     void set_territory(Territory* territory);
 
   private:
+    
     Player* owner;
     Type type;
     Territory* territory;

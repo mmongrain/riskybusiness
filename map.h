@@ -2,20 +2,18 @@
 #define MAP_H_
 
 #include <string>
-#include <iostream>
-#include <fstream>
 #include <vector>
-#include <sstream>
 
-#include "continent.h"
-#include "player.h"
 #include "observer.h"
-#include "territory.h"
 
+class Continent;
+class Territory;
+class Player;
 
 class Map: public Observable { 
 
   public:
+
     // BEGIN SINGLETON
     // http://stackoverflow.com/questions/1008019/c-singleton-design-pattern
     static Map &Instance() {
@@ -28,8 +26,9 @@ class Map: public Observable {
     void operator=(Map const&);
     // END SINGLETON 
 
-    void Load(char* filename);
+    bool Load(char* filename);
     void Save(char* filename);
+    bool VerifyConnectivity();
 
     Territory* StringToTerritory(std::string s);
     Continent* StringToContinent(std::string s);
@@ -58,12 +57,11 @@ class Map: public Observable {
     std::vector<Territory*> territories;
     
     void Clear();
-    void ParseMapInfo(const std::vector<std::string> &section_map);
-    void ParseContinentInfo(const std::vector<std::string> &section_continents);
-    void ParseTerritoryInfo(const std::vector<std::string> &section_continents);
-    void ReconcileTerritories();
+    bool ParseMapInfo(const std::vector<std::string> &section_map);
+    bool ParseContinentInfo(const std::vector<std::string> &section_continents);
+    bool ParseTerritoryInfo(const std::vector<std::string> &section_continents);
+    bool ReconcileTerritories();
     bool VerifyAdjacency(Territory* first, Territory* second);
-    bool VerifyConnectivity();
 
 };
 

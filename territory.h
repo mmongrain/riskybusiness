@@ -3,9 +3,7 @@
 
 #include <string>
 #include <vector>
-#include "continent.h"
-#include "player.h"
-#include "map.h"
+
 #include "observer.h"
 
 class Continent;
@@ -29,13 +27,9 @@ class Territory : public Observable {
      std::vector<Territory*> *get_adjacency_list() { return &adjacency_list; }
      std::string ToString();
      bool AreAdjacent(Territory *bordering);
-     bool AttackIsValid(Territory *defending);
      bool CanAttack();
      bool CanFortify();
-     void PrintAdjacentTerritories();
-     void PrintAttackableTerritories(Player *player);
      std::vector<Territory*> GetAttackableTerritories(Player* player);
-     void PrintAdjacentOwnedTerritories(Player *player);
      std::vector<Territory*> GetAdjacentOwnedTerritories(Player* player);
 
    private:

@@ -4,11 +4,11 @@
 #include <string>
 #include <vector>
 
-#include "continent.h"
-#include "map.h"
 #include "observer.h"
-#include "player.h"
-#include "territory.h"
+
+class Player;
+class Territory;
+class Continent;
 
 class PlayerView : Observer {
   public:

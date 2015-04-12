@@ -1,5 +1,9 @@
 #include <string>
+#include <vector>
+
 #include "game.h"
+#include "map.h"
+#include "player.h"
 #include "stats_control.h"
 
 StatsControl::StatsControl(Stats *decorated_stats) : StatsDecorator(decorated_stats) {

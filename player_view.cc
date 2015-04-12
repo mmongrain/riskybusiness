@@ -1,10 +1,12 @@
 #include <vector>
 #include <string>
-#include <iostream>
 
 #include "observer.h"
+#include "player.h"
 #include "player_view.h"
 #include "game.h"
+#include "territory.h"
+#include "continent.h"
 #include "ui.h"
 
 PlayerView::PlayerView(Player *player) { 
@@ -42,9 +44,6 @@ std::string PlayerView::to_string() {
     (i < continents.size() - 1) ? out += ", " : out += ".";
     out += "\n";
   }
-  out += //"\nArmies: " + std::to_string(units) + "\nBattles won: " +
-         //std::to_string(victories) + 
-         "\nCurrent no. of reinforcements: " +
-         std::to_string(reinforcements) + "\n";
+  out += "\nCurrent no. of reinforcements: " + std::to_string(reinforcements) + "\n";
   return out;
 }
