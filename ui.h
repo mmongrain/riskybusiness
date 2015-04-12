@@ -21,6 +21,11 @@ class UI {
     static int IntChoice(int min, int max);
     static std::string StringChoice();
 
+    // Game Loop UI
+    static void StartTurn(int turn, Player* player);
+    static void EndGame(Player* winner);
+    static void KillPlayer(Player* dead_player);
+
     // Attack Phase UI
     static Territory* GetReinforceableTerritory(Player* player);
     static int GetNumReinforcements(Player* player, Territory* to_reinforce);

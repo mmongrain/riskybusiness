@@ -240,6 +240,44 @@ void UI::FortificationComplete(int emigrants, Territory* source, Territory* dest
             << " to " << destination->get_name() << "!" << std::endl;
 }
 
+void UI::StartTurn(int turn, Player* player) {
+  std::cout << "-== TURN " << turn << ": PLAYER " << player->get_id() << " ==-" << std::endl;
+}
+
+void UI::EndGame(Player* winner) {
+  std::cout << "  ____    ____  __    ______ .___________.  ______   .______     ____    ____  __" << std::endl;
+  std::cout << "\\   \\  /   / |  |  /      ||           | /  __  \\  |   _  \\    \\   \\  /   / |  |" << std::endl;
+  std::cout << " \\   \\/   /  |  | |  ,----'`---|  |----`|  |  |  | |  |_)  |    \\   \\/   /  |  |" << std::endl;
+  std::cout << "  \\      /   |  | |  |         |  |     |  |  |  | |      /      \\_    _/   |  |" << std::endl;
+  std::cout << "   \\    /    |  | |  `----.    |  |     |  `--'  | |  |\\  \\----.   |  |     |__|"  << std::endl;
+  std::cout << "    \\__/     |__|  \\______|    |__|      \\______/  | _| `._____|   |__|     (__) " << std::endl;
+  std::cout << "=================================================================================" << std::endl;
+  std::cout << winner->get_name() << " (Player " << winner->get_id() << ") is the WINNER!" <<std::endl;
+  std::cout << "Gaze upon their works, ye mighty, and tremble!" << std::endl;
+  std::cout << "Team Risky Business (1983) thanks you for playing!" <<std::endl;                                                                                 
+}
+
+// Shamelessly stolen from NetHack 3.4.3
+// Some combination of "imitation is the sincerest form of flattery"
+// and "homage is theft"
+void UI::KillPlayer(Player* dead_player) {
+  std::cout << "                       ----------" << std::endl;
+  std::cout << "                      /          \\" << std::endl;
+  std::cout << "                     /    REST    \\" << std::endl;
+  std::cout << "                    /      IN      \\" << std::endl;
+  std::cout << "                   /     PEACE      \\" << std::endl;
+  std::cout << "                  /                  \\" << std::endl;
+  std::cout << "                  |     PLAYER " << dead_player->get_id() << "     |" << std::endl;
+  std::cout << "                  |                  |" << std::endl;
+  std::cout << "                  |                  |" << std::endl;
+  std::cout << "                  |                  |" << std::endl;
+  std::cout << "                  |                  |" << std::endl;
+  std::cout << "                  |                  |" << std::endl;
+  std::cout << "                  |       2015       |" << std::endl;
+  std::cout << "                 *|     *  *  *      | *" << std::endl;
+  std::cout << "        _________)/\\\\_//(\\/(/\\)/\\//\\/|_)_______" << std::endl;
+}
+
 // These declarations have to be here to keep the compiler happy
 std::vector<PlayerView*> UI::player_views;
 Stats* UI::stats = 0;

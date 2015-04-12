@@ -96,8 +96,7 @@ void Game::AssignCountries() {
 		// Remove it from the territories vector, rinse, repeat
 		territories.erase(std::remove(territories.begin(), territories.end(), territories[rando]), territories.end());
 	}
-	std::cout << "Countries have been assigned randomly!" << std::endl;
-	// PrintOwnershipInfo(); // used for testing
+	UI::StatusMessage("Countries have been assigned randomly!");
 }
 
 // ===== MAIN GAME PHASE : round-robin loop for players’ turns =====
@@ -106,17 +105,15 @@ void Game::AssignCountries() {
 void Game::MainPhase()
 {
 	int turn = 1;
-	std::cout << "\n===== MAIN PLAY PHASE =====" << std::endl;
 	while (game_over == false) {
-		std::cout << "--------- TURN #" << turn << ":---------";
 		for (unsigned int i = 0; i < players.size(); i++)
 		{
+      UI::StartTurn(turn, players[i]);
 			players[i]->PlayTurn();
 			if (game_over)
 				return;
 		}
 		++turn;
-		EndOfTurn();	
 	}
 }
 
@@ -124,20 +121,7 @@ void Game::MainPhase()
 
 bool Game::EndGame(){
 	Player* winner = players[0];
-	std::cout << "\nPLAYER " << winner->get_id() << " WINS!"
-		<< "\nThank you for playing.\nTo play again, press 1,\nTo savor your victory and rub it in people's faces, press 0" << std::endl;
-	int answer;
-	std::cin >> answer;
-	while (answer != 0 && answer != 1)
-	{
-		std::cout << "Wrong input! Press 1 to start another game or 0 to stop playing" << std::endl;
-		std::cin.clear();
-		std::cin.ignore(1000, '\n');
-		std::cin >> answer;
-	}
-	if (answer == 1)
-		return true;
-	return false;
+  UI::EndGame(winner);
 }
 
 // ===== OTHER GAME METHODS =====
@@ -157,28 +141,9 @@ void Game::MainMenu(){
 	}
 }
 
-void Game::KillPlayer(Player* deadPlayer){
-	std::cout << "\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\nPLAYER " << deadPlayer->get_id()
-		<< " IS DEAD!\nRIP\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n" << std::endl;
-	players.erase(std::remove(players.begin(), players.end(), deadPlayer), players.end());
-}
-
-// stops after each turn (useful with CompPlayers)
-void Game::EndOfTurn(){
-	std::cout << "\n\nPress 1 to continue playing or 0 to stop" << std::endl;
-	int answer;
-	std::cin >> answer;
-	std::cin.clear();
-	std::cin.ignore(1000, '\n');
-	while (answer != 0 && answer != 1)
-	{
-		std::cout << "Wrong input! Press 1 to continue playing or 0 to stop" << std::endl;
-		std::cin >> answer;
-		std::cin.clear();
-		std::cin.ignore(1000, '\n');
-	}
-	if (answer == 0)
-		game_over = true;
+void Game::KillPlayer(Player* dead_player){
+  UI::KillPlayer(dead_player);
+	players.erase(std::remove(players.begin(), players.end(), dead_player), players.end());
 }
 
 void Game::Options() {
@@ -232,18 +197,6 @@ void Game::TestHelper(int num_players) {
 		}
 	}
 	AssignCountries();
-}
-
-void Game::PrintOwnershipInfo(){
-	std::vector<Territory*> terr = *(Map::Instance().get_territories());
-	for (unsigned int i = 0; i < terr.size(); i++){
-		std::cout << terr[i]->get_name() << ": Player " << terr[i]->get_owner()->get_id() << std::endl;
-	}
-
-	for (unsigned int i = 0; i < players.size(); ++i){
-		std::cout << "Player " << players[i]->get_id() << ": " << std::endl;
-		players[i]->PrintOwnedTerritories();
-	}
 }
 
 /* Makes one CompPlayer of each kind (aggressive, defensive, random)
