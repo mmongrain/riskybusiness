@@ -24,6 +24,7 @@ class Game {
     ~Game() {}
 
     static void PlayGame();
+    static void GUIHelper();
     void EndGame();
 	void KillPlayer(Player* deadPlayer);
 	void TestHelper();
@@ -34,7 +35,10 @@ class Game {
     std::vector<Player*> *get_players()     { return &players; }
     std::vector<Player*> get_copy_players() { return players; }
 
+    // Game options
     bool gui_mode;
+    bool gui_labels;
+    bool gui_authorinfo;
     bool verbose_mode;
 
   private:

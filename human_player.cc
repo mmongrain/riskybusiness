@@ -40,7 +40,6 @@ void HumanPlayer::Fortify() {
   UI::StartPhase(this, "FORTIFICATION");
   if (FortifyingTerritories().size() > 0) {
     while (UI::FortificationChoice()) {
-      // AttackingTerritories are also valid source of fortification (all)
       Territory* source = UI::GetFortificationSource(FortifyingTerritories());
       Territory* destination;
       if (FortifiableTerritories(source).size() > 0) {

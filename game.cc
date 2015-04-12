@@ -4,10 +4,13 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <thread>
+#include <SFML/System.hpp>
 
 #include "card.h"
 #include "deck.h"
 #include "game.h"
+#include "gui.h"
 #include "human_player.h"
 #include "map.h"
 #include "player_view.h"
@@ -30,7 +33,9 @@ void Game::PlayGame() {
 
 void Game::Startup() {
   gui_mode = false;
-  verbose_mode = false; 
+  verbose_mode = false;
+  gui_labels = true;
+  gui_authorinfo = true;
 
   MainMenu();
   LoadMap();  
@@ -38,6 +43,15 @@ void Game::Startup() {
   Deck::Instance().Generate(*(Map::Instance().get_territories()));   
   CreatePlayers();
   AssignCountries();
+  if (gui_mode) { 
+    std::thread logic_thread(&Game::GUIHelper);
+    GUI::RevengeOfTheGUI();
+  }
+}
+
+void Game::GUIHelper() {
+  Instance().MainPhase();
+  Instance().EndGame();
 }
 
 // Load a mapfile selected by user
@@ -151,10 +165,14 @@ void Game::Options() {
   for (;;) {
     std::string gui_on = gui_mode ? "[ON]" : "[OFF]";
     std::string verbose_on = verbose_mode ? "[ON]" : "[OFF]";
+    std::string gui_labels_on = gui_labels ? "[ON]" : "[OFF]";
+    std::string gui_authorinfo_on = gui_authorinfo ? "[ON]" : "[OFF]";
     std::vector<std::string> options{
       "Return to main menu",
       "\"GUI\" mode " + gui_on,
       "Verbose mode " + verbose_on,
+      "GUI Map labels " + gui_labels_on,
+      "GUI Author Info" + gui_authorinfo_on
     };
     int option = UI::StringMenu("OPTIONS MENU", options);
     switch (option) {
@@ -162,6 +180,10 @@ void Game::Options() {
     case 1: gui_mode = !gui_mode;
       break;
     case 2: verbose_mode = !verbose_mode;
+      break;
+    case 3: gui_labels = !gui_labels;
+      break;
+    case 4: gui_authorinfo = !gui_authorinfo;
       break;
     }
   }
