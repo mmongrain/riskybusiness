@@ -22,6 +22,11 @@ void UI::StatusMessage(std::string message) {
   std::cout << message << std::endl;
 }
 
+void UI::ClearBuffer() {
+  char ch;
+  while (std::cin.get(ch) && ch != '\n');
+}
+
 Territory* UI::TerritoryMenu(std::vector<Territory*> territories) {
   char menu_option = 'a';
   char input = '*';
@@ -34,7 +39,7 @@ Territory* UI::TerritoryMenu(std::vector<Territory*> territories) {
   while (MenuChoice(menu_option, input) == -1) {
     std::cin >> input;
     if (input == '?') {
-      char help = HelpMenu();
+      HelpMenu();
     }
   }
   int choice = MenuChoice(menu_option, input);
@@ -55,7 +60,7 @@ int UI::StringMenu(std::string title, std::vector<std::string> options) {
   while (MenuChoice(menu_option, input) == -1) {
     std::cin >> input;
     if (input == '?') {
-      char help = HelpMenu();
+      HelpMenu();
     }
   }
   std::cout << std::endl;
@@ -95,7 +100,7 @@ bool UI::BinaryChoice() {
   while (input != 'y' && input != 'n') {
     std::cin >> input;
     if (input == '?') {
-      char help = HelpMenu();
+      HelpMenu();
     }
   }
   std::cout << std::endl;
@@ -108,7 +113,7 @@ int UI::IntChoice(int min, int max) {
     std::string input = "";
     std::getline(std::cin, input);
     if (input[0] == '?') {
-      char help = HelpMenu();
+      HelpMenu();
     }
     try {
       choice = std::stoi(input);
@@ -118,9 +123,9 @@ int UI::IntChoice(int min, int max) {
   return choice;
 }
 
+// Pulls in a string
+// If previous entry was a MenuChoice, might need to call ClearBuffer() first
 std::string UI::StringChoice() {
-  char ch;
-  while (std::cin.get(ch) && ch != '\n');
   std::string input = "";
   std::getline(std::cin, input);
   std::cout << std::endl;
@@ -145,8 +150,6 @@ int UI::GetNumConqueringArmies(int min, int max, Territory* attacking, Territory
 void UI::StartPhase(Player* player, std::string phase_name) {
     std::cout << "\n-== PLAYER " << player->get_id() << " (" << player->get_name() << "): " << phase_name << " ==-\n" << std::endl;
 }
-
-
 
 bool UI::AttackChoice() {
   std::cout << "Do you want to attack (y/n)?" << std::endl;
@@ -179,8 +182,18 @@ Territory* UI::GetDefendingTerritory(Player* player, Territory* attacking) {
 }
 
 char UI::HelpMenu() { 
-  std::cout << "You asked for help! But none was available." << std::endl;
-  return '*'; 
+  std::vector<std::string> options {
+    "Game Help", // 0
+    "Quit Game" // 1
+  };
+  int choice = StringMenu("HELP MENU", options);
+  switch (choice) {
+    case 0: MainHelp();
+      break;
+    case 1: std::cout << std::endl << "Be seeing you..." << std::endl;
+      std::exit(0);
+  }
+  return '$'; 
 }
 
 void UI::Attack(Territory* attacking, Territory* defending) {
@@ -309,6 +322,39 @@ void UI::KillPlayer(Player* dead_player) {
   std::cout << "                  |       2015       |" << std::endl;
   std::cout << "                 *|     *  *  *      | *" << std::endl;
   std::cout << "        _________)/\\\\_//(\\/(/\\)/\\//\\/|_)_______" << std::endl;
+}
+
+void UI::About() {
+  std::cout << "RISKY BUSINESS (1983)" << std::endl;
+  std::cout << "Made with <3 in 2015 by" << std::endl;
+  std::cout << "     Matthew Mongrain" << std::endl;
+  std::cout << "     Leo Nguyen" << std::endl;
+  std::cout << "     Alika Utepova" << std::endl;
+  std::cout << "\n(Enter 'y' and press ENTER to continue.)" << std::endl;
+  BinaryChoice();
+  return;
+}
+
+void UI::MainHelp() {
+  std::cout << "Risky Business (1983) is a Risk clone controlled entirely from the command line." << std::endl;
+  std::cout << "The keyboard controls are as follows:" << std::endl;
+  std::cout << "* Menus will look something like this:" << std::endl;
+  std::cout << "    a) Poland" << std::endl;
+  std::cout << "    b) Quebec" << std::endl;
+  std::cout << "    c) ..." << std::endl;
+  std::cout << "  To select an option, type the letter (say, 'a' for Poland) and press RETURN." << std::endl;
+  std::cout << "* Sometimes you will see a prompt ending with '(y/n)?'. These are yes or no questions." << std::endl;
+  std::cout << "  Enter 'y' or 'n' as appropriate and press RETURN to continue." << std::endl;
+  std::cout << "* Sometimes you will be prompted to enter a numerical value with a prompt that contains" << std::endl;
+  std::cout << "  something like '(1-7)'. Enter a valid numerical value and press RETURN to continue." << std::endl;
+  std::cout << "* There is a GUI mode that can be enabled from the Game Options menu. The window it creates" << std::endl;
+  std::cout << "  is noninteractive, but it can be of great help to visualize the action!" << std::endl;
+  std::cout << "* ENTERING '?' AND PRESSING ENTER AT ANY PROMPT WILL TAKE YOU TO THE GLOBAL HELP MENU!" << std::endl;
+  std::cout << "  IF YOU GET STUCK OR WANT TO QUIT A GAME IN PROGRESS, THAT'S THE PLACE TO BE!" << std::endl;
+  std::cout << "* Above all, DON'T PANIC." << std::endl;
+  std::cout << "\n(Enter 'y' and press ENTER to continue.)" << std::endl;
+  BinaryChoice();
+  return;
 }
 
 // These declarations have to be here to keep the compiler happy
