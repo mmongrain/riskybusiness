@@ -55,7 +55,8 @@ void Game::GUIHelper() {
 }
 
 // Load a mapfile selected by user
-void Game::LoadMap(){
+void Game::LoadMap() {
+  UI::ClearBuffer();
   for (;;) {
     char filename[100];
     UI::GetMapfile(filename);
@@ -151,8 +152,8 @@ void Game::MainMenu(){
     if (option == 0) break;
     if (option == 1) {} // MapEditor goes here
     if (option == 2) { Options(); }
-    if (option == 3) {}
-    if (option == 4) {}
+    if (option == 3) { UI::MainHelp(); }
+    if (option == 4) { UI::About(); }
   }
 }
 

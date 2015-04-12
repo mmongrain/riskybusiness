@@ -14,12 +14,15 @@ public:
 	// UI Utility
 	static void StatusMessage(std::string message);
 	static char HelpMenu();
+	static void About();
+	static void MainHelp();
 	static int MenuChoice(char menu_option, char input);
 	static Territory* TerritoryMenu(std::vector<Territory*> territories);
 	static int StringMenu(std::string title, std::vector<std::string> options);
 	static bool BinaryChoice();
 	static int IntChoice(int min, int max);
 	static std::string StringChoice();
+	static void ClearBuffer();
 
 	// Game Loop UI
 	static void StartTurn(int turn, Player* player);
@@ -58,8 +61,6 @@ public:
 	// Static data members
 	static std::vector<PlayerView*> player_views;
 	static Stats* stats;
-
-
 };
 
 #endif
