@@ -21,7 +21,7 @@ void HumanPlayer::Reinforce() {
 
 void HumanPlayer::Attack() {
   bool skip_flag = false;
-  UI::StartAttackPhase(this);
+  UI::StartPhase(this, "ATTACK");
   while (UI::AttackChoice()) {
     Territory *attacking = UI::GetAttackingTerritory(this);
     if (attacking == NULL) { continue; }

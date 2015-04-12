@@ -3,8 +3,9 @@
 #include <vector>
 #include <string>
 #include "territory.h"
-#include "player.h"
 #include "ui.h"
+
+class Player;
 
 Territory* UI::GetReinforceableTerritory (Player* player) {
   char menu_option = 'a';
@@ -135,8 +136,8 @@ int UI::GetNumConqueringArmies(int min, int max, Territory* attacking, Territory
   return IntChoice(min, max);
 }
 
-void UI::StartAttackPhase(Player* player) {
-    std::cout << "\n-== PLAYER " << player->get_id() << " (" << player->get_name() << "): ATTACK PHASE ==-\n" << std::endl;
+void UI::StartPhase(Player* player, std::string phase_name) {
+    std::cout << "\n-== PLAYER " << player->get_id() << " (" << player->get_name() << "): " << phase_name << " ==-\n" << std::endl;
 }
 
 bool UI::AttackChoice() {

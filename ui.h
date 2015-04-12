@@ -25,7 +25,7 @@ class UI {
     static Territory* GetReinforceableTerritory(Player* player);
     static int GetNumReinforcements(Player* player, Territory* to_reinforce);
     static int GetNumConqueringArmies(int min, int max, Territory* attacking, Territory* defending);
-    static void StartAttackPhase(Player* player);
+    static void StartPhase(Player* player, std::string phase_name);
     static bool AttackChoice();
     static bool AutoAttackChoice();
     static bool ContinueAttackChoice();
@@ -44,6 +44,7 @@ class UI {
     // Static data members
     static std::vector<PlayerView*> player_views;
     static Stats* stats;
+
 
 };
 
