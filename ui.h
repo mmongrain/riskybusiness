@@ -28,6 +28,10 @@ public:
 	static void StartTurn(int turn, Player* player);
 	static void EndGame(Player* winner);
 	static void KillPlayer(Player* dead_player);
+	
+	// Map Editor UI
+    	static void CreateMapFile(char * filename);
+    	static void DisplayTerritoriesList(std::vector<Territory*> territories);
 
 	// Attack Phase UI
 	static void PrintHand(Player *player);
