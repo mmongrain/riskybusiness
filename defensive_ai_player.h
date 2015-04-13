@@ -11,9 +11,6 @@ class Defensive : public Strategy {
 
 		void Attack(Player *player);
 
-	private:
-
-		bool has_attacked;
 };
 
 #endif

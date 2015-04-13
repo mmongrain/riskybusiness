@@ -88,7 +88,7 @@ void Game::CreatePlayers() {
   int num_robots = 0;
   int difficulty = 0;
   if (gladiator_mode) {
-	  num_robots = 3;
+	  num_robots = 6;
 	  difficulty = 3;
   } else if (UI::SingleOrMulti()) {
     num_humans = UI::GetNumPlayers(2, 6);
@@ -192,14 +192,14 @@ void Game::MainMenu(){
     };
     int option = UI::StringMenu("MAIN MENU", options);
     if (option == 0) break;
-	if (option == 1) { MapEditor::introMapEditor(); }
+	  if (option == 1) { MapEditor::introMapEditor(); }
     if (option == 2) { Options(); }
     if (option == 3) { UI::MainHelp(); }
     if (option == 4) { UI::About(); }
   }
 }
 
-void Game::KillPlayer(Player* dead_player){
+void Game::KillPlayer(Player* dead_player) {
   UI::KillPlayer(dead_player);
   players.erase(std::remove(players.begin(), players.end(), dead_player), players.end());
 }
@@ -207,7 +207,7 @@ void Game::KillPlayer(Player* dead_player){
 void Game::Options() {
   for (;;) {
     std::string gui_on = gui_mode ? "[ON]" : "[OFF]";
-    std::string verbose_on = verbose_mode ? "[ON]" : "[OFF]";
+    std::string verbose_on = verbose_mode ? " [ON]" : "[OFF]";
     std::string gui_labels_on = gui_labels ? "[ON]" : "[OFF]";
     std::string gui_authorinfo_on = gui_authorinfo ? "[ON]" : "[OFF]";
 	  std::string gladiator_mode_on = gladiator_mode ? "[ON]" : "[OFF]";
