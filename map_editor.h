@@ -12,10 +12,11 @@ public:
     MapEditor();
     static void introMapEditor();
     static void theMapEditor();
-    static void CountryCreator();
+    static void TerritoryCreator();
     static void AdjacencyDefiner();
     static void ContinentCreator();
     static void AssignTerritoriesToContinent(Continent* newContinent);
+		static bool VerifyMapCorrectness();
 
     
     

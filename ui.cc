@@ -139,7 +139,8 @@ int UI::IntChoice(int min, int max) {
 // Pulls in a string
 // If previous entry was a MenuChoice, might need to call ClearBuffer() first
 std::string UI::StringChoice() {
-	std::string input = "";
+	std::string input;
+	std::cin.ignore();
 	std::getline(std::cin, input);
 	std::cout << std::endl;
 	return input;
