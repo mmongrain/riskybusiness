@@ -56,9 +56,8 @@ void GUI::RevengeOfTheGUI() {
   std::vector<Player*>            *players = Game::Instance().get_players();
   std::vector<PlayerView*>         player_views = UI::player_views; 
   std::vector<sf::Sprite>          sprites;
-  std::vector<sf::CircleShape>     circle_shapes;
-  std::vector<sf::CircleShape>     triangle_shapes;
-  std::vector<sf::RectangleShape>  square_shapes;
+  std::vector<sf::Sprite>  icons;
+  std::vector<sf::Sprite>          legend;
   std::vector<sf::CircleShape>     player_circles;
   std::vector<sf::Text>            player_view_text;
   std::vector<sf::Text>            labels;
@@ -81,6 +80,16 @@ void GUI::RevengeOfTheGUI() {
     }
   }
   
+  sf::Texture unit_icons;
+  if (unit_icons.loadFromFile("icons.png")) {}
+  else exit(0);
+
+  sf::IntRect soldier(0, 0, 15, 15);
+
+  sf::IntRect cavalry(14, 0, 15, 15);
+
+  sf::IntRect cannon(29, 0, 15, 15);
+
   // Create the window
   sf::RenderWindow window(sf::VideoMode(window_size.x + 300, window_size.y), "Risky Business");
   window.setFramerateLimit(15);
@@ -98,16 +107,18 @@ void GUI::RevengeOfTheGUI() {
     }
 
     // Clear the current vectors
-    circle_shapes.clear();
-    triangle_shapes.clear();
-    square_shapes.clear();
+
+    icons.clear();
     sprites.clear();
     player_circles.clear();
     player_view_text.clear();
 
-    // Add all the objects to be drawn this cycle
+    sf::Sprite legend;
+    legend.setTexture(unit_icons);
+    legend.setPosition(sf::Vector2f(window_size.x + 10, 10));
 
-    sf::Vector2u draw_position(window_size.x + 10, 10);
+    // Add all the objects to be drawn this cycle
+    sf::Vector2u draw_position(window_size.x + 10, 32);
     for (auto &player : *players) {
 
       sf::Color player_color = player->get_color();
@@ -122,8 +133,6 @@ void GUI::RevengeOfTheGUI() {
       player_view_text.back().setString(player->get_name());
       draw_position.y += 10;
       
-      
-
       std::vector<Territory*> adjacency_list = player->get_owned_territories();
 
       for (auto territory : adjacency_list) {
@@ -134,26 +143,33 @@ void GUI::RevengeOfTheGUI() {
         units_single %= 10;
         int units_fives = units_single/5;
         units_single %= 5;
+        int offset = ((units_single + units_tens + units_fives)*16)/2;
 
         for (int i = 0; i < units_tens && unit_x < window_size.x; i++) {
-          square_shapes.push_back(sf::RectangleShape(sf::Vector2f(10, 10)));
-          square_shapes.back().setFillColor(player_color);
-          square_shapes.back().setPosition(unit_x - 5, unit_y - 5);
-          unit_x += 10;
+          icons.push_back(sf::Sprite());
+          icons.back().setPosition(unit_x - offset, unit_y - 10);
+          icons.back().setTexture(unit_icons);
+          icons.back().setColor(player_color);
+          icons.back().setTextureRect(cannon);
+          unit_x += 16;
         }
 
         for (int i = 0; i < units_fives && unit_x < window_size.x; i++) {
-          triangle_shapes.push_back(sf::CircleShape(5, 3));
-          triangle_shapes.back().setFillColor(player_color);
-          triangle_shapes.back().setPosition(unit_x - 5, unit_y - 5);
-          unit_x += 10;
+          icons.push_back(sf::Sprite());
+          icons.back().setColor(player_color);
+          icons.back().setPosition(unit_x - offset, unit_y - 10);
+          icons.back().setTexture(unit_icons);
+          icons.back().setTextureRect(cavalry);
+          unit_x += 16;
         }
 
         for (int i = 0; i < units_single && unit_x < window_size.x; i++) {
-          circle_shapes.push_back(sf::CircleShape(5));
-          circle_shapes.back().setFillColor(player_color);
-          circle_shapes.back().setPosition(unit_x - 5, unit_y - 5);
-          unit_x += 10;
+          icons.push_back(sf::Sprite());
+          icons.back().setColor(player_color);
+          icons.back().setPosition(unit_x - offset, unit_y - 10);
+          icons.back().setTexture(unit_icons);
+          icons.back().setTextureRect(soldier);
+          unit_x += 16;
         }
       }
     }
@@ -170,14 +186,13 @@ void GUI::RevengeOfTheGUI() {
     player_view_text.back().setString(player_view_content);
 
     // Clear, draw, display
+    window.draw(legend);
     window.clear(sf::Color::Black);
     // for (auto sprite : sprites) { window.draw(sprite); }
     for (auto player_circle : player_circles) { window.draw(player_circle); }
     for (auto player_view : player_view_text) { window.draw(player_view); }
     window.draw(map_sprite);
-    for (auto shape : square_shapes)   { window.draw(shape); } 
-    for (auto shape : triangle_shapes)   { window.draw(shape); } 
-    for (auto shape : circle_shapes)   { window.draw(shape); } 
+    for (auto icon : icons)   { window.draw(icon); } 
     for (auto label : labels)   { window.draw(label); }
     window.display();
   }

@@ -1,4 +1,3 @@
-
 #include <iostream>
 #include <stdlib.h> // rand()
 #include <algorithm> // sort()
@@ -39,6 +38,7 @@ int Battle::AttackHandler(Territory *attacking, Territory *defending) {
     if (defending->get_num_units() <= 0) return 1; // attacking territory wins     
     else if (attacking->get_num_units() <= 1) return 2; // attacking territory loses
   }
+  throw new BattleException();
 }
 
 void Battle::SingleAttack(Territory *attacking, Territory *defending){
@@ -66,7 +66,6 @@ void Battle::Capture(Territory* attacking, Territory* defending){
   int min = winner->get_last_roll().size();
   int max = attacking->get_num_units() - 1;
   min = (min > max) ? max : min;
-  std::cout << "MIN: " << min << " MAX:" << max << " ATTACKING: " << attacking->get_num_units() << std::endl;
   int answer = attacking->get_owner()->get_strategy()->GetNumConqueringArmies(min, max, attacking, defending);
   defending->set_num_units(answer);
   attacking->set_num_units(attacking->get_num_units() - answer);
