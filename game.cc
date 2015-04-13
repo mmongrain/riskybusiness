@@ -18,6 +18,7 @@
 #include "stats_control.h"
 #include "stats_battle.h"
 #include "territory.h"
+#include "map_editor.h"
 #include "ui.h"
 
 class Player;
@@ -150,7 +151,7 @@ void Game::MainMenu(){
     };
     int option = UI::StringMenu("MAIN MENU", options);
     if (option == 0) break;
-    if (option == 1) {} // MapEditor goes here
+		if (option == 1) { MapEditor::introMapEditor(); }
     if (option == 2) { Options(); }
     if (option == 3) { UI::MainHelp(); }
     if (option == 4) { UI::About(); }

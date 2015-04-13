@@ -35,7 +35,7 @@ void MapEditor::introMapEditor() {
 	theMapEditor();
 
 	while (keepGoing) {
-		UI::StatusMessage("Would you like to make another change to that file? (y or n)");
+		UI::StatusMessage("Would you like to make another change to that file? (y/n)");
 		keepGoing = UI::BinaryChoice();
 		
 		if (!keepGoing) {
