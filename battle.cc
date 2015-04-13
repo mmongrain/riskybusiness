@@ -66,6 +66,7 @@ void Battle::Capture(Territory* attacking, Territory* defending){
   int min = winner->get_last_roll().size();
   int max = attacking->get_num_units() - 1;
   min = (min > max) ? max : min;
+  std::cout << "MIN: " << min << " MAX:" << max << " ATTACKING: " << attacking->get_num_units() << std::endl;
   int answer = attacking->get_owner()->get_strategy()->GetNumConqueringArmies(min, max, attacking, defending);
   defending->set_num_units(answer);
   attacking->set_num_units(attacking->get_num_units() - answer);

@@ -126,7 +126,8 @@ int Strategy::NumConqueringArmiesToMove(int min, int max){
 }
 
 int Strategy::GetNumConqueringArmies(int min, int max, Territory* attacking, Territory* defending) {
-	return rand() % max + min;
+	int num_armies = rand() % max + min;
+	return (max > num_armies) ? num_armies : max;
 }
 
 bool Strategy::AutoAttackChoice() {
