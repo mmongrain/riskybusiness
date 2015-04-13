@@ -1,18 +1,18 @@
-#ifndef strategy_defensive_h
-#define strategy_defensive_h
+#ifndef strategy_aggressive_h
+#define strategy_aggressive_h
 
 #include "strategy.h"
 
 class Player;
 
-class Defensive : public Strategy {
+class Aggressive : public Strategy {
 
 	public:
 
 		void Attack(Player *player);
 
 	private:
-
+		
 		bool has_attacked;
 };
 

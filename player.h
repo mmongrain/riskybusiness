@@ -7,11 +7,11 @@
 #include <string>
 
 #include "observer.h"
+#include "strategy.h"
 
 class Territory;
 class Continent;
 class Card;
-class Strategy;
 
 class Player : public Observable {
 
@@ -45,6 +45,7 @@ public:
 	int get_total_units()     { return total_units; }
 	int get_num_territories() { return owned_territories.size(); }
 	bool get_card_this_turn() { return card_this_turn; }
+	Strategy* get_strategy()  { return strategy; }
 	std::string get_name()    { return name; }
 
 	std::vector<Territory*> &get_owned_territories() { return owned_territories; }
@@ -61,7 +62,6 @@ public:
 	void set_last_roll(std::vector<int> last_roll);
 
 	void set_strategy(Strategy *strat) { strategy = strat; }
-	
 
 protected:
 
