@@ -6,9 +6,11 @@
 class Player;
 
 class HumanPlayer : public Strategy {
-	void Reinforce(Player *player, int reinforcements);
-	void Attack(Player *player);
-	void Fortify(Player *player);
+	virtual void Reinforce(Player *player, int reinforcements);
+	virtual void Attack(Player *player);
+	virtual void Fortify(Player *player);
+	virtual int GetNumConqueringArmies(int min, int max, Territory* attacking, Territory* defending);
+	virtual bool AutoAttackChoice();
 };
 
 

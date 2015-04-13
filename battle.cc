@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include <stdlib.h> // rand()
 #include <algorithm> // sort()
@@ -11,6 +12,7 @@
 #include "territory.h"
 #include "player.h" 
 #include "exceptions.h"
+#include "strategy.h"
 
 void Battle::SingleBattle(Territory* attacking, Territory* defending) {
   int result = AttackHandler(attacking, defending);
@@ -21,7 +23,7 @@ void Battle::SingleBattle(Territory* attacking, Territory* defending) {
 
 int Battle::AttackHandler(Territory *attacking, Territory *defending) {
   // If user wants to autoattack, keep attackin' till someone wins
-  if (UI::AutoAttackChoice()) {
+  if (attacking->get_owner()->get_strategy()->AutoAttackChoice()) {
     while (attacking->get_num_units() > 1 && defending->get_num_units() > 0) { 
       SingleAttack(attacking, defending);
         if (defending->get_num_units() <= 0) return 1; // attacking territory wins     
@@ -65,7 +67,7 @@ void Battle::Capture(Territory* attacking, Territory* defending){
   int min = winner->get_last_roll().size();
   int max = attacking->get_num_units() - 1;
   min = (min > max) ? max : min;
-  int answer = UI::GetNumConqueringArmies(min, max, attacking, defending);
+  int answer = attacking->get_owner()->get_strategy()->GetNumConqueringArmies(min, max, attacking, defending);
   defending->set_num_units(answer);
   attacking->set_num_units(attacking->get_num_units() - answer);
   defending->get_owner()->remove_territory(defending);

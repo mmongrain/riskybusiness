@@ -12,6 +12,10 @@
 #include "game.h"
 #include "gui.h"
 #include "player.h"
+#include "strategy.h"
+#include "random_ai_player.h"
+#include "defensive_ai_player.h"
+#include "aggressive_ai_player.h"
 #include "map.h"
 #include "player_view.h"
 #include "stats_basic.h"
@@ -77,14 +81,46 @@ void Game::LoadMap() {
 }
 
 // Creating a number of Player objects chosen by user
-void Game::CreatePlayers(){
-  int num_players = UI::GetNumPlayers(2, 6);
+void Game::CreatePlayers() {
+  int num_humans;
+  int num_robots;
+  int difficulty;
+  if (UI::SingleOrMulti()) {
+    num_humans = UI::GetNumPlayers(2, 6);
+    num_robots = UI::GetNumAIPlayers(0, 6 - num_humans);
+    if (num_robots) { 
+      difficulty = UI::GetDifficulty(); 
+    }
+  } else {
+    num_humans = 1;
+    num_robots = UI::GetNumAIPlayers(1, 5);
+    difficulty = UI::GetDifficulty();
+  }
   UI::player_views = *(new std::vector<PlayerView*>);
   Game::players = *(new std::vector<Player*>);
-  for (int i = 0; i < num_players; i++) {
+  for (int i = 0; i < num_humans; i++) {
     players.push_back(new Player());
     UI::player_views.push_back(new PlayerView(players.back()));
   }
+  for (int i = 0; i < num_robots; i++) {
+    players.push_back(new Player());
+    int ai_type = difficulty;
+    if (difficulty == 3) {
+      ai_type = i % 3;
+    }
+    switch (ai_type) {
+      case 0: players.back()->set_strategy(new Random());
+              players.back()->set_name("Commodore 64");
+              break;
+      case 1: players.back()->set_strategy(new Defensive());
+              players.back()->set_name("Watson");
+              break;
+      case 2: players.back()->set_strategy(new Aggressive());
+              players.back()->set_name("HAL 9000");
+              break;
+    }
+    UI::player_views.push_back(new PlayerView(players.back()));
+  }  
   UI::stats = new StatsBasic;
   UI::stats = new StatsControl(UI::stats);
   UI::stats = new StatsBattle(UI::stats);

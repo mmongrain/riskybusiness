@@ -58,7 +58,7 @@ void UI::DisplayTerritoriesList(std::vector<Territory*> territories) {
 }
 
 int UI::StringMenu(std::string title, std::vector<std::string> options) {
-	std::cout << "-==" << title << "==-" << std::endl;
+	std::cout << "\n-==" << title << "==-" << std::endl;
 	char menu_option = 'a';
 	char input = '*';
 	for (unsigned int i = 0; i < options.size(); i++) {
@@ -76,6 +76,26 @@ int UI::StringMenu(std::string title, std::vector<std::string> options) {
 	std::cout << std::endl;
 	return MenuChoice(menu_option, input);
 }
+
+int UI::StringMenu(std::vector<std::string> options) {
+	char menu_option = 'a';
+	char input = '*';
+	for (unsigned int i = 0; i < options.size(); i++) {
+		std::cout << menu_option << ") " << options[i] << std::endl;
+		if (menu_option == 'z') { menu_option = 'A'; }
+		else { ++menu_option; }
+	}
+	// "while input is invalid"
+	while (MenuChoice(menu_option, input) == -1) {
+		std::cin >> input;
+		if (input == '?') {
+			HelpMenu();
+		}
+	}
+	std::cout << std::endl;
+	return MenuChoice(menu_option, input);
+}
+
 
 // menu_option is the character after the highest acceptable value
 // returns -1 on error, index otherwise
@@ -151,6 +171,10 @@ int UI::GetNumReinforcements(Player* player, Territory* to_reinforce) {
 	int armies = IntChoice(1, reinforcements);
 	std::cout << armies << " armies have been added to " << to_reinforce->get_name() << "." << std::endl;
 	return armies;
+}
+
+void UI::PrintNumReinforcements (int reinforcers, Territory* to_reinforce) {
+	std::cout << reinforcers << " armies have been added to " << to_reinforce->get_name() << "." << std::endl;
 }
 
 int UI::GetNumConqueringArmies(int min, int max, Territory* attacking, Territory* defending) {
@@ -253,8 +277,32 @@ void UI::CreateMapFile(char* filename) {
 }
 
 int UI::GetNumPlayers(int min, int max) {
-	std::cout << "How many players (" << min << "-" << max << ") are there?" << std::endl;
+	std::cout << "How many human players (" << min << "-" << max << ") are there?" << std::endl;
 	return IntChoice(min, max);
+}
+
+int UI::GetNumAIPlayers(int min, int max) {
+	std::cout << "How many AI players (" << min << "-" << max << ") will you face?" << std::endl;
+	return IntChoice(min, max);
+}
+
+int UI::GetDifficulty() {
+	std::cout << "How challenging will your opponents be?" << std::endl;
+	std::vector<std::string> difficulties {
+		"Easy",    // 0
+		"Normal",  // 1
+		"Hard",    // 2
+		"Assorted" // 3
+	};
+	return StringMenu(difficulties);
+}
+
+int UI::SingleOrMulti() {
+	std::vector<std::string> difficulties {
+		"Single Player",    // 0
+		"Multiplayer"   // 1
+	};
+	return StringMenu("CHOOSE GAME TYPE", difficulties);
 }
 
 bool UI::FortificationChoice() {

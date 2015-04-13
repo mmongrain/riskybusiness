@@ -3,6 +3,7 @@
 #include "territory.h"
 #include "ui.h"
 #include "battle.h"
+#include "strategy.h"
 
 // Asks the user to input the name of a territory and a number of 
 // reinforcements, does the necessary checks and performs the reinforcement
@@ -15,6 +16,7 @@ void HumanPlayer::Reinforce(Player *player, int reinforcements){
 		to_reinforce->set_num_units(to_reinforce->get_num_units() + armies);
 	}
 }
+
 void HumanPlayer::Attack(Player *player){
 	while (UI::AttackChoice() && player->AttackingTerritories().size() > 0) {
 		if (player->AttackingTerritories().size() > 0) {
@@ -48,4 +50,12 @@ void HumanPlayer::Fortify(Player *player){
 		UI::FortificationComplete(emigrants, source, destination);
 		break;
 	}
+}
+
+int HumanPlayer::GetNumConqueringArmies(int min, int max, Territory* attacking, Territory* defending) {
+	return UI::GetNumConqueringArmies(min, max, attacking, defending);
+}
+
+bool HumanPlayer::AutoAttackChoice() {
+	return UI::AutoAttackChoice();
 }

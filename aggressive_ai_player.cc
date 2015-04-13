@@ -8,10 +8,6 @@
 
 class Player;
 
-void Aggressive::Reinforce(Player *player, int reinforcements){
-
-}
-
 // attacks the first neighbor enemy territory which has less 
 // armies than one of its own territories acjacent to it
 
@@ -34,8 +30,4 @@ void Aggressive::Attack(Player *player){
 			}
 		}
 	}
-}
-
-void Aggressive::Fortify(Player *player){
-
 }

@@ -40,7 +40,7 @@ Player::Player() :  id(player_id++),
   }
   name = "Player " + std::to_string(id);
   hand = *(new std::deque<Card*>);
-	strategy = new HumanPlayer();
+  strategy = new HumanPlayer();
 }
 
 Player::~Player() {
