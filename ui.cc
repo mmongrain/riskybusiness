@@ -47,6 +47,16 @@ Territory* UI::TerritoryMenu(std::vector<Territory*> territories) {
 	return territories[choice];
 }
 
+void UI::DisplayTerritoriesList(std::vector<Territory*> territories) {
+    char position = 'a';
+    for (unsigned int i = 0; i < territories.size(); i++) {
+        std::cout << position << ") " << territories[i]->get_name() << std::endl;
+        if (position == 'z') { position = 'A'; }
+        else { ++position; }
+    }
+    
+}
+
 int UI::StringMenu(std::string title, std::vector<std::string> options) {
 	std::cout << "-==" << title << "==-" << std::endl;
 	char menu_option = 'a';
@@ -235,6 +245,11 @@ void UI::PrintLogo() {
 void UI::GetMapfile(char* filename) {
 	std::cout << "Please enter the file name of the .map file to load:" << std::endl;
 	strcpy(filename, StringChoice().c_str());
+}
+
+void UI::CreateMapFile(char* filename) {
+    std::cout << "A new file will be created. Please enter the file name of the .map file to create:" << std::endl;
+    strcpy(filename, StringChoice().c_str());
 }
 
 int UI::GetNumPlayers(int min, int max) {
