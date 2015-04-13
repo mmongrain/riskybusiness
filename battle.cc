@@ -9,7 +9,7 @@
 #include "game.h"
 #include "map.h"
 #include "territory.h"
-#include "human_player.h" 
+#include "player.h" 
 #include "exceptions.h"
 
 void Battle::SingleBattle(Territory* attacking, Territory* defending) {

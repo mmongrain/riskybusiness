@@ -11,7 +11,7 @@
 #include "deck.h"
 #include "game.h"
 #include "gui.h"
-#include "human_player.h"
+#include "player.h"
 #include "map.h"
 #include "player_view.h"
 #include "stats_basic.h"
@@ -81,7 +81,7 @@ void Game::CreatePlayers(){
   UI::player_views = *(new std::vector<PlayerView*>);
   Game::players = *(new std::vector<Player*>);
   for (int i = 0; i < num_players; i++) {
-    players.push_back(new HumanPlayer());
+    players.push_back(new Player());
     UI::player_views.push_back(new PlayerView(players.back()));
   }
   UI::stats = new StatsBasic;
@@ -212,7 +212,7 @@ void Game::TestHelper() {
 void Game::TestHelper(int num_players) {
   Game::players = *(new std::vector<Player*>);
   for (int i = 0; i < num_players; i++){
-    players.push_back(new HumanPlayer());
+    players.push_back(new Player());
     players.back()->set_battles_won(rand() % 100);
     players.back()->set_battles_lost(rand() % 100);
     players.back()->set_total_units(rand() % 256);

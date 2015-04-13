@@ -1,20 +1,15 @@
 #ifndef HUMAN_PLAYER_H_
 #define HUMAN_PLAYER_H_
 
-#include "player.h"
+#include "strategy.h"
 
-class HumanPlayer : public Player {
+class Player;
 
-public:
-	HumanPlayer() {}
-	~HumanPlayer() {}
-
-protected:
-	void Reinforce();
-	void Attack();
-	void Fortify();
+class HumanPlayer : public Strategy {
+	void Reinforce(Player *player, int reinforcements);
+	void Attack(Player *player);
+	void Fortify(Player *player);
 };
-
 
 
 #endif

@@ -2,10 +2,12 @@
 #define strategy_defensive_h
 #include "strategy.h"
 
-class CompPlayer;
+class Player;
 
 class Defensive : public Strategy {
-	void execute(CompPlayer *c_player);
+	void Reinforce(Player *player, int reinforcements);
+	void Attack(Player *player);
+	void Fortify(Player *player);
 
 private:
 	bool has_attacked;

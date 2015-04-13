@@ -1,11 +1,13 @@
 #ifndef strategy_h
 #define strategy_h
 
-class CompPlayer;
+class Player;
 
 class Strategy {
 public:
-	virtual void execute(CompPlayer *c_player) = 0;
+	virtual void Reinforce(Player *player, int reinforcements) = 0;
+	virtual void Attack(Player *player) = 0;
+	virtual void Fortify(Player *player) = 0;
 	virtual ~Strategy(){};
 };
 
