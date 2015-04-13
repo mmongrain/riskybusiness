@@ -52,17 +52,17 @@ void MapEditor::introMapEditor() {
 }
 
 void MapEditor::theMapEditor() {
-    char answer;
+    int answer;
     
     std::vector<std::string> modifications {"Add a new Country","Define Adjacency between 2 countries","Add a new Continent"};
     answer = UI::StringMenu("Modification to do", modifications);
     
     // User choice decides which modification to do
-    if(answer=='a')
+    if(answer==0)
          CountryCreator();
-    else if(answer=='b')
+    else if(answer==1)
          AdjacencyDefiner();
-    else if(answer=='c')
+    else if(answer==2)
          ContinentCreator();
 
 }
