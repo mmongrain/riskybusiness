@@ -41,6 +41,8 @@ void Game::Startup() {
   verbose_mode = false;
   gui_labels = true;
   gui_authorinfo = true;
+  slow_mode = true;
+  gladiator_mode = false;
 
   MainMenu();
   LoadMap();  
@@ -86,7 +88,7 @@ void Game::CreatePlayers() {
   int num_robots = 0;
   int difficulty = 0;
   if (gladiator_mode) {
-	  num_robots = 6;
+	  num_robots = 3;
 	  difficulty = 3;
   } else if (UI::SingleOrMulti()) {
     num_humans = UI::GetNumPlayers(2, 6);
@@ -208,14 +210,16 @@ void Game::Options() {
     std::string verbose_on = verbose_mode ? "[ON]" : "[OFF]";
     std::string gui_labels_on = gui_labels ? "[ON]" : "[OFF]";
     std::string gui_authorinfo_on = gui_authorinfo ? "[ON]" : "[OFF]";
-	std::string gladiator_mode_on = gladiator_mode ? "[ON]" : "[OFF]";
-    std::vector<std::string> options{
+	  std::string gladiator_mode_on = gladiator_mode ? "[ON]" : "[OFF]";
+    std::string slow_mode_on = slow_mode ? "[ON]" : "[OFF]";
+    std::vector<std::string> options {
       "Return to main menu",
       "\"GUI\" mode " + gui_on,
       "Verbose mode " + verbose_on,
       "GUI Map labels " + gui_labels_on,
       "GUI Author Info " + gui_authorinfo_on,
-	  "Gladiator Mode " + gladiator_mode_on
+	    "Gladiator Mode " + gladiator_mode_on,
+      "Slow Mode " + slow_mode_on
     };
     int option = UI::StringMenu("OPTIONS MENU", options);
     switch (option) {
@@ -228,8 +232,10 @@ void Game::Options() {
       break;
     case 4: gui_authorinfo = !gui_authorinfo;
       break;
-	case 5: gladiator_mode = !gladiator_mode;
-	  break;
+	  case 5: gladiator_mode = !gladiator_mode;
+	     break;
+    case 6: slow_mode = !slow_mode;
+     break;
     }
   }
 }

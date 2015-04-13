@@ -40,6 +40,7 @@ class Game {
     bool gui_labels;
     bool gui_authorinfo;
 	bool gladiator_mode;
+    bool slow_mode;
     bool verbose_mode;
     bool skip_flag;
 

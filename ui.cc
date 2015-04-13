@@ -7,6 +7,7 @@
 #include <thread>
 
 #include "card.h"
+#include "game.h"
 #include "player.h"
 #include "territory.h"
 #include "ui.h"
@@ -243,12 +244,12 @@ void UI::Attack(Territory* attacking, Territory* defending) {
 	for (auto die : atk_dice) {
 		std::cout << die << " ";
 	}
-	std::this_thread::sleep_for(std::chrono::milliseconds(250));	
+	if (Game::Instance().slow_mode) { std::this_thread::sleep_for(std::chrono::milliseconds(250)); }	
 	std::cout << "\nPlayer " << defending->get_owner()->get_id() << " (" << defending->get_owner()->get_name() << ") rolls ";
 	for (auto die : def_dice) {
 		std::cout << die << " ";
 	}
-	std::this_thread::sleep_for(std::chrono::milliseconds(250));	
+	if (Game::Instance().slow_mode) { std::this_thread::sleep_for(std::chrono::milliseconds(250)); }	
 	std::cout << std::endl;
 }
 
