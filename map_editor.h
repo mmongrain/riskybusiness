@@ -15,6 +15,7 @@ public:
     static void CountryCreator();
     static void AdjacencyDefiner();
     static void ContinentCreator();
+    static void AssignTerritoriesToContinent(Continent* newContinent);
 
     
     
