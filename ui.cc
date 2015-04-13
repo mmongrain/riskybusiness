@@ -2,6 +2,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <cstring>
 
 #include "card.h"
 #include "player.h"
@@ -268,12 +269,12 @@ void UI::PrintLogo() {
 
 void UI::GetMapfile(char* filename) {
 	std::cout << "Please enter the file name of the .map file to load:" << std::endl;
-	strcpy(filename, StringChoice().c_str());
+	std::strcpy(filename, StringChoice().c_str());
 }
 
 void UI::CreateMapFile(char* filename) {
     std::cout << "A new file will be created. Please enter the file name of the .map file to create:" << std::endl;
-    strcpy(filename, StringChoice().c_str());
+    std::strcpy(filename, StringChoice().c_str());
 }
 
 int UI::GetNumPlayers(int min, int max) {

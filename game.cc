@@ -85,7 +85,10 @@ void Game::CreatePlayers() {
   int num_humans;
   int num_robots;
   int difficulty;
-  if (UI::SingleOrMulti()) {
+  if (gladiator_mode) {
+	  num_robots = 6;
+	  difficulty = 3;
+  } else if (UI::SingleOrMulti()) {
     num_humans = UI::GetNumPlayers(2, 6);
     num_robots = UI::GetNumAIPlayers(0, 6 - num_humans);
     if (num_robots) { 
@@ -187,7 +190,7 @@ void Game::MainMenu(){
     };
     int option = UI::StringMenu("MAIN MENU", options);
     if (option == 0) break;
-		if (option == 1) { MapEditor::introMapEditor(); }
+	if (option == 1) { MapEditor::introMapEditor(); }
     if (option == 2) { Options(); }
     if (option == 3) { UI::MainHelp(); }
     if (option == 4) { UI::About(); }
@@ -205,12 +208,14 @@ void Game::Options() {
     std::string verbose_on = verbose_mode ? "[ON]" : "[OFF]";
     std::string gui_labels_on = gui_labels ? "[ON]" : "[OFF]";
     std::string gui_authorinfo_on = gui_authorinfo ? "[ON]" : "[OFF]";
+	std::string gladiator_mode_on = gladiator_mode ? "[ON]" : "[OFF]";
     std::vector<std::string> options{
       "Return to main menu",
       "\"GUI\" mode " + gui_on,
       "Verbose mode " + verbose_on,
       "GUI Map labels " + gui_labels_on,
-      "GUI Author Info" + gui_authorinfo_on
+      "GUI Author Info " + gui_authorinfo_on,
+	  "Gladiator Mode " + gladiator_mode_on
     };
     int option = UI::StringMenu("OPTIONS MENU", options);
     switch (option) {
@@ -223,6 +228,8 @@ void Game::Options() {
       break;
     case 4: gui_authorinfo = !gui_authorinfo;
       break;
+	case 5: gladiator_mode = !gladiator_mode;
+	  break;
     }
   }
 }
