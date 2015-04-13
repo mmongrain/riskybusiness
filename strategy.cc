@@ -10,7 +10,7 @@
 #include "ui.h"
 
 void Strategy::Reinforce(Player *player, int reinforcements){
-	std::this_thread::sleep_for(std::chrono::milliseconds(rand() % 2000));	
+	std::this_thread::sleep_for(std::chrono::milliseconds(rand() % 1000));	
 	// pick a territory
 	std::vector<Territory*> owned_territories = player->get_owned_territories();
 	Territory *to_reinforce = owned_territories[std::rand() % owned_territories.size()];
@@ -56,7 +56,7 @@ Territory* Strategy::WhomToAttack(Player* player, Territory* attacking){
 }
 
 void Strategy::Fortify(Player *player) {
-	std::this_thread::sleep_for(std::chrono::milliseconds(rand() % 2000));	
+	std::this_thread::sleep_for(std::chrono::milliseconds(rand() % 1000));	
 	// decide between fortifying or not
 	if (!WillFortify()) {
 		UI::StatusMessage("AI Player " + std::to_string(player->get_id()) + " chose not to fortify!");

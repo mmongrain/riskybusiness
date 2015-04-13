@@ -47,7 +47,8 @@ void GUI::RevengeOfTheGUI() {
   sf::Text map_info;
   map_info.setFont(pt_sans);
   map_info.setCharacterSize(18);
-  map_info.setColor(sf::Color::Black); 
+	sf::Color my_brown(33, 0, 51);
+  map_info.setColor(my_brown); 
   map_info.setString(map_info_text);
 
   // Some Drawables (& data members) stay constant thru the game so we can get them ready before the window opens
@@ -71,7 +72,8 @@ void GUI::RevengeOfTheGUI() {
         pt_sans,
         12
       ));
-      labels.back().setColor(sf::Color::Black);
+			sf::Color my_brown(113, 24, 0);
+      labels.back().setColor(my_brown);
       labels.back().setPosition(
         sf::Vector2f(
           (float)(territory->get_x() - 15),
@@ -116,7 +118,8 @@ void GUI::RevengeOfTheGUI() {
       player_circles.back().setPosition((float)draw_position.x, (float)draw_position.y);
       player_view_text.push_back(sf::Text());
       player_view_text.back().setFont(pt_sans);
-      player_view_text.back().setColor(sf::Color::White);
+			sf::Color my_white(255, 187, 91);
+      player_view_text.back().setColor(my_white);
       player_view_text.back().setCharacterSize(11);
       player_view_text.back().setPosition((float)(draw_position.x + 15), (float)(draw_position.y));
       player_view_text.back().setString(player->get_name());
@@ -160,7 +163,8 @@ void GUI::RevengeOfTheGUI() {
 
     player_view_text.push_back(sf::Text());
     player_view_text.back().setFont(pt_sans);
-    player_view_text.back().setColor(sf::Color::White);
+		sf::Color my_whiter_white(255, 239, 199);
+		player_view_text.back().setColor(my_whiter_white);
     player_view_text.back().setCharacterSize(11);
     player_view_text.back().setPosition((float)(draw_position.x + 10), (float)(draw_position.y) + 10);
     std::string player_view_content = "";
@@ -170,7 +174,7 @@ void GUI::RevengeOfTheGUI() {
     player_view_text.back().setString(player_view_content);
 
     // Clear, draw, display
-    window.clear(sf::Color::Black);
+    window.clear(my_brown);
     // for (auto sprite : sprites) { window.draw(sprite); }
     for (auto player_circle : player_circles) { window.draw(player_circle); }
     for (auto player_view : player_view_text) { window.draw(player_view); }

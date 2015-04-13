@@ -15,6 +15,14 @@
 #include "human_player.h"
 #include "battle.h"
 
+sf::Color my_yellow(232, 229, 0);
+sf::Color my_orange(255, 147, 66);
+sf::Color my_red(252, 75, 70);
+sf::Color my_purple(207, 53, 234);
+sf::Color my_blue(110, 44, 254);
+sf::Color my_green(148, 196, 6);
+
+
 Player::Player() :  id(player_id++),
                     reinforcements(0),
                     total_units(0),
@@ -24,17 +32,17 @@ Player::Player() :  id(player_id++),
                     card_this_turn(false),
                     times_redeemed(0) {
   switch (id) {
-    case 1: color = sf::Color::Red;
+    case 1: color = my_blue;
             break;
-    case 2: color = sf::Color::Blue;
+    case 2: color = my_purple;
             break;
-    case 3: color = sf::Color::Magenta;
+    case 3: color = my_red;
             break;
-    case 4: color = sf::Color::Green;
+    case 4: color = my_orange;
             break;
-    case 5: color = sf::Color::Yellow;
+    case 5: color = my_yellow;
             break;
-    case 6: color = sf::Color::Cyan;
+		case 6: color = my_green;
             break;
     default: color = sf::Color::Black;
   }
