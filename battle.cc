@@ -39,7 +39,6 @@ int Battle::AttackHandler(Territory *attacking, Territory *defending) {
     if (defending->get_num_units() <= 0) return 1; // attacking territory wins     
     else if (attacking->get_num_units() <= 1) return 2; // attacking territory loses
   }
-	throw new BattleException();
 }
 
 void Battle::SingleAttack(Territory *attacking, Territory *defending){

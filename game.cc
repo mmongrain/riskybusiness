@@ -82,9 +82,9 @@ void Game::LoadMap() {
 
 // Creating a number of Player objects chosen by user
 void Game::CreatePlayers() {
-  int num_humans;
-  int num_robots;
-  int difficulty;
+  int num_humans = 0;
+  int num_robots = 0;
+  int difficulty = 0;
   if (gladiator_mode) {
 	  num_robots = 6;
 	  difficulty = 3;
