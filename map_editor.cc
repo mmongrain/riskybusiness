@@ -62,14 +62,14 @@ bool MapEditor::VerifyMapCorrectness(){
 	std::vector<Territory*> territories = (*Map::Instance().get_territories());
 	for (auto territory : territories){
 		if (territory->get_continent() == NULL){
-			UI::StatusMessage("Please make sure that all your territories belong to a continent. At least one doesn't.\n");
+			UI::StatusMessage("Please make sure that all your territories belong to a continent. At least one doesn't.");
 			return false;
 		}
 	}
 
 	// Incorrect map 2: not a connected graph
 	if (!Map::Instance().VerifyConnectivity()){
-		UI::StatusMessage("Please make sure that all your territories are connected.\n");
+		UI::StatusMessage("Please make sure that all your territories are connected.");
 		return false;
 	}
 	// Incorrect map 3: TBD
@@ -96,9 +96,12 @@ void MapEditor::theMapEditor() {
 // Method called when the user wants to create a new Territory
 void  MapEditor::TerritoryCreator() {
 
-	std::string territoryName;
+	std::string territoryName = "";
 	UI::StatusMessage("Name of the new territory to create: ");
-	territoryName = UI::StringChoice();
+	UI::ClearBuffer();
+	while (territoryName == ""){
+		territoryName = UI::StringChoice();
+	}
 
 	while (Map::Instance().StringToTerritory(territoryName) != 0) {
 		UI::StatusMessage("This territory name is already taken. Pick another name: ");
@@ -120,36 +123,33 @@ void  MapEditor::TerritoryCreator() {
 void  MapEditor::AdjacencyDefiner() {
 
 	bool makeEmAdjacent, makeEmNonAdjacent;
-	std::string firstTerritory, secondTerritory;
+	Territory *firstTerritory, *secondTerritory;
 
 	UI::StatusMessage("Enter the names of 2 territories to see their adjacency:");
-
+	UI::ClearBuffer();
 	UI::StatusMessage("Name of first territory: ");
-	firstTerritory = UI::StringChoice();
+	firstTerritory = UI::TerritoryMenu((*Map::Instance().get_territories()));
 	UI::StatusMessage("Name of second territory: ");
-	secondTerritory = UI::StringChoice();
+	secondTerritory = UI::TerritoryMenu((*Map::Instance().get_territories()));
 
-	// While the two naEmes entered don't exists
-	while (Map::Instance().StringToTerritory(firstTerritory) == 0 || Map::Instance().StringToTerritory(secondTerritory) == 0) {
+	// While the two names entered don't exists
+	while (firstTerritory == NULL|| secondTerritory == NULL) {
 		UI::StatusMessage("ERROR: 1 or 2 countries couldn't be found. Please enter 2 other names: ");
-		firstTerritory = UI::StringChoice();
-		secondTerritory = UI::StringChoice();
+		firstTerritory = UI::TerritoryMenu((*Map::Instance().get_territories()));
+		secondTerritory = UI::TerritoryMenu((*Map::Instance().get_territories()));
 	}
 
-	Territory* aTerritory = Map::Instance().StringToTerritory(firstTerritory);
-	Territory* anotherTerritory = Map::Instance().StringToTerritory(secondTerritory);
-
 	// If they are adjacent
-	if (aTerritory->AreAdjacent(anotherTerritory)) {
+	if (firstTerritory->AreAdjacent(secondTerritory)) {
 		UI::StatusMessage("These 2 territories are adjacent.");
-		UI::StatusMessage("Make them nonadjacent? (y or n)");
+		UI::StatusMessage("Make them nonadjacent? (y/n)");
 		makeEmAdjacent = UI::BinaryChoice();
 
 		if (makeEmAdjacent) {
 			// Removes each from other's adjacency list
-			aTerritory->get_adjacency_list()->erase(std::remove(aTerritory->get_adjacency_list()->begin(), aTerritory->get_adjacency_list()->end(), anotherTerritory), aTerritory->get_adjacency_list()->end());
-			anotherTerritory->get_adjacency_list()->erase(std::remove(anotherTerritory->get_adjacency_list()->begin(), anotherTerritory->get_adjacency_list()->end(), aTerritory), anotherTerritory->get_adjacency_list()->end());
-			UI::StatusMessage("From now on, these 2 territories are adjacent.");
+			firstTerritory->get_adjacency_list()->erase(std::remove(firstTerritory->get_adjacency_list()->begin(), firstTerritory->get_adjacency_list()->end(), secondTerritory), firstTerritory->get_adjacency_list()->end());
+			secondTerritory->get_adjacency_list()->erase(std::remove(secondTerritory->get_adjacency_list()->begin(), secondTerritory->get_adjacency_list()->end(), firstTerritory), secondTerritory->get_adjacency_list()->end());
+			UI::StatusMessage("From now on, these 2 territories are not adjacent.");
 		}
 		else {
 			UI::StatusMessage("No changes have been made.");
@@ -164,9 +164,9 @@ void  MapEditor::AdjacencyDefiner() {
 
 		if (makeEmNonAdjacent) {
 			// Add each territory to the other's adjacency list
-			aTerritory->get_adjacency_list()->push_back(anotherTerritory);
-			anotherTerritory->get_adjacency_list()->push_back(aTerritory);
-			UI::StatusMessage("From now on, these 2 territories are nonadjacent.");
+			firstTerritory->get_adjacency_list()->push_back(secondTerritory);
+			secondTerritory->get_adjacency_list()->push_back(firstTerritory);
+			UI::StatusMessage("From now on, these 2 territories are adjacent.");
 
 		}
 		else {
@@ -181,6 +181,7 @@ void  MapEditor::ContinentCreator() {
 	bool wantsToCreate;
 	std::string continentName;
 	UI::StatusMessage("Name of the new Continent to create: ");
+	UI::ClearBuffer();
 	continentName = UI::StringChoice();
 
 	while (Map::Instance().StringToContinent(continentName) != 0) {
