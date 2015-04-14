@@ -34,6 +34,7 @@ class Game {
     bool get_game_over();
     std::vector<Player*> *get_players()     { return &players; }
     std::vector<Player*> get_copy_players() { return players; }
+    int get_turn() { return turn; }
 
     // Game options
     bool gui_mode;
@@ -50,6 +51,7 @@ class Game {
     bool game_over;
     int num_human_players;
     int num_comp_players;
+    int turn;
 
     void Startup();
 	void LoadMap();

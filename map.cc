@@ -11,7 +11,7 @@
 #include "player.h"
 #include "territory.h"
 
-bool Map::Load(char* filename) {
+bool Map::Load(const char* filename) {
   std::ifstream file(filename);
   std::vector<std::string> section_map;
   std::vector<std::string> section_continents;
@@ -56,7 +56,7 @@ bool Map::Load(char* filename) {
   return false;
 } 
 
-void Map::Save(char *filename) {
+void Map::Save(const char *filename) {
   std::ofstream out(filename);
   out << "[Map]\nauthor=" << get_author() << "\nwarn="; 
   (get_warn()) ? out << "yes\nimage=" : out << "no\nimage="; 

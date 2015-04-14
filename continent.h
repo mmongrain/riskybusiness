@@ -26,6 +26,7 @@ class Continent : public Observable {
   private:
 
     friend class Map;
+    friend class MapEditor;
     std::string name;
     int bonus; // used to calculate reinforcements
     std::vector<Territory*> territories;

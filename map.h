@@ -26,8 +26,8 @@ class Map: public Observable {
     void operator=(Map const&);
     // END SINGLETON 
 
-    bool Load(char* filename);
-    void Save(char* filename);
+    bool Load(const char* filename);
+    void Save(const char* filename);
     bool VerifyConnectivity();
 
     Territory* StringToTerritory(std::string s);
@@ -43,9 +43,14 @@ class Map: public Observable {
     std::vector<Territory*> *get_territories()     { return &territories; }
     std::vector<Territory*> get_copy_territories() { return territories;  }
 
+
   private:
 
+    // So that MapEditor can freely modify datamembers
+    friend class MapEditor;
+
     struct MapInfo {
+      std::string filename;
       std::string author;
       std::string image;
       bool wrap;

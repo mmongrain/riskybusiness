@@ -1,61 +1,261 @@
 #include <iostream>
 #include <string>
+#include <vector>
+#include <fstream>
+#include <algorithm>// std::find()
+
 #include "map.h"
 #include "territory.h"
 #include "continent.h"
 #include "map_editor.h"
-#include <vector>
-#include <fstream>
-#include <algorithm>// std::find()
 #include "ui.h"
 
-// General opening of the Map Editor
-void MapEditor::introMapEditor() {
-    int answer;
-    char filename[100];
-    bool keepGoing;
-    
-    UI::StatusMessage("Welcome to the Interactive Map Editor.");
-    UI::StatusMessage("What would you like to do?");
-    UI::StatusMessage("Create a new map (Enter 0) or modify an exisiting map (Enter 1)?");
-    
-    answer = UI::IntChoice(0, 1);
-    
-    if (answer == 0) {
-        // Creates a new map
-        Map::Instance();
-        // Ask the name of new file to create
-        UI::CreateMapFile(filename);
-    }
-    if (answer == 1) {
-        // Loads an existing map from file
-        UI::GetMapfile(filename);
-        Map::Instance().Load(filename);
-    }
-    theMapEditor();
-    
-    while (keepGoing) {
-        UI::StatusMessage("Would you like to make another change to that file? (y/n)");
-        keepGoing = UI::BinaryChoice();
-        
-        if (!keepGoing) {
-            // If user wants to stop and save - check if map is correct
-            if (VerifyMapCorrectness()){
-                Map::Instance().Save(filename);
-                Map::Instance().Load(filename);
-            }
-            // If not correct - make him correct the map
-            else keepGoing = true;
+void MapEditor::StartMapEditor() {
+    std::vector<std::string> main_options{
+        "Return to main menu",   // 0
+        "Create a new map",      // 1
+        "Modify an existing map" // 2
+    };
+    while (true) {
+        int answer = UI::StringMenu("INTERACTIVE MAP EDITOR", main_options);
+        switch (answer) {
+            case 0:
+                return;
+            case 1:
+                NewMap();
+                break;
+            case 2:
+                ExistingMap();
+                break;
         }
-        if (keepGoing)
-            theMapEditor();
     }
-    
-    // Finished task - Returns to main menu
-    
 }
 
-bool MapEditor::VerifyMapCorrectness(){
+void MapEditor::NewMap() {
+  std::ifstream f;
+  UI::ClearBuffer();
+  std::string filename = UI::StringChoice("What filename do you want to use for your new map?");
+  while (filename == "" || filename == "\n") {
+    filename = UI::StringChoice("Invalid filename--please try again!");
+  }
+  Map::Instance().map_info.filename = filename;
+  std::string author = UI::StringChoice("What's the name of the author?");
+  while (author == "" || author == "\n") {
+    author = UI::StringChoice("Invalid name--please try again!");
+  }
+  Map::Instance().map_info.author = author;
+  std::string image = UI::StringChoice("What's the filename of the associated .bmp image?\nEnter 'none' for none.");
+  while (image == "" || image == "\n") {
+  author = UI::StringChoice("Invalid filename--please try again!");
+  }
+  Map::Instance().map_info.image = image;
+  Map::Instance().map_info.wrap = UI::BinaryChoice("Wrap (y/n)?");
+  Map::Instance().map_info.scroll = UI::BinaryChoice("Scroll (y/n)?");
+  Map::Instance().map_info.warn = UI::BinaryChoice("Warn (y/n)?");
+  NewMapContinents();
+  NewMapTerritories();
+  NewMapAdjacencies();
+  EditMenu();
+}
+
+void MapEditor::ExistingMap() {
+  std::ifstream f;
+  std::string filename = UI::StringChoice("What filename do you want to load?");
+  while (filename == "" || filename == "\n") {
+    filename = UI::StringChoice("Invalid filename--please try again!");
+  }
+  Map::Instance().Load(filename.c_str());
+  EditMenu();
+}
+
+void MapEditor::NewMapContinents() {
+  std::vector<std::string> continents_options {
+    "Add a continent",
+    "Delete a continent",
+    "Continue to next step",
+  };
+  while (true) {
+    int answer = UI::StringMenu("STEP 1: DEFINE CONTINENTS", continents_options);
+    switch (answer) {
+      case 0: 
+        AddContinent();
+        break;
+      case 1:
+        if (Map::Instance().continents.size() > 0) {
+          RemoveContinent();
+        } else {
+          UI::StatusMessage("You haven't created any continents to delete yet!");
+          break;
+        }
+      case 2: 
+        if (Map::Instance().continents.size() > 1) {
+          return;
+        } else {
+          UI::StatusMessage("You need to create at least two continents!");
+          break;
+        }
+    }
+  }
+}
+
+void MapEditor::NewMapTerritories() {
+  std::vector<std::string> territories_options {
+    "Add a territory",
+    "Delete a territory",
+    "Continue to next step",
+  };
+  while (true) {
+    int answer = UI::StringMenu("STEP 2: DEFINE TERRITORIES", territories_options);
+    switch (answer) {
+      case 0: 
+        AddTerritory();
+        break;
+      case 1:
+        if (Map::Instance().territories.size() > 0) {
+          RemoveTerritory();
+        } else {
+          UI::StatusMessage("You haven't created any territories to delete yet!");
+          break;
+        }
+      case 2: 
+        if (Map::Instance().territories.size() > 5) {
+          return;
+        } else {
+          UI::StatusMessage("You need to create at least six territories!");
+          break;
+        }
+    }
+  }
+}
+
+void MapEditor::AddContinent() {
+  Continent *new_continent = new Continent();
+  UI::ClearBuffer();
+  std::string continent_name = UI::StringChoice("What's the name of your continent?");
+  while (continent_name == "" || continent_name == "\n") {
+    continent_name = UI::StringChoice("Invalid name--please try again!");
+  }
+  new_continent->name = continent_name;
+  new_continent->bonus = UI::IntChoice("What's the bonus associated with " + continent_name + "? (0-100)", 0, 100);
+  Map::Instance().continents.push_back(new_continent);
+}
+
+void MapEditor::AddTerritory() {
+  Territory *new_territory = new Territory();
+  UI::ClearBuffer();
+  std::string territory_name = UI::StringChoice("What's the name of your territory?");
+  while (territory_name == "" || territory_name == "\n") {
+    territory_name = UI::StringChoice("Invalid name--please try again!");
+  }
+  new_territory->name = territory_name;
+  new_territory->x = UI::IntChoice("What's the x-coordinate of " + territory_name + "? (0-1920)", 0, 1920);
+  new_territory->y = UI::IntChoice("What's the y-coordinate of " + territory_name + "? (0-1920)", 0, 1920);
+  UI::StatusMessage("Which continent does " + territory_name + " belong to?");
+  new_territory->continent = UI::ContinentMenu(Map::Instance().continents);
+  Map::Instance().territories.push_back(new_territory);
+}
+
+void MapEditor::RemoveContinent() {
+  UI::StatusMessage("Remove which continent?");
+  Continent *old_continent = UI::ContinentMenu(Map::Instance().continents);
+  Map::Instance().continents.erase(std::remove(Map::Instance().continents.begin(), Map::Instance().continents.end(), old_continent), Map::Instance().continents.end());
+  delete old_continent;
+  UI::StatusMessage("Continent removed!");
+}
+
+void MapEditor::RemoveTerritory() {
+  UI::StatusMessage("Remove which territory?");
+  Territory *old_territory = UI::TerritoryMenu(Map::Instance().territories);
+  Map::Instance().territories.erase(std::remove(Map::Instance().territories.begin(), Map::Instance().territories.end(), old_territory), Map::Instance().territories.end());
+  delete old_territory;
+  UI::StatusMessage("Territory removed!");
+}
+
+void MapEditor::NewMapAdjacencies() {
+  std::vector<std::string> adjacency_options {
+    "Establish new adjacency", // 0
+    "Finish and Save Map" // 1
+  };
+  while (true) {
+    int answer = UI::StringMenu("STEP 3: ESTABLISH ADJACENCIES", adjacency_options);
+    switch (answer) {
+      case 0:
+        NewAdjacency();
+        break;
+      case 1:
+        if (Map::Instance().VerifyConnectivity()) {
+          if (SaveMap() ) {
+            return;
+          }
+        } else {
+          UI::StatusMessage("Your map is not fully connected yet! Please add more links.");
+        }
+    }
+  }
+}
+  
+void MapEditor::NewAdjacency() {
+  Territory* first;
+  Territory* second;
+  UI::StatusMessage("Which is the first territory?");
+  first = UI::TerritoryMenu(Map::Instance().territories);
+  UI::StatusMessage("Which is the second territory?");
+  second = UI::TerritoryMenu(Map::Instance().territories);
+  if (first == second) {
+    UI::StatusMessage("A territory can't be adjacent to itself!");
+    return;
+  } else if (std::find(first->adjacency_list.begin(), first->adjacency_list.end(), second) != first->adjacency_list.end()) {
+    UI::StatusMessage("Those territories are already adjacent!");
+    return;
+  }
+  if (UI::BinaryChoice("Define adjacency between " + first->name + " and " + second->name + "(y/n)?")) {
+      first->adjacency_list.push_back(second);
+      second->adjacency_list.push_back(first);
+  }
+}
+
+bool MapEditor::SaveMap() {
+  if (VerifyMapCorrectness()) {
+    Map::Instance().Save(Map::Instance().map_info.filename.c_str());
+    UI::StatusMessage("Save complete!");
+    return true;
+  } else return false;
+}
+
+void MapEditor::EditMenu() {
+  std::vector<std::string> edit_menu_options {
+    "Add a territory",  // 0
+    "Remove a territory", // 1
+    "Add a continent",  // 2
+    "Remove a continent", // 3 
+    "Save map to disk", // 4
+    "Return to Map Editor main menu" // 5
+  };
+  while (true) {
+    int answer = UI::StringMenu("EDIT MAP", edit_menu_options);
+    switch (answer) {
+      case 0:
+        AddTerritory();
+        break;
+      case 1:
+        RemoveTerritory();
+        break;
+      case 2:
+        AddContinent();
+        break;
+      case 3:
+        RemoveContinent();
+        break;
+      case 4:
+        SaveMap();
+        break;
+      case 5:
+        return;
+    }
+  }
+}
+
+bool MapEditor::VerifyMapCorrectness() {
     
     // Incorrect map 1: at least 1 territory doesn't belong to any continent
     std::vector<Territory*> territories = (*Map::Instance().get_territories());
@@ -77,290 +277,4 @@ bool MapEditor::VerifyMapCorrectness(){
         return false;
     }
     return true;
-}
-
-void MapEditor::theMapEditor() {
-    char answer;
-    
-    // Menu with 2 additional options if the continents vector and territories vector aren't empty
-    if (Map::Instance().get_territories()->size()!=0 && Map::Instance().get_continents()->size()!=0) {
-        std::vector<std::string> modifications2{ "Add a new territory", "Define Adjacency between 2 territories", "Add a new Continent", "Assign Territories to existing Continent", "Assign Continent to existing territory" };
-        answer = UI::StringMenu("Modification to do", modifications2);
-        
-        switch (answer) {
-            case 0:
-                TerritoryCreator();
-                break;
-            case 1:
-                AdjacencyDefiner();
-                break;
-            case 2:
-                ContinentCreator();
-                break;
-            case 3:
-                AssignTerritoriesToExistingContinent();
-                break;
-            case 4:
-                AssignContinentToExistingTerritory();
-                break;
-                
-            default:
-                break;
-        }
-    }
-    else {
-        // Menu if the continents vector and territories vector are empty
-        std::vector<std::string> modifications1{ "Add a new territory", "Define Adjacency between 2 territories", "Add a new Continent" };
-        answer = UI::StringMenu("Modification to do", modifications1);
-        
-        switch (answer) {
-            case 0:
-                TerritoryCreator();
-                break;
-            case 1:
-                AdjacencyDefiner();
-                break;
-            case 2:
-                ContinentCreator();
-                break;
-                
-            default:
-                break;
-        }
-    }
-    
-        
-}
-
-// Method called when the user wants to create a new Territory
-void  MapEditor::TerritoryCreator() {
-    
-    std::string territoryName = "";
-    UI::StatusMessage("Name of the new territory to create: ");
-    UI::ClearBuffer();
-    while (territoryName == ""){
-        territoryName = UI::StringChoice();
-    }
-    
-    while (Map::Instance().StringToTerritory(territoryName) != 0) {
-        UI::StatusMessage("This territory name is already taken. Pick another name: ");
-        territoryName = UI::StringChoice();
-    }
-    
-    Territory* newTerritory = new Territory();
-    newTerritory->set_name(territoryName);
-    newTerritory->set_continent(NULL);
-    Map::Instance().get_territories()->push_back(newTerritory);
-    
-    UI::StatusMessage("Territory created!");
-    
-    bool wantsToAssignContinent = true;
-    bool wantsToCreate;
-    UI::StatusMessage("Now let's assign a Continent to it, OK? (y or n)");
-    wantsToAssignContinent = UI::BinaryChoice();
-    
-    if(wantsToAssignContinent) {
-        // If the present map does not have any continents to assign
-        if (Map::Instance().get_continents()->empty()) {
-            UI::StatusMessage("Looks like this Map does not have any continents yet. Create one now? (y or n)");
-            wantsToCreate = UI::BinaryChoice();
-            if (wantsToCreate) {
-                ContinentCreator();
-            }
-            else if (!wantsToCreate) {
-                UI::StatusMessage("The map contains no continents.");
-            }
-        }
-        // if the continents vector is not empty
-        else {
-            AssignContinentToTerritory(newTerritory);
-            
-        }
-    }
-    else if(!wantsToAssignContinent) {
-        UI::StatusMessage("Remember you will have to assign a Continent to it later, or there will be an error.");
-    }
-    
-}
-
-// Method called when the user wants to define the adjacency between 2 countries
-// Load .map and browse to search for the name of these 2 countries and ask to be adjacent or not
-// If one or two of the territories not found, error message
-void  MapEditor::AdjacencyDefiner() {
-    
-    bool makeEmAdjacent, makeEmNonAdjacent;
-    Territory *firstTerritory, *secondTerritory;
-    
-    UI::StatusMessage("Enter the names of 2 territories to see their adjacency:");
-    UI::ClearBuffer();
-    UI::StatusMessage("Name of first territory: ");
-    firstTerritory = UI::TerritoryMenu((*Map::Instance().get_territories()));
-    UI::StatusMessage("Name of second territory: ");
-    secondTerritory = UI::TerritoryMenu((*Map::Instance().get_territories()));
-    
-    // While the two names entered don't exists
-    while (firstTerritory == NULL || secondTerritory == NULL) {
-        UI::StatusMessage("ERROR: 1 or 2 territories couldn't be found. Please enter 2 other names: ");
-        firstTerritory = UI::TerritoryMenu((*Map::Instance().get_territories()));
-        secondTerritory = UI::TerritoryMenu((*Map::Instance().get_territories()));
-    }
-    
-    // If they are adjacent
-    if (firstTerritory->AreAdjacent(secondTerritory)) {
-        UI::StatusMessage("These 2 territories are adjacent.");
-        UI::StatusMessage("Make them nonadjacent? (y/n)");
-        makeEmAdjacent = UI::BinaryChoice();
-        
-        if (makeEmAdjacent) {
-            // Removes each from other's adjacency list
-            firstTerritory->get_adjacency_list()->erase(std::remove(firstTerritory->get_adjacency_list()->begin(), firstTerritory->get_adjacency_list()->end(), secondTerritory), firstTerritory->get_adjacency_list()->end());
-            secondTerritory->get_adjacency_list()->erase(std::remove(secondTerritory->get_adjacency_list()->begin(), secondTerritory->get_adjacency_list()->end(), firstTerritory), secondTerritory->get_adjacency_list()->end());
-            UI::StatusMessage("From now on, these 2 territories are not adjacent.");
-        }
-        else {
-            UI::StatusMessage("No changes have been made.");
-        }
-        
-    }
-    // If they are nonadjacent
-    else {
-        UI::StatusMessage("These 2 territories are nonadjacent.");
-        UI::StatusMessage("Make them adjacent? (y or n)");
-        makeEmNonAdjacent = UI::BinaryChoice();
-        
-        if (makeEmNonAdjacent) {
-            // Add each territory to the other's adjacency list
-            firstTerritory->get_adjacency_list()->push_back(secondTerritory);
-            secondTerritory->get_adjacency_list()->push_back(firstTerritory);
-            UI::StatusMessage("From now on, these 2 territories are adjacent.");
-            
-        }
-        else {
-            UI::StatusMessage("No changes have been made.");
-        }
-    }
-    
-}
-
-// Method called when the user wants to create a new continent
-void  MapEditor::ContinentCreator() {
-    bool wantsToCreate, wantsToAssignTerritories;
-    std::string continentName = "";
-    UI::StatusMessage("Name of the new Continent to create: ");
-    UI::ClearBuffer();
-    while (continentName == ""){
-        continentName = UI::StringChoice();
-    }
-    
-    while (Map::Instance().StringToContinent(continentName) != 0) {
-        UI::StatusMessage("This continent name is already taken. Pick another name: ");
-        continentName = UI::StringChoice();
-    }
-    
-    Continent* newContinent = new Continent();
-    newContinent->set_name(continentName);
-    Map::Instance().get_continents()->push_back(newContinent);
-    
-    UI::StatusMessage("Continent created! Now, let's assign territories to it. OK? (y/n).");
-    wantsToAssignTerritories = UI::BinaryChoice();
-    
-    if(wantsToAssignTerritories) {
-        // If the present map does not have any territories to assign
-        if (Map::Instance().get_territories()->empty()) {
-            UI::StatusMessage("Looks like this Map does not have any territories yet. Create one now? (y or n)");
-            wantsToCreate = UI::BinaryChoice();
-            if (wantsToCreate) {
-                TerritoryCreator();
-            }
-            else if (!wantsToCreate) {
-                UI::StatusMessage("The map contains no territories.");
-            }
-        }
-        // if the territories vector is not empty
-        else {
-            AssignTerritoriesToContinent(newContinent);
-            
-        }
-        
-    }
-    else if(!wantsToAssignTerritories) {
-        UI::StatusMessage("Remember you will have to assign territories to it later, or there will be an error.");
-    }
-    
-}
-
-
-// Method to assign territories to a continent (new or existing)
-void MapEditor::AssignTerritoriesToContinent(Continent* continent) {
-    std::string continentName = continent->get_name();
-    bool wantsToContinue = true;
-    UI::StatusMessage("Here's the list of territories that you can choose from (Enter letter):");
-    
-    // Loop for multiple territories
-    Territory* territoryToAssign;
-    do {
-        territoryToAssign = UI::TerritoryMenu(*Map::Instance().get_territories());
-        continent->get_territories().push_back(territoryToAssign);
-        UI::StatusMessage("Do you want to assign another territory to that continent? (y/n)");
-        wantsToContinue = UI::BinaryChoice();
-    } while (wantsToContinue);
-    
-    UI::StatusMessage("All the territories were assigned to "+continentName+" successfully!");
-    
-    
-}
-
-// Method to assign continent to territory (new or existing)
-void MapEditor::AssignContinentToTerritory(Territory* territory) {
-    UI::StatusMessage("Here's the list of continents you can choose from (Enter a letter):");
-    Continent* assignedContinent = UI::ContinentMenu(*Map::Instance().get_continents());
-    territory->set_continent(assignedContinent);
-    UI::StatusMessage("Continent "+assignedContinent->get_name()+" assigned to Territory "+territory->get_name()+"!");
-}
-
-// Method called when the user wants to assign territories to existing continent
-void MapEditor::AssignTerritoriesToExistingContinent() {
-    Continent* theContinent;
-    bool wantsToCreate;
-    
-    if (Map::Instance().get_territories()->empty()) {
-        UI::StatusMessage("No continents exist yet. Create one now? (y or n)");
-        wantsToCreate = UI::BinaryChoice();
-        if (wantsToCreate) {
-            ContinentCreator();
-        }
-        else if (!wantsToCreate) {
-            UI::StatusMessage("The map contains no continents.");
-        }
-    }
-    else {
-        UI::StatusMessage("Choose from this list, the existing Continent (Enter a letter):");
-        theContinent = UI::ContinentMenu(*Map::Instance().get_continents());
-        
-        AssignTerritoriesToContinent(theContinent);
-    }
-}
-
-// Method called when the user wants to assign a continent to existing territory
-void MapEditor::AssignContinentToExistingTerritory() {
-    Territory* theTerritory;
-    bool wantsToCreate;
-    
-    if (Map::Instance().get_territories()->empty()) {
-        UI::StatusMessage("No territory exist yet. Create one now? (y or n)");
-        wantsToCreate = UI::BinaryChoice();
-        if (wantsToCreate) {
-            TerritoryCreator();
-        }
-        else if (!wantsToCreate) {
-            UI::StatusMessage("The map contains no territories.");
-        }
-    }
-    else {
-        UI::StatusMessage("Choose from this list, the existing Territory (Enter a letter):");
-        theTerritory = UI::TerritoryMenu(*Map::Instance().get_territories());
-        
-        AssignContinentToTerritory(theTerritory);
-    }
-    
 }

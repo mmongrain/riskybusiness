@@ -167,6 +167,11 @@ bool UI::BinaryChoice() {
 	return (input == 'y');
 }
 
+bool UI::BinaryChoice(std::string prompt) {
+	std::cout << prompt << std::endl;
+	return BinaryChoice();
+}
+
 int UI::IntChoice(int min, int max) {
 	int choice = min - 1;
 	while (choice < min || choice > max) {
@@ -184,6 +189,11 @@ int UI::IntChoice(int min, int max) {
 	return choice;
 }
 
+int UI::IntChoice(std::string prompt, int min, int max) {
+	std::cout << prompt << std::endl;
+	return IntChoice(min, max);
+}
+
 // Pulls in a string
 // If previous entry was a MenuChoice, might need to call ClearBuffer() first
 std::string UI::StringChoice() {
@@ -191,6 +201,11 @@ std::string UI::StringChoice() {
 	std::getline(std::cin, input);
 	std::cout << std::endl;
 	return input;
+}
+
+std::string UI::StringChoice(std::string prompt) {
+	std::cout << prompt << std::endl;
+	return StringChoice();
 }
 
 int UI::GetNumReinforcements(Player* player, Territory* to_reinforce) {

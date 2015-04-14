@@ -36,6 +36,7 @@ class Territory : public Observable {
    private:
 
      friend class Map;
+     friend class MapEditor;
      std::string name;
      int x;
      int y;

@@ -23,8 +23,11 @@ public:
 	static int StringMenu(std::string title, std::vector<std::string> options);
 	static int StringMenu(std::vector<std::string> options);
 	static bool BinaryChoice();
+	static bool BinaryChoice(std::string prompt);
 	static int IntChoice(int min, int max);
+	static int IntChoice(std::string prompt, int min, int max);
 	static std::string StringChoice();
+	static std::string StringChoice(std::string prompt);
 	static void ClearBuffer();
 
 	// Game Loop UI

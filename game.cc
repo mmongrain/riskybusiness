@@ -51,6 +51,8 @@ void Game::Startup() {
   // Gladiator mode pits history's greatest computers against each other in a battle to the death
   gladiator_mode = false;
 
+  turn = 1;
+
   MainMenu();
   LoadMap();  
   // Initialize the Deck of cards. Must be done after the map is loaded.
@@ -181,7 +183,6 @@ void Game::AssignCountries() {
 
 void Game::MainPhase()
 {
-  int turn = 1;
   while (game_over == false) {
     for (unsigned int i = 0; i < players.size(); i++)
     {
@@ -216,7 +217,7 @@ void Game::MainMenu(){
     };
     int option = UI::StringMenu("MAIN MENU", options);
     if (option == 0) break;
-	  if (option == 1) { MapEditor::introMapEditor(); }
+	  if (option == 1) { MapEditor::StartMapEditor(); }
     if (option == 2) { Options(); }
     if (option == 3) { UI::MainHelp(); }
     if (option == 4) { UI::About(); }

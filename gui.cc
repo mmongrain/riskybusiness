@@ -107,23 +107,23 @@ void GUI::RevengeOfTheGUI() {
 
     sf::Sprite legend;
     legend.setTexture(unit_icons);
-    legend.setPosition(sf::Vector2f(window_size.x + 10, 10));
+    legend.setPosition(sf::Vector2f(window_size.x + 6, 10));
     labels.push_back(sf::Text(
       "1",
       pt_sans,
       12
     ));
     labels.back().setColor(my_white);
-    labels.back().setPosition(sf::Vector2f(window_size.x + 17, 26));
+    labels.back().setPosition(sf::Vector2f(window_size.x + 11, 26));
     labels.push_back(sf::Text(
       "5",
       pt_sans,
       12
     ));
     labels.back().setColor(my_white);
-    labels.back().setPosition(sf::Vector2f(window_size.x + 32, 26));
+    labels.back().setPosition(sf::Vector2f(window_size.x + 19, 26));
     labels.push_back(sf::Text(
-      "10",
+      "10    [ TURN " + std::to_string(Game::Instance().get_turn()) + " ]",
       pt_sans,
       12
     ));

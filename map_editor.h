@@ -1,27 +1,24 @@
 #ifndef _MAP_EDITOR_H
 #define _MAP_EDITOR_H
 
-#include <stdio.h>
-#include <iostream>
-#include <string>
-#include "map.h"
-
 class MapEditor {
     
-public:
-    MapEditor();
-    static void introMapEditor();
-    static void theMapEditor();
-    static void TerritoryCreator();
-    static void AdjacencyDefiner();
-    static void ContinentCreator();
-    static void AssignTerritoriesToContinent(Continent* continent);
-    static void AssignContinentToTerritory(Territory* territory);
+  public:
+    
+    static void StartMapEditor();
+    static void NewMap();
+    static void ExistingMap();
+    static void NewMapContinents();
+    static void NewMapTerritories();
+    static void AddContinent();
+    static void AddTerritory();
+    static void RemoveContinent();
+    static void RemoveTerritory();
+    static void NewMapAdjacencies();
+    static void NewAdjacency();
+    static bool SaveMap();
+    static void EditMenu();
     static bool VerifyMapCorrectness();
-    static void AssignTerritoriesToExistingContinent();
-    static void AssignContinentToExistingTerritory();
-    
-    
     
 };
 
