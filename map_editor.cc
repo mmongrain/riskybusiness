@@ -85,8 +85,8 @@ void MapEditor::NewMapContinents() {
           RemoveContinent();
         } else {
           UI::StatusMessage("You haven't created any continents to delete yet!");
-          break;
         }
+        break;
       case 2: 
         if (Map::Instance().continents.size() > 1) {
           return;
@@ -115,8 +115,8 @@ void MapEditor::NewMapTerritories() {
           RemoveTerritory();
         } else {
           UI::StatusMessage("You haven't created any territories to delete yet!");
-          break;
         }
+        break;
       case 2: 
         if (Map::Instance().territories.size() > 5) {
           return;
@@ -149,7 +149,7 @@ void MapEditor::AddTerritory() {
   }
   new_territory->name = territory_name;
   new_territory->x = UI::IntChoice("What's the x-coordinate of " + territory_name + "? (0-1920)", 0, 1920);
-  new_territory->y = UI::IntChoice("What's the y-coordinate of " + territory_name + "? (0-1920)", 0, 1920);
+  new_territory->y = UI::IntChoice("What's the y-coordinate of " + territory_name + "? (0-1080)", 0, 1080);
   UI::StatusMessage("Which continent does " + territory_name + " belong to?");
   new_territory->continent = UI::ContinentMenu(Map::Instance().continents);
   Map::Instance().territories.push_back(new_territory);
@@ -208,7 +208,7 @@ void MapEditor::NewAdjacency() {
     UI::StatusMessage("Those territories are already adjacent!");
     return;
   }
-  if (UI::BinaryChoice("Define adjacency between " + first->name + " and " + second->name + "(y/n)?")) {
+  if (UI::BinaryChoice("Define adjacency between " + first->name + " and " + second->name + " (y/n)?")) {
       first->adjacency_list.push_back(second);
       second->adjacency_list.push_back(first);
   }
@@ -226,10 +226,11 @@ void MapEditor::EditMenu() {
   std::vector<std::string> edit_menu_options {
     "Add a territory",  // 0
     "Remove a territory", // 1
-    "Add a continent",  // 2
-    "Remove a continent", // 3 
-    "Save map to disk", // 4
-    "Return to Map Editor main menu" // 5
+    "Define adjacency between territories", // 2
+    "Add a continent",  // 3
+    "Remove a continent", // 4 
+    "Save map to disk", // 5
+    "Return to Map Editor main menu" // 6
   };
   while (true) {
     int answer = UI::StringMenu("EDIT MAP", edit_menu_options);
@@ -241,15 +242,18 @@ void MapEditor::EditMenu() {
         RemoveTerritory();
         break;
       case 2:
-        AddContinent();
+        NewAdjacency();
         break;
       case 3:
-        RemoveContinent();
+        AddContinent();
         break;
       case 4:
-        SaveMap();
+        RemoveContinent();
         break;
       case 5:
+        SaveMap();
+        break;
+      case 6:
         return;
     }
   }
@@ -259,21 +263,20 @@ bool MapEditor::VerifyMapCorrectness() {
     
     // Incorrect map 1: at least 1 territory doesn't belong to any continent
     std::vector<Territory*> territories = (*Map::Instance().get_territories());
-    for (auto territory : territories){
-        if (territory->get_continent() == NULL){
-            UI::StatusMessage("Please make sure that all your territories belong to a continent. At least one doesn't.");
-            return false;
-        }
+    for (auto territory : territories) {
+      if (territory->get_continent() == NULL) {
+        UI::StatusMessage("Please make sure that all your territories belong to a continent! " + territory->name + ", for one, doesn't.");
+        return false;
+      }
     }
-    
     // Incorrect map 2: not a connected graph
     if (!Map::Instance().VerifyConnectivity()){
-        UI::StatusMessage("Please make sure that all your territories are connected.");
+        UI::StatusMessage("Please make sure that all your territories are connected!");
         return false;
     }
     // Incorrect map 3: map has less than 6 territories, number of players can go up to 6, so each can have their own
     if (Map::Instance().get_territories()->size()<6) {
-        UI::StatusMessage("Your map needs to have at least 6 territories for it to be used in the game.");
+        UI::StatusMessage("Your map needs to have at least 6 territories for it to be used in the game. It currently has " + std::to_string(Map::Instance().territories.size()) + ".");
         return false;
     }
     return true;
