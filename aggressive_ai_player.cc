@@ -36,39 +36,3 @@ void Aggressive::Attack(Player *player){
 		}
 	}
 }
-
-void Aggressive::Reinforce(Player *player, int reinforcements){
-	if (Game::Instance().slow_mode) { std::this_thread::sleep_for(std::chrono::milliseconds(250)); }	
-	// pick a territory
-	std::vector<Territory*> owned_territories = player->get_owned_territories();
-	Territory *to_reinforce = owned_territories[std::rand() % owned_territories.size()];
-
-	// put all reinforcements there
-	to_reinforce->set_num_units(to_reinforce->get_num_units() + reinforcements);
-	UI::PrintNumReinforcements(reinforcements, to_reinforce);
-}
-
-void Aggressive::Fortify(Player *player) {
-	if (Game::Instance().slow_mode) { std::this_thread::sleep_for(std::chrono::milliseconds(250)); }	
-	// decide between fortifying or not
-	if (!WillFortify()) {
-		UI::StatusMessage("AI Player " + std::to_string(player->get_id()) + " chose not to fortify!");
-		return;
-	}
-
-	// pick from where
-	Territory *move_from = ChoosePointOfDepart(player);
-	if (move_from == NULL)
-		return;
-
-	// pick to where
-	Territory *move_to = ChooseDestination(player, move_from);
-	if (move_to == NULL)
-		return;
-
-	// move everything there
-	int armies = std::rand() % (move_from->get_num_units() - 1) + 1;
-	move_from->set_num_units(move_from->get_num_units() - armies);
-	move_to->set_num_units(move_to->get_num_units() + armies);
-	UI::FortificationComplete(armies, move_from, move_to);
-}

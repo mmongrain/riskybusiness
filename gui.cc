@@ -12,8 +12,15 @@
 #include "player_view.h"
 #include "territory.h"
 #include "ui.h"
+#include "stats.h"
 
 void GUI::RevengeOfTheGUI() {
+  sf::Color my_white(255, 187, 91);
+  sf::Color my_whiter_white(255, 239, 199);
+  sf::Color my_brown(33, 0, 51);
+
+
+
   // Load the .map file, load the font, get the relevant image from there
   sf::Texture map_texture;
   sf::Font pt_sans;
@@ -47,7 +54,6 @@ void GUI::RevengeOfTheGUI() {
   sf::Text map_info;
   map_info.setFont(pt_sans);
   map_info.setCharacterSize(18);
-	sf::Color my_brown(33, 0, 51);
   map_info.setColor(my_brown); 
   map_info.setString(map_info_text);
 
@@ -71,7 +77,6 @@ void GUI::RevengeOfTheGUI() {
         pt_sans,
         12
       ));
-			sf::Color my_brown(113, 24, 0);
       labels.back().setColor(my_brown);
       labels.back().setPosition(
         sf::Vector2f(
@@ -118,9 +123,31 @@ void GUI::RevengeOfTheGUI() {
     sf::Sprite legend;
     legend.setTexture(unit_icons);
     legend.setPosition(sf::Vector2f(window_size.x + 10, 10));
+    labels.push_back(sf::Text(
+      "1",
+      pt_sans,
+      12
+    ));
+    labels.back().setColor(my_white);
+    labels.back().setPosition(sf::Vector2f(window_size.x + 17, 26));
+    labels.push_back(sf::Text(
+      "5",
+      pt_sans,
+      12
+    ));
+    labels.back().setColor(my_white);
+    labels.back().setPosition(sf::Vector2f(window_size.x + 32, 26));
+    labels.push_back(sf::Text(
+      "10",
+      pt_sans,
+      12
+    ));
+    labels.back().setColor(my_white);
+    labels.back().setPosition(sf::Vector2f(window_size.x + 47, 26));
+
 
     // Add all the objects to be drawn this cycle
-    sf::Vector2u draw_position(window_size.x + 10, 32);
+    sf::Vector2u draw_position(window_size.x + 10, 45);
     for (auto &player : *players) {
 
       sf::Color player_color = player->get_color();
@@ -129,7 +156,6 @@ void GUI::RevengeOfTheGUI() {
       player_circles.back().setPosition((float)draw_position.x, (float)draw_position.y);
       player_view_text.push_back(sf::Text());
       player_view_text.back().setFont(pt_sans);
-			sf::Color my_white(255, 187, 91);
       player_view_text.back().setColor(my_white);
       player_view_text.back().setCharacterSize(11);
       player_view_text.back().setPosition((float)(draw_position.x + 15), (float)(draw_position.y));
@@ -179,7 +205,6 @@ void GUI::RevengeOfTheGUI() {
 
     player_view_text.push_back(sf::Text());
     player_view_text.back().setFont(pt_sans);
-		sf::Color my_whiter_white(255, 239, 199);
 		player_view_text.back().setColor(my_whiter_white);
     player_view_text.back().setCharacterSize(11);
     player_view_text.back().setPosition((float)(draw_position.x + 10), (float)(draw_position.y) + 10);
@@ -187,11 +212,12 @@ void GUI::RevengeOfTheGUI() {
     for (auto player_view : player_views) {
       player_view_content += player_view->get_view_str() + "\n";
     }
+    player_view_content += "\n" + UI::stats->get_stats_string();
     player_view_text.back().setString(player_view_content);
 
     // Clear, draw, display
-    window.draw(legend);
     window.clear(my_brown);
+    window.draw(legend);
     // for (auto sprite : sprites) { window.draw(sprite); }
     for (auto player_circle : player_circles) { window.draw(player_circle); }
     for (auto player_view : player_view_text) { window.draw(player_view); }

@@ -14,7 +14,12 @@
 #include "strategy.h"
 
 void Battle::SingleBattle(Territory* attacking, Territory* defending) {
-  int result = AttackHandler(attacking, defending);
+  int result = 0;
+  try { 
+    result = AttackHandler(attacking, defending);
+  } catch (BattleException e) {
+    std::cerr << "BattleException in SingleBattle, result is " << result << std::endl;
+  }
   if (result == 1) {
     Capture(attacking, defending);
   } else { UI::Retreat(attacking); }
@@ -44,10 +49,16 @@ int Battle::AttackHandler(Territory *attacking, Territory *defending) {
 void Battle::SingleAttack(Territory *attacking, Territory *defending){
   int num_atk_dice = DetermineAtkDice(attacking);
   int num_def_dice = DetermineDefDice(defending);
-  std::vector<int> atk_dice = Dice(num_atk_dice);
-  attacking->get_owner()->set_last_roll(atk_dice);
-  std::vector<int> def_dice = Dice(num_def_dice);
-  defending->get_owner()->set_last_roll(def_dice);
+  std::vector<int> atk_dice;
+  std::vector<int> def_dice;
+  try {
+    atk_dice = Dice(num_atk_dice);
+    attacking->get_owner()->set_last_roll(atk_dice);
+    def_dice = Dice(num_def_dice);
+    defending->get_owner()->set_last_roll(def_dice);
+  } catch (BattleException e) {
+    std::cerr << "BattleException in Battle::SingleAttack: num_atk_dice = " << num_atk_dice << " num_def_dice = " << num_def_dice << std::endl;
+  }
   UI::Attack(attacking, defending);
   for (unsigned int i = 0; i < def_dice.size() && i < atk_dice.size(); i++) {
     if (atk_dice[i] > def_dice[i] && defending->get_num_units() != 0) {

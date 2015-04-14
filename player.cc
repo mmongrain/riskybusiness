@@ -244,7 +244,7 @@ std::string Player::HasMatch() {
 		return "three soldiers";
 	}
 	else if (cavalry >= 3) {
-		return std::to_string(cavalry) + "three cavalry";
+		return "three cavalry";
 	}
 	else if (cannons >= 3) {
 		return "three cannons";

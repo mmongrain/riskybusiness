@@ -152,7 +152,6 @@ void Game::CreatePlayers() {
 
   UI::stats = new StatsBasic;
   UI::stats = new StatsControl(UI::stats);
-  UI::stats = new StatsBattle(UI::stats);
 }
 
 // Randomly assigning countries

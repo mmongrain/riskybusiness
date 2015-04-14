@@ -32,18 +32,10 @@ void PlayerView::Update() {
 }
 
 std::string PlayerView::to_string() {
-  std::string out = "[" + player->get_name() + "]\nTerritories controlled: ";
-  for (unsigned int i = 0; i < territories.size(); i++) {
-    out += territories[i]->get_name();
-    (i < territories.size() - 1) ? out += ", " : out += ".";
-    if (i%3==0){ out += "\n";}
-  }
-  out += "\nContinents controlled: ";
+  std::string out = "[" + std::to_string(player->get_id()) + "]: ";
   for (unsigned int i = 0; i < continents.size(); i++) {
     out += continents[i]->get_name();
     (i < continents.size() - 1) ? out += ", " : out += ".";
-    out += "\n";
   }
-  out += "\nCurrent no. of reinforcements: " + std::to_string(reinforcements) + "\n";
   return out;
 }
