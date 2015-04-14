@@ -80,22 +80,52 @@ bool MapEditor::VerifyMapCorrectness(){
 }
 
 void MapEditor::theMapEditor() {
-    int answer;
+    char answer;
     
-    std::vector<std::string> modifications{ "Add a new territory", "Define Adjacency between 2 territories", "Add a new Continent", "Assign Territories to existing Continent", "Assign Continent to existing territory" };
-    answer = UI::StringMenu("Modification to do", modifications);
+    std::vector<std::string> modifications1{ "Add a new territory", "Define Adjacency between 2 territories", "Add a new Continent" };
+    answer = UI::StringMenu("Modification to do", modifications1);
     
-    // User choice decides which modification to do
-    if (answer == 0)
-        TerritoryCreator();
-    else if (answer == 1)
-        AdjacencyDefiner();
-    else if (answer == 2)
-        ContinentCreator();
-    else if (answer == 3)
-        AssignTerritoriesToExistingContinent();
-    else if (answer == 4)
-        AssignContinentToExistingTerritory();
+    switch (answer) {
+        case 'a':
+            TerritoryCreator();
+            break;
+        case 'b':
+            AdjacencyDefiner();
+            break;
+        case 'c':
+            ContinentCreator();
+            break;
+            
+        default:
+            break;
+    }
+    
+    // Menu with 2 additional options if the continents vector and territories vector aren't empty
+    if (Map::Instance().get_territories()->size()!=0 && Map::Instance().get_continents()->size()!=0) {
+        std::vector<std::string> modifications2{ "Add a new territory", "Define Adjacency between 2 territories", "Add a new Continent", "Assign Territories to existing Continent", "Assign Continent to existing territory" };
+        answer = UI::StringMenu("Modification to do", modifications2);
+        
+        switch (answer) {
+            case 'a':
+                TerritoryCreator();
+                break;
+            case 'b':
+                AdjacencyDefiner();
+                break;
+            case 'c':
+                ContinentCreator();
+                break;
+            case 'd':
+                AssignTerritoriesToExistingContinent();
+                break;
+            case 'e':
+                AssignContinentToExistingTerritory();
+                break;
+                
+            default:
+                break;
+        }
+    }
     
 }
 
