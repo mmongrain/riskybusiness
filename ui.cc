@@ -52,6 +52,26 @@ Territory* UI::TerritoryMenu(std::vector<Territory*> territories) {
 	return territories[choice];
 }
 
+Continent* UI::ContinentMenu(std::vector<Continent*> continents) {
+    char menu_option = 'a';
+    char input = '*';
+    for (unsigned int i = 0; i < continents.size(); i++) {
+        std::cout << menu_option << ") " << continents[i]->get_name() << std::endl;
+        if (menu_option == 'z') { menu_option = 'A'; }
+        else { ++menu_option; }
+    }
+    // "while input is invalid"
+    while (MenuChoice(menu_option, input) == -1) {
+        std::cin >> input;
+        if (input == '?') {
+            HelpMenu();
+        }
+    }
+    int choice = MenuChoice(menu_option, input);
+    std::cout << std::endl;
+    return continents[choice];
+}
+
 void UI::DisplayTerritoriesList(std::vector<Territory*> territories) {
     char position = 'a';
     for (unsigned int i = 0; i < territories.size(); i++) {

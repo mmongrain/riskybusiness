@@ -33,6 +33,7 @@ public:
 	// Map Editor UI
     static void CreateMapFile(char * filename);
     static void DisplayTerritoriesList(std::vector<Territory*> territories);
+    static Continent* ContinentMenu(std::vector<Continent*> continents);
 
 	// Attack Phase UI
 	static void PrintHand(Player *player);
