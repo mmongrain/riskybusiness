@@ -69,23 +69,7 @@ void GUI::RevengeOfTheGUI() {
   std::vector<sf::Text>            player_view_text;
   std::vector<sf::Text>            labels;
 
-  if (Game::Instance().gui_authorinfo) { labels.push_back(map_info); }
-  if (Game::Instance().gui_labels) {
-    for (auto &territory : *territories) {
-      labels.push_back(sf::Text(
-        territory->get_name(),
-        pt_sans,
-        12
-      ));
-      labels.back().setColor(my_brown);
-      labels.back().setPosition(
-        sf::Vector2f(
-          (float)(territory->get_x() - 15),
-          (float)(territory->get_y())
-        )
-      );
-    }
-  }
+  
   
   sf::Texture unit_icons;
   if (unit_icons.loadFromFile("icons.png")) {}
@@ -117,6 +101,7 @@ void GUI::RevengeOfTheGUI() {
 
     icons.clear();
     sprites.clear();
+    labels.clear();
     player_circles.clear();
     player_view_text.clear();
 
@@ -202,6 +187,26 @@ void GUI::RevengeOfTheGUI() {
         }
       }
     }
+
+    // Dynamic map labels with ownership info
+    if (Game::Instance().gui_labels) {
+      for (auto &territory : *territories) {
+        labels.push_back(sf::Text(
+          territory->get_name() +  " (" + std::to_string(territory->get_owner()->get_id()) + ", " + std::to_string(territory->get_num_units()) + ")",
+          pt_sans,
+          12
+        ));
+        labels.back().setColor(my_brown);
+        labels.back().setPosition(
+          sf::Vector2f(
+            (float)(territory->get_x() - 15),
+            (float)(territory->get_y())
+          )
+        );
+      }
+    }
+    if (Game::Instance().gui_authorinfo) { labels.push_back(map_info); }
+
 
     player_view_text.push_back(sf::Text());
     player_view_text.back().setFont(pt_sans);

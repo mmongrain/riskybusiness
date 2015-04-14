@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+class Continent;
 class Territory;
 class Player;
 class PlayerView;

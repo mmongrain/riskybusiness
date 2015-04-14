@@ -9,6 +9,7 @@
 #include "card.h"
 #include "game.h"
 #include "player.h"
+#include "continent.h"
 #include "territory.h"
 #include "ui.h"
 
