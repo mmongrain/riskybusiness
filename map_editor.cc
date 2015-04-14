@@ -88,19 +88,19 @@ void MapEditor::theMapEditor() {
         answer = UI::StringMenu("Modification to do", modifications2);
         
         switch (answer) {
-            case 'a':
+            case 0:
                 TerritoryCreator();
                 break;
-            case 'b':
+            case 1:
                 AdjacencyDefiner();
                 break;
-            case 'c':
+            case 2:
                 ContinentCreator();
                 break;
-            case 'd':
+            case 3:
                 AssignTerritoriesToExistingContinent();
                 break;
-            case 'e':
+            case 4:
                 AssignContinentToExistingTerritory();
                 break;
                 
@@ -114,13 +114,13 @@ void MapEditor::theMapEditor() {
         answer = UI::StringMenu("Modification to do", modifications1);
         
         switch (answer) {
-            case 'a':
+            case 0:
                 TerritoryCreator();
                 break;
-            case 'b':
+            case 1:
                 AdjacencyDefiner();
                 break;
-            case 'c':
+            case 2:
                 ContinentCreator();
                 break;
                 
