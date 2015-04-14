@@ -15,9 +15,12 @@ public:
     static void TerritoryCreator();
     static void AdjacencyDefiner();
     static void ContinentCreator();
-    static void AssignTerritoriesToContinent(Continent* newContinent);
-		static bool VerifyMapCorrectness();
-
+    static void AssignTerritoriesToContinent(Continent* continent);
+    static void AssignContinentToTerritory(Territory* territory);
+    static bool VerifyMapCorrectness();
+    static void AssignTerritoriesToExistingContinent();
+    static void AssignContinentToExistingTerritory();
+    
     
     
 };
