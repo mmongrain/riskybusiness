@@ -5,6 +5,7 @@
 #include <vector>
 
 class Territory;
+class Continent;
 class Player;
 class PlayerView;
 class Stats;
@@ -29,18 +30,18 @@ public:
 	static void StartTurn(int turn, Player* player);
 	static void EndGame(Player* winner);
 	static void KillPlayer(Player* dead_player);
-	
+
 	// Map Editor UI
-    static void CreateMapFile(char * filename);
-    static void DisplayTerritoriesList(std::vector<Territory*> territories);
-    static Continent* ContinentMenu(std::vector<Continent*> continents);
+	static void CreateMapFile(char * filename);
+	static void DisplayTerritoriesList(std::vector<Territory*> territories);
+	static Continent* ContinentMenu(std::vector<Continent*> continents);
 
 	// Attack Phase UI
 	static void PrintHand(Player *player);
 	static void PrintMatch(Player *player, std::string match, int bonus_reinforcements);
 	static Territory* GetReinforceableTerritory(Player* player);
 	static int GetNumReinforcements(Player* player, Territory* to_reinforce);
-	static void PrintNumReinforcements (int reinforcers, Territory* to_reinforce);
+	static void PrintNumReinforcements(int reinforcers, Territory* to_reinforce);
 	static int GetNumConqueringArmies(int min, int max, Territory* attacking, Territory* defending);
 	static void StartPhase(Player* player, std::string phase_name);
 	static bool AttackChoice();

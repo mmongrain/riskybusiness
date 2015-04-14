@@ -10,6 +10,7 @@
 #include "game.h"
 #include "player.h"
 #include "territory.h"
+#include "continent.h"
 #include "ui.h"
 
 class Player;
