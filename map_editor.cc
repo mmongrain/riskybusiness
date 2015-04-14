@@ -13,7 +13,7 @@
 void MapEditor::introMapEditor() {
     int answer;
     char filename[100];
-    bool keepGoing = true;
+    bool keepGoing;
     
     UI::StatusMessage("Welcome to the Interactive Map Editor.");
     UI::StatusMessage("What would you like to do?");
@@ -82,24 +82,6 @@ bool MapEditor::VerifyMapCorrectness(){
 void MapEditor::theMapEditor() {
     char answer;
     
-    std::vector<std::string> modifications1{ "Add a new territory", "Define Adjacency between 2 territories", "Add a new Continent" };
-    answer = UI::StringMenu("Modification to do", modifications1);
-    
-    switch (answer) {
-        case 'a':
-            TerritoryCreator();
-            break;
-        case 'b':
-            AdjacencyDefiner();
-            break;
-        case 'c':
-            ContinentCreator();
-            break;
-            
-        default:
-            break;
-    }
-    
     // Menu with 2 additional options if the continents vector and territories vector aren't empty
     if (Map::Instance().get_territories()->size()!=0 && Map::Instance().get_continents()->size()!=0) {
         std::vector<std::string> modifications2{ "Add a new territory", "Define Adjacency between 2 territories", "Add a new Continent", "Assign Territories to existing Continent", "Assign Continent to existing territory" };
@@ -126,7 +108,28 @@ void MapEditor::theMapEditor() {
                 break;
         }
     }
+    else {
+        // Menu if the continents vector and territories vector are empty
+        std::vector<std::string> modifications1{ "Add a new territory", "Define Adjacency between 2 territories", "Add a new Continent" };
+        answer = UI::StringMenu("Modification to do", modifications1);
+        
+        switch (answer) {
+            case 'a':
+                TerritoryCreator();
+                break;
+            case 'b':
+                AdjacencyDefiner();
+                break;
+            case 'c':
+                ContinentCreator();
+                break;
+                
+            default:
+                break;
+        }
+    }
     
+        
 }
 
 // Method called when the user wants to create a new Territory
