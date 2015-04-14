@@ -237,7 +237,7 @@ void MapEditor::AssignTerritoriesToContinent(Continent* newContinent) {
 		std::string territoryNameToAssign;
 		if (numOfTerritoriesToAssign == 1) { UI::StatusMessage("Now, Enter the name of that territory: "); }
 		else { UI::StatusMessage("Now, Enter the names of those territories from the above list: "); }
-		for (unsigned int i = 0; i < numOfTerritoriesToAssign; i++) {
+		for (int i = 0; i < numOfTerritoriesToAssign; i++) {
 			territoryNameToAssign = UI::StringChoice();
 
 			while (Map::Instance().StringToTerritory(territoryNameToAssign) == 0) {

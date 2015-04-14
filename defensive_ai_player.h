@@ -8,9 +8,14 @@ class Player;
 class Defensive : public Strategy {
 
 	public:
+		
+		virtual void Fortify(Player *player);
+		virtual void Attack(Player *player);
+		virtual void Reinforce(Player *player, int reinforcements);
 
-		void Attack(Player *player);
+	private:
 
+		bool has_attacked;
 };
 
 #endif

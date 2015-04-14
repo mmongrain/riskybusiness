@@ -33,12 +33,13 @@ void UI::ClearBuffer() {
 
 Territory* UI::TerritoryMenu(std::vector<Territory*> territories) {
 	char menu_option = 'a';
-	char input = '*';
 	for (unsigned int i = 0; i < territories.size(); i++) {
 		std::cout << menu_option << ") " << territories[i]->get_name() << std::endl;
 		if (menu_option == 'z') { menu_option = 'A'; }
 		else { ++menu_option; }
 	}
+
+	char input = '*'; //42
 	// "while input is invalid"
 	while (MenuChoice(menu_option, input) == -1) {
 		std::cin >> input;
@@ -64,12 +65,13 @@ void UI::DisplayTerritoriesList(std::vector<Territory*> territories) {
 int UI::StringMenu(std::string title, std::vector<std::string> options) {
 	std::cout << "\n-==" << title << "==-" << std::endl;
 	char menu_option = 'a';
-	char input = '*';
 	for (unsigned int i = 0; i < options.size(); i++) {
 		std::cout << menu_option << ") " << options[i] << std::endl;
 		if (menu_option == 'z') { menu_option = 'A'; }
 		else { ++menu_option; }
 	}
+
+	char input = '*'; // 42
 	// "while input is invalid"
 	while (MenuChoice(menu_option, input) == -1) {
 		std::cin >> input;
@@ -269,7 +271,7 @@ void UI::CaptureAnnouncement(int conquerors, Territory* attacking, Territory* de
 }
 
 void UI::PrintLogo() {
-	std::cout << " ____  _     _\n|  _ \\(_)___| | ___   _\n| |_) | / __| |/ / | | |\n|  _ <| \\__ \\   <| |_| |\n|_|_\\_\\_|___/_|\\_\\\\__, |\n| __ ) _   _ ___(_)___/   ___  ___ ___\n|  _ \\| | | / __| | '_ \\ / _ \\/ __/ __|\n| |_) | |_| \\__ \\ | | | |  __/\\__ \\__ \\\n|____/ \\__,_|___/_|_| |_|\\___||___/___/\n" << std::endl;
+	std::cout << "\033[1;31m ____  _     _\n|  _ \\(_)___| | ___   _\n| |_) | / __| |/ / | | |\n|  _ <| \\__ \\   <| |_| |\n|_|_\\_\\_|___/_|\\_\\\\__, |\n| __ ) _   _ ___(_)___/   ___  ___ ___\n|  _ \\| | | / __| | '_ \\ / _ \\/ __/ __|\n| |_) | |_| \\__ \\ | | | |  __/\\__ \\__ \\\n|____/ \\__,_|___/_|_| |_|\\___||___/___/(1983)\033[0m\n\n" << std::endl;
 }
 
 void UI::GetMapfile(char* filename) {
@@ -363,7 +365,7 @@ void UI::PrintMatch(Player *player, std::string match, int bonus_reinforcements)
 }
 
 void UI::EndGame(Player* winner) {
-	std::cout << "  ____    ____  __    ______ .___________.  ______   .______     ____    ____  __" << std::endl;
+	std::cout << "____    ____  __    ______ .___________.  ______   .______     ____    ____  __" << std::endl;
 	std::cout << "\\   \\  /   / |  |  /      ||           | /  __  \\  |   _  \\    \\   \\  /   / |  |" << std::endl;
 	std::cout << " \\   \\/   /  |  | |  ,----'`---|  |----`|  |  |  | |  |_)  |    \\   \\/   /  |  |" << std::endl;
 	std::cout << "  \\      /   |  | |  |         |  |     |  |  |  | |      /      \\_    _/   |  |" << std::endl;
@@ -373,6 +375,7 @@ void UI::EndGame(Player* winner) {
 	std::cout << winner->get_name() << " (Player " << winner->get_id() << ") is the WINNER!" << std::endl;
 	std::cout << "Gaze upon their works, ye mighty, and tremble!" << std::endl;
 	std::cout << "Team Risky Business (1983) thanks you for playing!" << std::endl;
+	std::exit(0);
 }
 
 // Shamelessly stolen from NetHack 3.4.3

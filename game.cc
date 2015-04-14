@@ -28,7 +28,6 @@
 class Player;
 
 void Game::PlayGame() {
-  UI::PrintLogo();
   Instance().Startup();
   Instance().MainPhase();
   Instance().EndGame();
@@ -37,11 +36,19 @@ void Game::PlayGame() {
 // ===== STARTUP PHASE =====
 
 void Game::Startup() {
+
+  // DEFAULT OPTIONS
+  // "GUI" Mode launches a visual, noninteractive game board
   gui_mode = false;
+  // Verbose Mode prints every update to anything to cout
   verbose_mode = false;
+  // GUI Map Labels prints names of territories on the board
   gui_labels = true;
-  gui_authorinfo = true;
+  // GUI Author Info prints the author information to the board
+  gui_authorinfo = false;
+  // Slow Mode slows the CPU down a little to make it less jarring for the human player
   slow_mode = true;
+  // Gladiator mode pits history's greatest computers against each other in a battle to the death
   gladiator_mode = false;
 
   MainMenu();
@@ -84,29 +91,46 @@ void Game::LoadMap() {
 
 // Creating a number of Player objects chosen by user
 void Game::CreatePlayers() {
+
   int num_humans = 0;
   int num_robots = 0;
   int difficulty = 0;
+
   if (gladiator_mode) {
 	  num_robots = 6;
 	  difficulty = 3;
+
   } else if (UI::SingleOrMulti()) {
     num_humans = UI::GetNumPlayers(2, 6);
     num_robots = UI::GetNumAIPlayers(0, 6 - num_humans);
     if (num_robots) { 
       difficulty = UI::GetDifficulty(); 
     }
+
   } else {
     num_humans = 1;
     num_robots = UI::GetNumAIPlayers(1, 5);
     difficulty = UI::GetDifficulty();
   }
-  UI::player_views = *(new std::vector<PlayerView*>);
+
   Game::players = *(new std::vector<Player*>);
+  UI::player_views = *(new std::vector<PlayerView*>);
   for (int i = 0; i < num_humans; i++) {
     players.push_back(new Player());
     UI::player_views.push_back(new PlayerView(players.back()));
   }
+
+  std::vector<std::string> ai_names {
+    "Commodore 64",
+    "UNIVAC",
+    "Watson",
+    "HAL 9000",
+    "Manchester Mark 1",
+    "Apple ]["
+  };
+  std::random_shuffle(ai_names.begin(), ai_names.end());
+
+
   for (int i = 0; i < num_robots; i++) {
     players.push_back(new Player());
     int ai_type = difficulty;
@@ -115,17 +139,17 @@ void Game::CreatePlayers() {
     }
     switch (ai_type) {
       case 0: players.back()->set_strategy(new Random());
-              players.back()->set_name("Commodore 64");
               break;
       case 1: players.back()->set_strategy(new Defensive());
-              players.back()->set_name("Watson");
               break;
       case 2: players.back()->set_strategy(new Aggressive());
-              players.back()->set_name("HAL 9000");
               break;
     }
+    players.back()->set_name(ai_names.back());
+    ai_names.pop_back();
     UI::player_views.push_back(new PlayerView(players.back()));
-  }  
+  } 
+
   UI::stats = new StatsBasic;
   UI::stats = new StatsControl(UI::stats);
   UI::stats = new StatsBattle(UI::stats);
@@ -182,6 +206,7 @@ void Game::EndGame(){
 
 // Main Menu loop
 void Game::MainMenu(){
+  UI::PrintLogo();
   for (;;) {
     std::vector<std::string> options{
       "Play Game",      // 0

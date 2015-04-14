@@ -8,9 +8,9 @@ class Strategy {
     
   public:
 
-    virtual void Reinforce(Player *player, int reinforcements);
+    virtual void Reinforce(Player *player, int reinforcments) = 0;
     virtual void Attack(Player *player) = 0;
-    virtual void Fortify(Player *player);
+    virtual void Fortify(Player *player) = 0;
     virtual ~Strategy(){};
 
     virtual int GetNumConqueringArmies(int min, int max, Territory* attacking, Territory* defending);

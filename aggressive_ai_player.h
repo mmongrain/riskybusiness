@@ -9,7 +9,9 @@ class Aggressive : public Strategy {
 
 	public:
 
-		void Attack(Player *player);
+		virtual void Fortify(Player *player);
+		virtual void Attack(Player *player);
+		virtual void Reinforce(Player *player, int reinforcements);
 
 };
 
