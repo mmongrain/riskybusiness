@@ -1,3 +1,5 @@
+
+
 class DeckTest {
 	void DeckTest::TestClear() {
 		Deck::Instance().Clear();
