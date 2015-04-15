@@ -1,39 +1,26 @@
-# Team "Risky Business (1983)" Conquest Game
+# Risky Business (1983)
 
-## Team Members
-Anne-Marie Dube, #26456383   
-Matthew Mongrain, #26991793   
-Tan Trung Nguyen, #26621856   
-Alika Utepova, #26917046   
+## Introduction
+Risky Business (1983) is a Risk clone controllable entirely from the command line. It features a GUI mode, three levels of AI difficulty, a map editor, and compatibility with .map files from Sean O'Connor's game [Conquest](http://www.windowsgames.co.uk/conquest.html).
 
-## State of the Project
-At this stage of intermediate delivery, the game is in a playable state, but is missing some features. (This being a Risk clone, you would likely lose several hours and several friends before you discovered those missing features, however.) Following is a list of currently implemented features, a list of features still being worked on, and a list of features that will be added later, along with compilation instructions for the current set of files.
+## Compilation
+Risky Business was written with cross-platform compatibility in mind. Regardless of your platform, you will need to satisfy two library dependencies before compilation, namely
+* [Boost](http://www.boost.org)
+* [SFML](http://www.sfml-dev.org/index.php)
+On Linux, these libraries can be installed through your favorite package manager, and on Windows by following the instructions on the sites above. The source was written with gcc 4.2.2 in mind; we have not tested compilation with other compilers.
 
-### Currently Implemented
-* Human players
-* Map file parsing and output
-* Singleton classes for Map and Game
-* Observer classes for Player and Map
-* Battle and turn logic
-* Main game loop
+## Options
+On launching the game, you'll see an options menu. GUI mode is off by default, but it makes the game a *lot* easier to play and has a pretty colour scheme, too.
+* *"GUI" mode (off by default)*: Launches an SFML GUI window with the game board and pieces to help visualize the game. Requires that the .map file be joined to an appropriate .bmp file in the same directory as the executable.
+* *Verbose mode (off by default)*: Prints every time an object changes. Annoying.
+* *GUI Map Labels (on by default)*: Prints labels with name, controlling player, and units on territories. Requires GUI mode.
+* *GUI Author Info (off by default)*: Prints the author information of the .map file in the top left corner of the window.
+* *Gladiator Mode (off by default)*: Pits six AI players of varying difficulties against one another in a match to the death for your entertainment. Highly entertaining in combination with GUI mode and Slow Mode Off.
+* *Slow Mode (on by default)*: Slows down the AI players' text scroll to give you a chance to see what's going on.
 
-### In Progress
-* Map editor
-* Computer players and strategies
-* Victory conditions for main game loop
+## Help
+An ingame command reference can be summoned at any time by pressing ? and hitting RETURN. That's also how you quit the game.
 
-### Roadmap 
-* GUI using SFML
-* Cards
+## Credits
+Risky Business (1983) was written by [Matthew Mongrain](https://github.com/mmongrain), [Alika Utepova](https://github.com/AlikaU) and Tan Trung Nguyen.
 
-## Compilation Instructions
-A makefile is included with the files in this .zip.
-```
-make
-```
-is sufficient to compile it using gcc, and has been tested under Ubuntu Linux 14.04 and Mac OSX 10.10. Compilation has also been tested in Windows 8 using Visual Studio 2013. 
-
-## Operation Notes
-Though the program deals more or less gracefully with invalid input, there are some times where it can misbehave when reading commands from the keyboard. Since interaction with the final game will be done entirely through the mouse, we don't intend to fix text input--it's only there to demonstrate the operation of the program.
-
-The game should work with any correctly-formatted .map file from http://www.windowsgames.co.uk/conquest_maps.html ; World.map from that site has been included for testing. For other maps, game_driver.cc would need to be modified with the new file name. The final version will have a GUI for selecting, loading, and saving maps.
