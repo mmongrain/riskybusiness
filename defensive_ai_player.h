@@ -9,7 +9,7 @@ class Defensive : public Strategy {
 
 	public:
 		
-		virtual void Attack(Player *player);
+		void Attack(Player *player);
 
 };
 

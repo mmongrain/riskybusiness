@@ -78,9 +78,6 @@ protected:
 	std::vector<int> last_roll;
 	std::deque<Card*> hand;
 	sf::Color color;
-	void Reinforce();
-	void Attack();
-	void Fortify();
 	void CalculateReinforcements();
 	void Draw();
 	std::string HasMatch();
@@ -88,6 +85,9 @@ protected:
 
 private:
 
+	void Reinforce();
+	void Attack();
+	void Fortify();
 	static int player_id;
 	std::string name;
 	void DetermineContinentOwnership();
