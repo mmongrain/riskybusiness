@@ -4,14 +4,10 @@
 #include <thread>
 
 #include "battle.h"
-#include "comp_player.h"
-#include "map.h"
 #include "aggressive_ai_player.h"
 #include "territory.h"
-#include "game.h"
 #include "ui.h"
-
-class Player;
+#include "player.h"
 
 // attacks the first neighbor enemy territory which has less 
 // armies than one of its own territories acjacent to it

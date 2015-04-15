@@ -4,14 +4,11 @@
 #include <thread>
 
 #include "battle.h"
-#include "comp_player.h"
-#include "map.h"
 #include "random_ai_player.h"
 #include "territory.h"
-#include "game.h"
 #include "ui.h"
+#include "player.h"
 
-class Player;
 
 void Random::Attack(Player *player){
 
