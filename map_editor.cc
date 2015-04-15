@@ -49,9 +49,9 @@ void MapEditor::NewMap() {
   author = UI::StringChoice("Invalid filename--please try again!");
   }
   Map::Instance().map_info.image = image;
-  Map::Instance().map_info.wrap = UI::BinaryChoice("Wrap (y/n)?");
-  Map::Instance().map_info.scroll = UI::BinaryChoice("Scroll (y/n)?");
-  Map::Instance().map_info.warn = UI::BinaryChoice("Warn (y/n)?");
+  Map::Instance().map_info.wrap = UI::BinaryChoice("Wrap (y/n)? Enter n if you don't know or don't care.");
+  Map::Instance().map_info.scroll = UI::BinaryChoice("Scroll (y/n)? Enter n if you don't know or don't care.");
+  Map::Instance().map_info.warn = UI::BinaryChoice("Warn (y/n)? Enter n if you don't know or don't care.");
   NewMapContinents();
   NewMapTerritories();
   NewMapAdjacencies();
@@ -60,6 +60,7 @@ void MapEditor::NewMap() {
 
 void MapEditor::ExistingMap() {
   std::ifstream f;
+  UI::ClearBuffer();
   std::string filename = UI::StringChoice("What filename do you want to load?");
   while (filename == "" || filename == "\n") {
     filename = UI::StringChoice("Invalid filename--please try again!");

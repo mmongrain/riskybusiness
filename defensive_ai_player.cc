@@ -4,12 +4,10 @@
 #include <thread>
 
 #include "battle.h"
-#include "comp_player.h"
-#include "map.h"
 #include "defensive_ai_player.h"
 #include "territory.h"
-#include "game.h"
 #include "ui.h"
+#include "player.h"
 
 class CompPlayer;
 
@@ -41,6 +39,6 @@ void Defensive::Attack(Player *player){
 		}
 	}
 	if (!has_attacked){
-		std::cout << "CompPlayer " << player->get_id() << " chose not to attack" << std::endl;
+		std::cout << "AI " << player->get_id() << " chose not to attack" << std::endl;
 	}
 }
