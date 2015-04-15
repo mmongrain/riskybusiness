@@ -4,7 +4,7 @@
 Risky Business (1983) is a Risk clone controllable entirely from the command line. It features a GUI mode, three levels of AI difficulty, a map editor, and compatibility with .map files from Sean O'Connor's game [Conquest](http://www.windowsgames.co.uk/conquest.html).
 
 ## Compilation
-Risky Business was written with cross-platform compatibility in mind. Regardless of your platform, you will need to satisfy two library dependencies before compilation, namely
+Risky Business was written with cross-platform compatibility in mind, and compiles and runs well on Linux, Mac OSX, and Windows. Regardless of your platform, you will need to satisfy two library dependencies before compilation, namely
 * [Boost](http://www.boost.org)
 * [SFML](http://www.sfml-dev.org/index.php)
 
