@@ -7,6 +7,7 @@ Risky Business (1983) is a Risk clone controllable entirely from the command lin
 Risky Business was written with cross-platform compatibility in mind. Regardless of your platform, you will need to satisfy two library dependencies before compilation, namely
 * [Boost](http://www.boost.org)
 * [SFML](http://www.sfml-dev.org/index.php)
+
 On Linux, these libraries can be installed through your favorite package manager, and on Windows by following the instructions on the sites above. The source was written with gcc 4.2.2 in mind; we have not tested compilation with other compilers.
 
 ## Options
