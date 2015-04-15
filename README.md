@@ -10,6 +10,15 @@ Risky Business was written with cross-platform compatibility in mind. Regardless
 
 On Linux, these libraries can be installed through your favorite package manager, and on Windows by following the instructions on the sites above. The source was written with gcc 4.2.2 in mind; we have not tested compilation with other compilers.
 
+We've included a makefile with the source. On Linux, 
+````
+make
+````
+will compile everything nicely into an executable called rb.o, which can be run by typing
+````
+./rb.o
+````
+
 ## Options
 On launching the game, you'll see an options menu. GUI mode is off by default, but it makes the game a *lot* easier to play and has a pretty colour scheme, too.
 * *"GUI" mode (off by default)*: Launches an SFML GUI window with the game board and pieces to help visualize the game. Requires that the .map file be joined to an appropriate .bmp file in the same directory as the executable.
