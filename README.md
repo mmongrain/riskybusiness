@@ -20,6 +20,9 @@ will compile everything nicely into an executable called rb.o, which can be run 
 ````
 If you run into any problems compiling or running the unit tests or software, please [let me know](mailto:mtmngrn@gmail.com) and I’ll do everything I can to help. In case you really run into trouble, in which case I’ll assume you’re running Windows ;), try running RiskIsAwesome3/Release/RiskIsAwesome3.exe, which should work out-of-the-box on Windows 7/8.
 
+## Unit Testing
+Our two unit testing modules (Deck and Map) can be found, along with all the files each needs to run and compile, in unit-deck/ and unit-map/ respectively. We have included source code alone so that you can compile and test the code using your preferred OS and environment.
+
 ## Options
 On launching the game, you'll see an options menu. GUI mode is off by default, but it makes the game a *lot* easier to play and has a pretty colour scheme, too.
 * *"GUI" mode (off by default)*: Launches an SFML GUI window with the game board and pieces to help visualize the game. Requires that the .map file be joined to an appropriate .bmp file in the same directory as the executable.
@@ -31,6 +34,9 @@ On launching the game, you'll see an options menu. GUI mode is off by default, b
 
 ## Help
 An ingame command reference can be summoned at any time by pressing ? and hitting RETURN. That's also how you quit the game.
+
+## GitHub
+The project’s [GitHub page](https://github.com/mmongrain/riskybusiness/) is a good place to get the latest version.
 
 ## Credits
 Risky Business (1983) was written by [Matthew Mongrain](https://github.com/mmongrain), [Alika Utepova](https://github.com/AlikaU) and Tan Trung Nguyen.
