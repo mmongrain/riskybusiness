@@ -10,7 +10,7 @@ Risky Business was written with cross-platform compatibility in mind, and compil
 
 On Linux, these libraries can be installed through your favorite package manager, and on Windows by following the instructions on the sites above. The source was written with gcc 4.2.2 in mind; we have not tested compilation with other compilers.
 
-We've included a makefile with the source. On Linux, 
+We've included a makefile with the source and tests. On Linux, 
 ````
 make
 ````
@@ -18,6 +18,7 @@ will compile everything nicely into an executable called rb.o, which can be run 
 ````
 ./rb.o
 ````
+If you run into any problems compiling or running the unit tests or software, please [let me know](mailto:mtmngrn@gmail.com) and I’ll do everything I can to help. In case you really run into trouble, in which case I’ll assume you’re running Windows ;), try running RiskIsAwesome3/Release/RiskIsAwesome3.exe, which should work out-of-the-box on Windows 7/8.
 
 ## Options
 On launching the game, you'll see an options menu. GUI mode is off by default, but it makes the game a *lot* easier to play and has a pretty colour scheme, too.
