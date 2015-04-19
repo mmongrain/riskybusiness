@@ -25,7 +25,7 @@ void UnitDeck::Draw(){
 void UnitDeck::IsEmpty(){
 	bool empty = false;
 	int size = Deck::Instance().size();
-	if (size = 0)
+	if (size == 0)
 		empty = true;
 	assert(Deck::Instance().IsEmpty() == empty);
 }
